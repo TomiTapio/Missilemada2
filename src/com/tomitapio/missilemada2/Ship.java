@@ -316,7 +316,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
         cargo_capacity = 1.5*cargo_capacity;
       if (cargo_capacity < 0.0)
         cargo_capacity = 0.0;
-      sensor_range = senrange_core * 1.58 * (r5.nextDouble() + 0.47);
+      sensor_range = senrange_core * 1.51 * (r5.nextDouble() + 0.47);
       stealth = 0.95 * r9.nextDouble(); //jolly good stealth capability, but expensive
       curr_hull_hp = getAvgScoutHullHP() * (0.35 + 1.3*hull_factor); //in MJ. NN teraJ avg...
       defense_beam_accuracy = 0.39 + 0.83 * r8.nextDouble(); //defense beam to nullify missiles
@@ -431,7 +431,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
       max_speed = Missilemada2.getBaseSpeed(); //km per sec, from scenario config
       System.out.println("DEBUG: base speed is "+(max_speed/miner_speed)+" of rand miner speed.");
       cargo_capacity = 0.0; //tons
-      sensor_range = senrange_core * 1.30 * (0.90 + 0.90); //NOTE, standardised senrange for all faction bases. For gameplay.
+      sensor_range = senrange_core * 1.33 * (0.90 + 0.90); //NOTE, standardised senrange for all faction bases. For gameplay.
       stealth = 0.0; //no stealth capability, and bases must be equal
       curr_hull_hp = (400.0/25.0) * getAvgScoutHullHP() * (0.5+hull_factor); //in MJ. NN teraJ avg...
       defense_beam_accuracy = 1.5 + r8.nextDouble(); //defense beam to nullify missiles
