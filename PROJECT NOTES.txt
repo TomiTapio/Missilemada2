@@ -1,3 +1,4 @@
-
+- you need jsi-1.0.0 (java spatial index) and lwjgl-2.9.0 libraries
+and Slick2D (2013)
 
 - "clear output directory on build" option in IDEA (which is on by default) deletes the textures from out/production/Missilemada2.
