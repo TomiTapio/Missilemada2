@@ -1,0 +1,3 @@
+
+
+- "clear output directory on build" option in IDEA (which is on by default) deletes the textures from out/production/Missilemada2.

@@ -1,0 +1,432 @@
+Missilemada 2: place mining ship, place defender ship, place scout ship(scan for asteroids and foes, also combat), place attack cruiser (hinder enemy mining, quite expensive)
+4 resource types from 5 types of asteroids: fuel, metal1, metal2, metal3, useless. Okay maybe aste can give 2 things at once.
+
+
+Maybe defe ship can place mines. Nah, space is too large.
+--done??-- Maybe atk cruiser is so big it can repair other ships.
+
+WORLD:
+5000 000 km diameter region, use DOUBLE. -2500 000 to 2500 000. (Saturn's rings is 60 000 + 80 000 km from Saturn core, so 2x 140Mm)
+31 km/sec UNACCEPTABLE coz only 45h edge to edge.
+Want 30*(300 sec) = 9000 ticks edge to edge. 9000 * 5min tick is 750h. Means speed of 6666 kph = x m/s.
+
+MAYBE space whales (a type of weaponless ship, flees always, whale faction...... sigh) 
+NOPE energy beings, 
+MAYBE mapwide wavefronts of destruction (all scouts to 10% HP)
+MAYBE Sensor anomaly = is nothing, but Scouts go check. 
+
+DONE: ini file: plr start reso, enemy resources.
+DONE: ini file: Base move speed.
+DONE: is_drone func. 
+DONE? Manned not accept a drone as buddy.
+DONE: Drone accept only manned buddy. 
+DONE: UI button list. Dot draw, dot was this clicked coords. AddUIButton(text, x, y, width, height, bool draw border) 
+DONE. misl turning TOO MUCH coz 30-900 seconds tick!
+DONE: Move clear screen to before advance time. Then use sensors can draw ping lines.
+DONE: How visualize sensor range. draw DISC, wireframe, outermost only.
+DONE: Draw line to buddy, or to follow-stronger. Too spammy, disabled.
+
+DONE: Boom on plr ship loss.
+DONE: Capture enemy ships that have engine & sensors damage! (execute crew) 
+DONE: Let do immediate ship building. Ships sit there doing nothing until their timer ding. 
+DONE: COUNTER: CREW AVAILABLE AT BASE. ("Commander, the stealth shuttle has brought 5 more men to the base!")
+
+- Arrow on BASE to indicate that combat in direction X. 
+- Faction have last spotted foe location? Shift frontline towards, until frontline X away from base. OR until FL is X near to last_spotted.
+-attach vfx on hazardzone effecting us. attach vfx on grasvitywell-strong.
+-UI buttons: scoutrange up/down.
+-if to-scout spot WAY FAR from curr location, don't accept, req new one until reasonable dist from self_spot.
+-HUD msg: first time we spotted an enemy.
+-once misldrone has volley off, forcedesti away
+-- before firing missile, compare self misl spd to foe spd, and dist to foe...
+--missile.setowner(ship) IF game has a missile hacking feature. El cheapo missiles suck! but they would be low fuel and probably not reach foe after hacking. 
+-----if fac has wanted amounts of ships already, THEN WHAT PRODUCE? Incr want count of WHICH? Defender.
+
+
+
+--HAZARDZONES! isDestiInsideHazard(), isDestiInsideDAMAGINGHazard(), for mydetectedhazardslist do adjustDestiAwayFromHZCenter(Vector desti, Hazard hazard1).
+--reset camera-button.
+-- speed up time button.
+-- when scout is scouting, stay the fuck out of known_hostile area. estimateifcoordsarehostile(xyz) (dist to spotted base, dist to frontline, how much frontline away from ourbase.)
+-- start of secn2: base wants outside of play area... *sigh*
+
+__indicate by TEXT that these aste have the reso we are lacking!
+__mute all sounds button, toggle.
+__seen derelicts as to-scout spots
+__indicate that you-commander dont have license to build AC yet! in the GUI.
+__pause button in top right, for mouse-only time.
+
+__ when we lose a ship, vfx of ship name on the battlefield.
+DONE: fix transparency of draw background rectangle, want opaque.
+
+DONE: GUI button and func key F2 to toggle show list of my ships, in order of battlestr.
+__show info on foe ships that we have in scoutreports.
+__ F1 toggle help panel
+
+---delay repairs so repair not (heal, wait) but instead (wait, heal) for UNDER COMBAT.
+    setDelayedHullRepair(timestamp, healamount) and check that on update.
+
+--xxxx starbase instaheals itself coz new itself
+
+
+__________________________________________________________________________________________________
+Commander xp system:
+On scenario start, read player's per-shipcategory xp levels from text file.
+Also have total xp. Total xp(influence?) goes down on ship destroyed, scenario lost.
+   totalxp down on crew casualties.
+
+Commander class gets xp every shipbuild / shipcapture.
+every 2days, and scenario over, save xp to file. To prevent "start, build 9, quit".
+__on quit dectection... hmm...
+__N xp to all categories on scenario win! N = two shipbuild worth. (Zaibatsu gave more researchers / allowance.)
+
+Start with scout 1, manned miner 1. "You get these 10year old designs, commander junior grade."
+After M xp in miner or scout, unlock cheapo mining drone. 
+After M xp in mining drone, unlock cheapo missiledrone.
+After M xp in Scout, unlock cheapo Defender. Commander.getDefenderPriceTier()
+__After M xp in Scout, unlock drop-SENSAT(sensor satellite) ability. Commander.hasLearnedSenSat()
+After M xp in Defender, unlock cheapo Cruiser.
+After M xp in Defender, unlock cheapo beamdrone.
+__After M xp in Defender, unlock VOLLEY Commander-command.
+
+-what about enemy faction Commanders????
+Build only 13 cruisers to get to max cruiser tier (5). CruiserXP = 1000 / 13. Bar maxed at 1000.
+DONE: repair at base, tiny bit xp on that category. 0.2 xp.
+
+-more REsupply of crewmen when high totalxp level.
+-commander.addtolog(scenario X you won/lost in N days, total battle strength Y, M men lost.)
+
+    xxx;
+    Commander c = new Commander("foo");
+    c.addXP("SCOUT", 1000);
+    c.addTotalXP(1000);
+    c.saveToFile();
+    c.loadFromFile();
+    c.addBonusXPFromScenarioWin();
+
+______________
+
+
+rejected: ---faction flag AS TEXTURE, not colored quad.
+----if (parentFaction == Missilemada2.getPlayerFaction() || Missilemada2.getPlayerFaction().isShipScouted(this)) { then drop a vfx of event
+--use_sensors to tag flatsprite debris as VISIBLE, so is_cooler_game.
+DONE: Ship parameter: resist detection. stealth. 0 .. 1.0
+
+rejected: A cling-Missile that not explode, just hinder & hull-erode target. Ignores shields. 
+REJECTED: Mine type Missiles, stay and wait until foe X distance. 
+
+Damaging field. Dam relative to speed and mass. Bases never inside it. 
+Ship: count of saw buddies blow up. Increase timid.
+
+
+
+----Function scouting spot away from all scouted asteroids. And away from all known foes. 
+
+--If misl curr spd slower than target, x. If much faster than target, y.
+--If scout alone, don't fire at far target. Only fire back if fired upon(if they detect us? Nah, don't fire back coz too small effect on foe.) 
+
+
+On base kapow, set camera to there. Melody. On game over, tri instrument same Melody. 
+Try slug moving base. Towards mining & frontline. Boost misl range of base (high-end misl only? ) 
+DONE: What if AC drops cheap beamdrones? Max five in hold. 
+
+---On ding, vfx of built and move to holdingspot. 
+
+Sphere class to sphere my. Edit its insides. Some random(func param), check z depths. 
+
+
+__TODO: base not send out ALL its stored misl on spotting first foe!
+
+
+DONE: BUTTON: everybody shoot blind volley towards attack flag! (if they know their missile range would sorta reach)
+DONE: BUTTONS: miners home/mine,
+	scouts home/miners/atkflag/scoutnear/scoutfar,
+ 	mil home/miners/atkflag/scoutnear/scoutfar.
+REJECTED TODO (drones: home/follow mil/follow miners)
+
+--AI function to set AI faction's scout/mil/miner modes... *sigh*
+--rightclick-drag to pan camera, I guess.
+DONE: mousewheel up/dn to zoom camera.
+DONE: shipRequestsDestination to use new fac modes. And ship's own logic to obey modes.
+DONE: reset danger number on peacemode... heh.
+
+BUTTON to toggle line-to-target, line-to-milbud
+BUTTON to toggle line-to-desti
+
+DONE: BUTTONS fl left flank, fl right flank!
+
+
+
+****AI to consider variantf of "FLAG" mode!!!!!!!!!!
+
+
+
+- best cost-efficiency AC: JaCFBncwB, according to curr Str calc formula. better than qqqqqqqqq coz lower mass, lower speed, lower HP.
+
+--possible: if floating expired-misl vfx next to ship, ship gain BC.
+
+- make MINER not accept desti near frontline!!!
+- if have upgrade pending (merit > 2.1), and NEAR FAR BASE and not in battle, force exact base.
+
+--maybe gui buttons to tell faction what to mine!
+- batttledecide: if see fuckton of foe misl, unforced-go to milbud NOT FRONTLINE.
+- DONE: havemerits and at base: upgrade engine or shieldgen or misl output TO BE (1.0 + 0.003*MERITS), reduce merits NOT.
+- DONE: visual vfx of "merits up".
+- DONE: INI: how many old derelicts.
+- use somewhere  amIBeyond_HalfScoutDist()
+- DONE: missiledrone (and others when needed): bar gauge of how full of missiles.
+- DONE: getDefenseBeamEvasion() 
+- DONE: rightclick drag.
+- ship cost and delay were negative??
+- show min max build price near build buttons?
+- on mouseover, build cost of button.
+- base destr -> next scenario pls.
+- some       Vector SPOT_seenships = Missilemada2.getShips_XYNearest(getX(), getY(), 1.15*getSensorRange(), 4);
+       if (Missilemada2.doesShipVectorContainType(SPOT_seenships, "SENSAT"))      return;     bits to logic, to avoid enemy AC or such.
+
+
+/*
+   //xxxif it is damaged enough to try hacking, get very close.
+   if (ene_closest.getShieldPerc() < 13 && ene_closest.getHullPerc() < 0.5 && ene_closest.getSystemsStatusAvg() < 0.8) { //damaged
+     scurrent_destinationXYZ = ene_closest.getXYZ();
+     have_destination = true;
+   }
+*/
+
+
+
+DONE: enemy factions call VOLLEY
+DONE: gameover if N seconds of "foe is 1.9x more battlestr than us".
+--WHO adds vfx while paused??
+--"warning: you are almost over crew allowance"...
+--why the fuck miners to far right. who adds such.
+
+-- aste infotext, what it contains. if scouted.
+
+-- SCOUTING location, pls scout elsewhere than FRONTLINE.
+
+-----use near/far/frontline at: //mil-ships (not scouts). probably non-combat time now.
+--mystery: why miners not miner right after world creation??
+
+--See dead ship, increase scaredness.
+--Scenario: two fac, CLOSE. 
+--Scenario: 3 fac, far, few aste, high initial budget. 
+
+-----------
+--splash screen has list of 10 scenarios, and highscore(best time) of each scen.
+
+--DONEEEEEEE: scenario config txtfile:
+		num foe fac=2; //1-5
+		//not specify starting ships of self fac and foe fac, too hard.
+		BASEDIST=1100500.0; //km.
+		ASTEROIDS_PER_FACTION = 115; //12-150, less aste makes harder
+		nope.... SECONDS_TO_MAX_SPEED = 1.5 * 3600.0; //was 170sec back when maxspeed capping was different.
+		DIFFICULTYADJUSTMENT_AI_RESOGAIN = 0.00009; //0.00009
+		SensorRangeMinShip=1.12*(270500.0)
+-----------
+    readHighScoresFromFile();
+    saveHighScoresToFile();
+--use merit of ships somehowww
+done: ai volley when ship dead.
+----use my_dist_from_frontline/basedist, my_dist_from_base/basedist somewhere in logic.
+
+
+--- I guess untextured asteroids get bad z-depth drawing. nope, all get. zbuffer precision is shite?
+--BA symbol to red >=<
+done: frontlineflag to dottedline circle.
+--repair symbol to wrench.
+--todo ship fire symbol .
+DONE visual space clutter, as flatsprites.
+
+==SCORE of pts per Time elapsed, so plr can try to optimize. 
+==Show ships lost counter (in cost units).
+==If took hull hit and damage number greater than 8th of hull, set one system to broken. Coz small ship.
+
+
+
+---vfx that has xy bearing, for ARROW POINTING gfx.
+
+Crew promotions? Nah.
+Base put dudes in ships? Low-manned new ships when base low? 
+
+Merit points into upgrades! Sensors, shield, engine, cargo capa. Beam range. 
+Miner get 1 merit every 800? Tons delivered. 
+Tiny drone, scout size smaller, only does Missile defense beam. No shields.
+Missile drone, 80%of scout, no shields, no beam, bad engine, good sensors.
+
+done by tagging nearby asteroids. isLocationACombatPlace() : if zero ships near that spot, assume it is hostile place. ??
+
+DONE:Mining accident. Systems blam.
+-fuel accident, too cobbled-together systems. MIner that carry fuel. Base storing loads of fuel.
+
+Speedy travel, micrometeorite accident.
+
+Test without ANY asteroids. 
+
+done: Temp formation when friendly ships see each other?
+done: fac.doWeHaveEnough(shiptype).
+
+----jvisualvm: disable texture DOES NOT take time! later: took 6.6% of cpu.. mysterious.
+----differentiate FOE ships from MY ships!
+---shield-flash _IS_ vfx overlay!
+--tinyminer needs a systems repair AT BASE.
+--draw beam weapon as a quad, for N ticks.
+--beam weap sound: seashore at pitch90? used guitar harmonics.
+--54synthchoir as "battle start"? try 2.7 *12 note.
+--31 gt harmonics pitch 13 as beam or shields
+--7claviet pitch7 as mis shotdown.
+- 75panflute pitch28 for bass.
+____127 gunshot, 113 agogo
+
+done: Start World: N asteroids, and one starbase per faction.
+Plasma storm hinder sensors and movement.
+Ion cloud hinder sensors.
+Aste blows up unexpectedly.
+Special resource pickup: ship debris, metal 1 2 3.
+done: plr can decide what kind of ship to build
+: and what aste to mine
+: and what defe ships where.
+Player can only move camera to places that are within own fac ships sensors! This prevents infinite viewing.
+
+Lose condition: foes kill your starbase.
+Win condition: kill all foe starbases, or conquer them, or have N more combat ships than foes. 
+
+
+
+NOPE: plr can take command of scout and AC. Not miner or defe.
+maybe plr can create ship formations.
+
+----DONE:draw sensor range orb.
+----if have missiles, if fired them all, goto self.fallback position.
+--if camera too far, don't draw texts.
+done:----maybe atan2 is FUCKED because no longer in awt-2D engine coords? but was fine earlier and for ships?nope.
+----stars/nebula background pic: SET EMISSION ONLY.
+-- why base no spew missiles???
+---try base vs base only -battle!
+--if first good mining you find is near enemy base, YOU ARE GAMEOVER SCREWED...
+
+asteroids move very slowly, can gently bump each other? Ships never collide with asteroids because advanced ships.
+
+Milestone: found one enemy starbase.
+Milestone: destroyed 3 enemy scouts.
+Milestone: destroyed 3 enemy miners.
+Milestone: destroyed 1 AC.
+Minestone: destroyed 1 starbase.
+
+DONE: StartWorld(int num_factions, int distance betw bases, int num aste, worldtimeincrement)
+
+
+
+TIME SCALE AND BATTLE: must be longer than MMada1... 1 hour tick is SHIT for missiles and beam attacks, but good for mining and flight distances. Drop to 15sec scale when battle?
+mine & travel: 5min ticks. combat: 5sec ticks.
+travel time in hours from one Base to Base?? 30 ticks per player_second, 3hrs ship_flight in plr_sec... 300hrs in 100 plr_sec
+BATTLE is non-interactive to PLAYER! No input while battle! Just animation showing what happened. Popup of damage taken, damage dealt, did who flee, did who blew up, did we salvage-convert.
+maybe later (MM2 v1.5) could have a mini-game of the formation-vs-formation battles.
+salvage-convert: no need for crewman, repair engine, set robo-autopilot so the converted one goes to our base for refit.
+
+
+
+GRAPHICS IDEAS: ship = transparent textured elongated sphere, shows other texture sphere beneath.
+asteroid = Custom sphere func with randomness in points. Elongated or not. 
+starbase = huge spherical ship.
+missile = elongated non-textured sphere, or cylinder+cylinder <>.
+atk beam = emission-type material on cylinder! Maybe some texture, hexadecimal or squiggles.
+defe beam = other color atk beam, no texture.
+repair happening = flatsprite facing camera.
+resource coming off asteroid = flatsprite facing camera.
+resource from mining ship to base = 
+ene ship converted and repaired =
+ship explodes = 10 flatsprites? Some debris spheres or cubes, emission-glowing.
+
+
+-faction HUD log: ship reached 2 merits.
+- zaibatsu Y lost a ship somewhere
+- we destroyed enemy ship hhhhhh.
+
+---near-camera silly debris whizzing past.
+---possible: two factions/zaibatsus form a non-aggression pact. Resource transfer tribute from weaker?
+
+
+---done: "glDisable(GL_TEXTURE_2D); It's horrobly slow, because opengl has to re-manage the context then..."
+---done investigated. void glPolygonOffset(GLfloat factor, GLfloat units);
+---done with pixelformat. blehhh http://lwjgl.org/javadoc/org/lwjgl/opengl/ContextAttribs.html and http://www.opengl.org/registry/specs/ARB/multisample.txt
+
+SHIP:
+"the Space Shuttle top speed is always around 17,500 miles per hour" so let's 4x that for out slowest ship = 70k MPH = 112654 kph.
+ship.useSensors()
+ship.decideGoal() {remember distances to base, friends, foes, foe base....} MODE: go repair a base, mine, scout, flee, attack, defend(stay close to weakest buddy), patrol(scout but only near friendly ships)
+ship.useWeapons()
+ship.repairAtBase(boolean i am convertee) {unload cargo,repair, pick up some reso if are AC and gonna salvage-convert foes.}
+ship.advancetime() { recharge shields and weapons, use sens, decide, use weap, move(), crewRepair() }
+
+DONE: ship catch fire (continuous hull & system damage until rand chance. Rand chance of crew death), limps back to base. woo! SBase also catch fire.
+DONE: ships have a crew count. Crew to zero means autopilot to base, . (crew zero and engines <50% == kapow)
+todo VERY vulne to capture while
+done: ship systems have repair percentages. Sensors to zero, engine to zero, life support to zero... misl system, shie system, defe system, mining system
+done: ship gets hit: rand chance of system damage(33%) and crew death(7%).
+done: system repairs: 1% chance of 5% sysrepair per crewman, per (5m tick) (first life supp, then engines, then sensors, then shie, weap, hull, mining) (cargo bay damage is nothing, easy to re-pick-up fallen ore)
+
+onmouseover, ship numbers info panel. cargo(resources), crew count.
+done: hull repair at base, or at atk cruiser.
+
+Mining ship when full, fly to home base. 
+Mining ship: buddy is mining ship.
+Defe ship: buddy is mining ship.
+Scout ship: buddy is scout or atk cruiser.
+AC: buddy is AC.
+
+done: Convert enemy ships! 
+rejected: Defe or atk ship use N of their carried resources to convert foe ship that surrendered.		
+
+Ship stats: hull, shie,   missiles, atk beam, defe beam,   crew count. speed.
+Mine 200  20     0  20   0    4  8
+Def  100 100    50  60 100    5 18   
+Sco   25  40    30  30   0    2 25
+MisDr 12   0    30   0   0    0  8 missile drone, no missile build rate, fetches more
+BeaDr 12  30     0  30  30    0 14 beam drone, extra much beam range because not all-purpose ship
+MDro  15   0     0   0   0    0 16 mining drone
+AC   400 250   200 100 150   15 15 
+SBase950 450   400 100 350   50 0.1 or immobile. Strong as two ACs.
+SENSAT x   0     0   0   0    0  0 sensor buoy, sits and scans.
+Price: Four scout is price of one miner. 2.8 scout is defe. 3.2 miners is AC. 
+
+Future: atk scout, doublegood defender, doublegood miner 
+speed: defender speed is realworld shuttle x 5.
+beam str also defines its reach?
+defe beam needs rarest metal3? Shie needs metal2, Hull needs metal1. Misl capability needs 1 2 fuel.
+maybe: Would the ships need to refuel at base?? Pick up more missiles??
+Miner: (cargo capacity N tons, 1600 tons one 10x10x4m cargo bay) (one cube is 4-6 tons)
+
+Ship dot accelerate towards xyz. Kinetic energy vs engine power over time tick duration, MJoules.
+
+
+FACTION:
+fac.issueFactionCommand(str). all_to_base, all_to_defend_miners, all_scout_AC_attack, all_scout_defe_AC_attack, 
+fac.produceship(str whichtype)
+fac.getScore() shipbuildcosts + resources + territory
+
+So, faction has a b c d ship counts and x y z q resource counts. Buy ships, place ships.
+Faction has knowledge of mining locations (decide what aste to mine next) and foes (if X resources, send atk&scout&defe to enemy location)
+Fac has list of known enemy locations!
+Fac has list of known good asteroid locations!
+
+What makes factions different? Build bias  0.5--4.0
+(2.0 mine, 0.5 defe, 2.0 scout, 0.5 AC)
+(1.5 mine, 1.5 defe, 0.7 scout, 0.8 AC)
+(1.0 mine, 0.5 defe, 2.7 scout, 1.3 AC)
+or aggression (how soon pick a fight) (choose aste near or far from foe). Battle Confidence, Mining Boldness/Timidness.
+Faction params from a rand string?!? 
+Play faction melody on ship production, and reso dropped at base, and ship convert.
+
+Faction start with base, miner, defe, scout. 
+Faction send scout/attackforce that direction. Or near that aste. Or away/toward from known foe. area.
+Faction dot create fleet. 
+
+Faction set miner priority. Fuel metal 1 metal 2.
+Faction send miner to known asteroid. Maybe miner decision making is minimal. To asteroid, to base. 
+
+
+
+
+
+"C:\Program Files (x86)\Java\jre7\bin\java" -Dfile.encoding=UTF-8 -classpath "C:\Program Files (x86)\Java\jre7\lib\charsets.jar;C:\Program Files (x86)\Java\jre7\lib\deploy.jar;C:\Program Files (x86)\Java\jre7\lib\javaws.jar;C:\Program Files (x86)\Java\jre7\lib\jce.jar;C:\Program Files (x86)\Java\jre7\lib\jfr.jar;C:\Program Files (x86)\Java\jre7\lib\jfxrt.jar;C:\Program Files (x86)\Java\jre7\lib\jsse.jar;C:\Program Files (x86)\Java\jre7\lib\management-agent.jar;C:\Program Files (x86)\Java\jre7\lib\plugin.jar;C:\Program Files (x86)\Java\jre7\lib\resources.jar;C:\Program Files (x86)\Java\jre7\lib\rt.jar;C:\Program Files (x86)\Java\jre7\lib\ext\access-bridge-32.jar;C:\Program Files (x86)\Java\jre7\lib\ext\dnsns.jar;C:\Program Files (x86)\Java\jre7\lib\ext\jaccess.jar;C:\Program Files (x86)\Java\jre7\lib\ext\localedata.jar;C:\Program Files (x86)\Java\jre7\lib\ext\sunec.jar;C:\Program Files (x86)\Java\jre7\lib\ext\sunjce_provider.jar;C:\Program Files (x86)\Java\jre7\lib\ext\sunmscapi.jar;C:\Program Files (x86)\Java\jre7\lib\ext\sunpkcs11.jar;C:\Program Files (x86)\Java\jre7\lib\ext\zipfs.jar;C:\Users\RC\IdeaProjects\Missilemada2\out\production\Missilemada2;D:\DMISC\lwjgl-2.9.0;D:\DMISC\lwjgl-2.9.0\jar\jinput.jar;D:\DMISC\lwjgl-2.9.0\jar\lwjgl.jar;D:\DMISC\lwjgl-2.9.0\jar\lwjgl_util.jar;D:\DMISC\lwjgl-2.9.0\jar\lwjgl_util_applet.jar;D:\DMISC\lwjgl-2.9.0\jar\lzma.jar;D:\DMISC\Slick2D\lib\slick.jar;C:\Users\RC\IdeaProjects\jsi-1.0.0\jsi-1.0.0-javadoc.jar;C:\Users\RC\IdeaProjects\jsi-1.0.0\jsi-1.0.0-sources.jar;C:\Users\RC\IdeaProjects\jsi-1.0.0\jsi-1.0.0.jar;C:\Users\RC\IdeaProjects\jsi-1.0.0\trove4j-2.0.2.jar;C:\Users\RC\IdeaProjects\jsi-1.0.0\slf4j-api-1.6.3.jar;" com.tomitapio.missilemada2.Missilemada2
