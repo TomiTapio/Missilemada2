@@ -84,6 +84,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
 
   boolean have_destination = false;
   boolean forceddestination = false;
+  String destination_desc = "";
   Vector current_destinationXYZ;
   //vector of XYZ vectors -- places we have visited recently, so don't visit twice. if SCOUT and currdest x-near recent, req new dest.
   Vector visited_destinations_XYZs_fooooooo;
@@ -634,6 +635,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
     if (!Missilemada2.areCoordsWithinPlayarea(xyz)) {
       //Missilemada2.addToHUDMsgList("setDes: a "+type+"wants outside of play area");
       System.out.println("setDes: a "+type+"wants outside of play area: "+debugwhy);
+      return;
     }
 
     if (xyz == null) {
@@ -647,14 +649,17 @@ public class Ship extends MobileThing implements Comparable<Ship> {
       } else {
         current_destinationXYZ = xyz;
         have_destination = true;
+        destination_desc = debugwhy;
         //forced is already false.
         debugVFXText(xyz, debugwhy);
       }
     }
   }
   public void forceDestination(Vector xyz, String debugwhy) {
+    destination_desc = debugwhy;
     //verify valid in-playarea coords
     if (isStarbase() && xyz == null) {
+      Missilemada2.addToHUDMsgList("forceDes: a stooopid starbase wants null forceDes");
       return; //xx hotfix
     }
     if (!Missilemada2.areCoordsWithinPlayarea(xyz)) {
@@ -720,17 +725,36 @@ public class Ship extends MobileThing implements Comparable<Ship> {
     }
   }
   public String toStringLeaderboard() { //don't say which faction, show battlestr, str perc, shield perc
-    return "STR: " + (int) (max_battle_str/1000000) + " " + type+" "+getName()
-          //+" ("+getId()+") "
-          + "_shields " + (int) (getShieldPerc() * 100.0)
-          + "% hull " + (int) (getHullPerc() * 100.0)
-          + "% dangr " + (int) (getDangerMeter() * 10.0)
-          + " cost " +Integer.toString((int)(buildcost/1.0))
-          + " crew " + getCrewCount()
-          //" str/cost "+(int)(max_battle_str/buildcost)
-          +" mrange "+(int)(misl_range_measured/1000000)+",max"+getHowManyMislWhenFull()+"misl";
-  }
+    StringBuffer s = new StringBuffer(150);
+    //xx possibly crop name to 14 char if longer.
+    s.append("STR " + (int) (max_battle_str / 1000000) + " " + type + " " + getName());
 
+    if (see_enemy_count > 0)
+      s.append("_" + see_enemy_count);
+    else
+      s.append("_-");
+    s.append(" dangr " + (int) (getDangerMeter() * 10.0));
+    if (cargo_capacity > 4.0)
+      s.append(" C " + (int) Math.round(cargo_carried));
+
+    s.append("_shie " + (int) (getShieldPerc() * 100.0)+"% ");
+    s.append("hull " + (int) (getHullPerc() * 100.0)+"% ");
+
+    //s.append(+ " cost " +Integer.toString((int)(buildcost/1.0)));
+    if (max_crew_count > 0)
+      s.append(",crew " + getCrewCount());
+    if (hasMissileCapability()) {
+      s.append(",mrang" + (int) (misl_range_measured / 100000));
+      s.append(",max" + getHowManyMislWhenFull() + "misl");
+    }
+    s.append(","+ destination_desc);
+
+    String ret2 = s.toString();
+    ret2 = ret2.replace("STARBASE", "BASE");
+    ret2 = ret2.replace("TINYMINER", "TINYM");
+    return ret2;
+    //" str/cost "+(int)(max_battle_str/buildcost)
+  }
   public String toStringShort() {
     if (parentFaction == null) {
       return "Derelict "+ type+" ship "+getId();
@@ -1094,7 +1118,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
         parentFaction.lostCrewmen(curr_crew_count);
       curr_crew_count = 0;
 
-      //faction focuses efforts coz lost a ship.
+      //faction focuses efforts this location, coz lost a ship.
       if (parentFaction != null) {
         parentFaction.shiftFrontLine(this.getXYZ(), 5.0, this);
         //withdraw frontline a little, towards base, coz mucho battle.
@@ -1104,7 +1128,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
       if (scoring_ship != null) {
         //scoring ship gets merit badges.
         if (this.type.equals("SCOUT"))
-          scoring_ship.addMerit(0.35);
+          scoring_ship.addMerit(0.45);
         if (this.type.equals("TINYMINER"))
           scoring_ship.addMerit(0.18);
         if (this.type.equals("MINER"))
@@ -1114,11 +1138,11 @@ public class Ship extends MobileThing implements Comparable<Ship> {
         if (this.type.equals("MISSILEDRONE"))
           scoring_ship.addMerit(0.3);
         if (this.type.equals("SENSAT"))
-          scoring_ship.addMerit(0.10);
+          scoring_ship.addMerit(0.1);
         if (this.type.equals("DEFENDER"))
           scoring_ship.addMerit(1.0);
         if (this.type.equals("AC"))
-          scoring_ship.addMerit(1.4);
+          scoring_ship.addMerit(2.4);
 
         Faction scoring_fac = scoring_ship.getFaction();
         if (scoring_fac != null)
@@ -1173,7 +1197,11 @@ public class Ship extends MobileThing implements Comparable<Ship> {
 
       if (parentFaction != null)
         parentFaction.shipCountDown(this, damagetype); //deduct one ship from faction's counter.
-      System.out.println("---------SHIP DESTROYED by "+damagetype + ". It was " +toString());
+      if (parentFaction == Missilemada2.getPlayerFaction()) {
+        //vfx of lost ship name to battlefield.
+        Missilemada2.addVfxOnMT(xcoord, ycoord, zcoord, "NAMEOFLOSTSHIP", 60000/*ms*/, 3380.0, 1.0/*transp*/, null, "", 1.0, "lost "+getName());
+      }
+      System.out.println("------SHIP DESTROYED by "+damagetype + ". It was " +toString());
 
 
       if (type.equals("STARBASE")) { //if base, remove from shiplist and baselist.
@@ -3703,7 +3731,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
       //xxx might go slightly away from frontlineflag-n-base combo?
       //else the normal miner-in-combat activity, old logic, miners decide for themselves when to flee.
 //      if (danger_meter > 0.8) {
-//        parentFaction.forgetAsteroid(destinationAsteroid); //xx or closest? //xxxx causes MUCH MERIT GET.
+//        parentFaction.forgetAsteroidUNUSED(destinationAsteroid); //xx or closest? //xxxx causes MUCH MERIT GET.
 //        clearDestination();
 //      }
     }
@@ -4100,6 +4128,12 @@ public class Ship extends MobileThing implements Comparable<Ship> {
       }
     }
     return false;
+  }
+  private boolean hasMissileCapability() {
+    if (max_buildcredits > 2 * (misl_cost+1.0))
+      return true;
+    else
+      return false;
   }
   private int getMislLauncherRechargeSeconds() {
     //xxmaybe? branch on ship type. misldrone many tubes, scout one, defender two, base LOTS.

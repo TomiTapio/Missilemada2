@@ -2101,42 +2101,69 @@ public class Missilemada2 {
     int numships = getPlayerFaction().getShipCount();
 
     //sort by shoving from master alive shiplist into tree and reading in order.
+    //also shove spotted foes into 2nd tree.
     Comparator<Ship> comparator = new Ship.ShipComparator();
-    TreeSet shipstoleaderboard = new TreeSet(comparator);
+    TreeSet plrshipstoleaderboard = new TreeSet(comparator);
+    TreeSet seenfoes = new TreeSet(comparator);
     Faction pf = getPlayerFaction();
     int listsize = shipList.size();
     for (int j = 0; j < listsize; j++) {
       Ship tryship = (Ship) shipList.elementAt(j);
       if (tryship != null) {
         if (tryship.getFaction() == pf && !tryship.isSenSat() ) { //ignore immobile SENSATs
-          shipstoleaderboard.add(tryship);
+          plrshipstoleaderboard.add(tryship);
+        } else {
+          if (tryship.isSeenByPlayer() && !tryship.isSenSat() ) { //ignore immobile SENSATs
+            seenfoes.add(tryship);
+          }
         }
       }
     }
-
     //read from TreeSet in order, draw text.
-    Iterator it = shipstoleaderboard.descendingIterator();
     int i = 0;
-    float off1 = 320.0f;
-    while (it.hasNext() && i < 20) { //max 20 rows
-      Ship s = (Ship) it.next();
-      //drawstring
-      tx = s.toStringLeaderboard();
+    float off1 = 320.0f; //2nd column for aligning
+    float off2 = 118.0f; //3rd column for aligning
+    Color usecolor;
+    try {
+      Iterator it = plrshipstoleaderboard.descendingIterator();
+      while (it.hasNext() && i < 15) { //max 20 rows
+        Ship s = (Ship) it.next();
+        tx = s.toStringLeaderboard();
+        //draw as columns, chop string off at _ separator.
+        String[] foo = tx.split("_");
 
-      //xxxx draw as columns, chop string off at _ separator.
-      String[] foo = tx.split("_");
+        //if hull dama, diff color.
+        if (s.getShieldPerc() < 0.25 || s.getHullPerc() < 0.94) {
+          usecolor = color_hurt;
+        } else {
+          usecolor = color_unhurt;
+        }
+        font20.drawString(hud_x, hud_y + i * rowheight, foo[0], usecolor);
+        font20.drawString(hud_x + off1, hud_y + i * rowheight, foo[1], usecolor);
+        font20.drawString(hud_x + off1+off2, hud_y + i * rowheight, foo[2], usecolor);
 
-
-
-      //if hull dama, diff color.
-      if (s.getShieldPerc() < 0.25 || s.getHullPerc() < 0.94) {
-        font20.drawString(hud_x, hud_y + i * rowheight, foo[0], color_hurt);
-        font20.drawString(hud_x+off1, hud_y + i * rowheight, foo[1], color_hurt);
-      } else {
-        font20.drawString(hud_x, hud_y + i * rowheight, foo[0], color_unhurt);
-        font20.drawString(hud_x+off1, hud_y + i * rowheight, foo[1], color_unhurt);
+        i++;
       }
-      i++;
+    } catch (Exception e) {
+      e.printStackTrace();
+    }
+    //for plr seen foes: already have them in a Tree.
+    Iterator it2 = seenfoes.descendingIterator();
+    int j = 0; //rows written
+    usecolor = color_unhurt;
+    float hud_y_next = hud_y + (i) * rowheight;
+    font20.drawString(hud_x, hud_y_next + j * rowheight, "----spotted competitor ships----", color_unhurt);
+    j++;
+    while (it2.hasNext() && j < 13) { //max 12 rows
+      Ship s = (Ship) it2.next();
+      tx = s.toStringLeaderboard();
+      //draw as columns, chop string off at _ separator.
+      String[] foo = tx.split("_");
+      font20.drawString(hud_x, hud_y_next + j * rowheight, foo[0], usecolor);
+      //foes: not show seecount,danger,cargo.
+      //font20.drawString(hud_x + off1, hud_y_next + j * rowheight, foo[1], usecolor);
+      font20.drawString(hud_x + off1+off2, hud_y_next + j * rowheight, foo[2], usecolor);
+      j++;
     }
   }
     public static void addVfxOnMT(double x/*is offset, if attached.*/, double y, double z, String in_fx_str, int dur /*ms*/, double siz, double tra,

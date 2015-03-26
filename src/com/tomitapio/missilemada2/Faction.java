@@ -8,12 +8,13 @@ public class Faction {
   StarBase base;
   Commander cmdr;
 
-  Vector scoutreports_bases; //base forgetting VERY slow.
+  Vector scoutreports_ships; //removed from list when N ticks not seen. //last_seen_stamp
+  Vector scoutreports_bases; //base forgetting VERY slow. ie. never.
   Vector scoutreports_asteroids;
   Vector scoutingCandidateSpots;
   private double scouting_distance_avg = 0.9 * Missilemada2.getScoutingDistance_crude();
 
-  private static final long ASTE_FORGET_SECONDS = 15 * 24 * 3600; //gameplay
+  private static final long ASTE_FORGET_SECONDS = 25 * 24 * 3600; //gameplay
   private static final long SHIP_FORGET_SECONDS = 480 * 60; //gameplay
   private static final long RESUPPLY_INTERVAL_SECONDS = 2*24*3600; //gameplay
   private static final long RESUPPLY_DOCKDURATION_SECONDS = 4*3600; //gameplay
@@ -66,7 +67,7 @@ public class Faction {
   private String milmode = "FAR";
   private String minermode = "GO";
 
-  Vector scoutreports_ships; //removed from list when N ticks not seen. //last_seen_stamp
+
   int num_unique_foes_seen = 0;
   Ship strongest_seen_enemy = null;
   private double total_ene_battlerstr_in_SRs = 0.0;
@@ -1823,14 +1824,21 @@ public class Faction {
     else
       return false;
   }
-  public void addScoutReportEnemyShip(Ship reportingscout, ScoutReport sr) {
+  public void addScoutReportEnemyShip(Ship reportingscout, ScoutReport sr) { //called by ship.usesensors and defecting.
+  //xxx if sensat, less merit, less commotion.
     if (!isShipScouted( (Ship)sr.item )) {
       scoutreports_ships.add(sr);
       reportingscout.addMerit(0.057); //0.166 WAY TOO MUCH
 
-      //melody of enemy sighted. CONSTANTLY?
+      if (((Ship) sr.item).isStarbase()) {
+        addScoutReportBase(reportingscout, sr);
+        reportingscout.addMerit(0.110); //0.166 WAY TOO MUCH
+      } else { //regular ship
+        //melody of enemy sighted. CONSTANTLY? maybe add a timer.
 //      if (this.isPlayerFaction())
 //        Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("enemy spotted", 2, "") /*Vector of pitches*/, 49 /*core note*/, 30 /*dist guit*/, 70, 2.3F /*note duration*/);
+
+      }
 
       //if first sighting, melody of battle.
       if (scoutreports_ships.size() == 1) {
@@ -1880,6 +1888,7 @@ public class Faction {
     scoutreports_bases.add(sr);
     reportingscout.addMerit(2);
     //melody of enemy BASE sighted.
+    //xxxx big-ass vfx.
     if (this.isPlayerFaction())
       Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("enemy base spotted", 16, "") /*Vector of pitches*/, 50 /*core note*/, 56 /*instrument*/, 90, 0.9F /*note duration*/);
   }
@@ -2386,7 +2395,7 @@ public class Faction {
     throw new NullPointerException("faction.getmode");
     //return "error";
   }
-  public void forgetAsteroid(Asteroid as) { //to prevent miners from stupidly trying verydanger spot. Just scout it again with fast scouts.
+  public void forgetAsteroidUNUSED(Asteroid as) { //to prevent miners from stupidly trying verydanger spot. Just scout it again with fast scouts.
     for (int i = 0; i < scoutreports_asteroids.size(); i++) {
       ScoutReport sr = (ScoutReport) scoutreports_asteroids.elementAt(i);
       if (sr != null) {

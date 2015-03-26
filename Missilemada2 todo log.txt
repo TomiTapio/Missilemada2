@@ -32,8 +32,9 @@ DONE: Let do immediate ship building. Ships sit there doing nothing until their 
 DONE: COUNTER: CREW AVAILABLE AT BASE. ("Commander, the stealth shuttle has brought 5 more men to the base!")
 
 - Arrow on BASE to indicate that combat in direction X. 
+- Arrow on BASE to indicate that wantedmetal asteroid is thataway. or green special-line to it. 
 - Faction have last spotted foe location? Shift frontline towards, until frontline X away from base. OR until FL is X near to last_spotted.
--attach vfx on hazardzone effecting us. attach vfx on grasvitywell-strong.
+
 -UI buttons: scoutrange up/down.
 -if to-scout spot WAY FAR from curr location, don't accept, req new one until reasonable dist from self_spot.
 -HUD msg: first time we spotted an enemy.
@@ -45,8 +46,12 @@ DONE: COUNTER: CREW AVAILABLE AT BASE. ("Commander, the stealth shuttle has brou
 
 
 --HAZARDZONES! isDestiInsideHazard(), isDestiInsideDAMAGINGHazard(), for mydetectedhazardslist do adjustDestiAwayFromHZCenter(Vector desti, Hazard hazard1).
+-attach vfx on hazardzone effecting us. attach vfx on grasvitywell-strong.
+
 --reset camera-button.
+
 -- speed up time button.
+
 -- when scout is scouting, stay the fuck out of known_hostile area. estimateifcoordsarehostile(xyz) (dist to spotted base, dist to frontline, how much frontline away from ourbase.)
 -- start of secn2: base wants outside of play area... *sigh*
 
@@ -60,12 +65,17 @@ __ when we lose a ship, vfx of ship name on the battlefield.
 DONE: fix transparency of draw background rectangle, want opaque.
 
 DONE: GUI button and func key F2 to toggle show list of my ships, in order of battlestr.
-__show info on foe ships that we have in scoutreports.
+DONE: show info on foe ships that we have in scoutreports.
 __ F1 toggle help panel
-
+__ fac has array or spotted foe starbases. func: bool seenAnyBases(), func areCoordsNearFoeBases()
+__on win/lose, pause and infotext.
+DONE: don't forget asteroidreport so soon.
 ---delay repairs so repair not (heal, wait) but instead (wait, heal) for UNDER COMBAT.
     setDelayedHullRepair(timestamp, healamount) and check that on update.
-
+DONE: if ship sees 1+ foes, indicate that on leaderboard. 
+DONE: if ship carrying mining cargo (not drones), indicate that on leaderboard. 
+DONE: debug string of why this destination, in the leaderboard.
+__cheating func key, toggle foe visibility on/off.
 --xxxx starbase instaheals itself coz new itself
 
 
