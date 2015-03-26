@@ -2071,7 +2071,7 @@ public class Missilemada2 {
     float xplace = hud_x;
     float yplace = hud_y;
     float wid = 900.0f; //guess
-    float hei = rowheight * 20 + 5.0f;
+    float hei = rowheight * 12 + 5.0f;
     //we are in HUD-drawing coords.
     GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f); //dark gray
     //set texture

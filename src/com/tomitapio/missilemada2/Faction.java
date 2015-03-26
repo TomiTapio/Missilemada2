@@ -18,7 +18,7 @@ public class Faction {
   private static final long SHIP_FORGET_SECONDS = 480 * 60; //gameplay
   private static final long RESUPPLY_INTERVAL_SECONDS = 2*24*3600; //gameplay
   private static final long RESUPPLY_DOCKDURATION_SECONDS = 4*3600; //gameplay
-  private static final long SAVEXP_EVERY_SECONDS = 4*24*3600; //anti-boosting, must play instead of start_new_scenario
+  private static final long SAVEXP_EVERY_SECONDS = 8/*days*/*24*3600; //anti-boosting, must play instead of start_new_scenario constantly.
 
   int crew_alive = 0; //assigned and unassigned
   int crew_idle = 0; //unassigned
@@ -1074,6 +1074,12 @@ public class Faction {
         Missilemada2.addToHUDMsgList(Missilemada2.strCurrDaysHours() + "____Commander's progress has been noted. (saved to disk)____",0);
       }
     }
+    //if don't know where to mine most needed mineral, nag msg.
+    if (Missilemada2.gimmeRandDouble() < 0.002) {
+      if (!knowWhereToMine(lacking_resource)) {
+        Missilemada2.addToHUDMsgList("We don't know where to find that lacking resource!",0);
+      }
+    }
 
     //update timers of the undetectable resupply shuttle.
     resupply_arrivetimer = resupply_arrivetimer + seconds;
@@ -1182,6 +1188,16 @@ public class Faction {
         //no autobuild, that's for testing. tryShipProduction("", -1); //empty values to indicate AI mode
       }
     }
+  }
+  private boolean knowWhereToMine(String lacking_resource1) {
+    Asteroid a = chooseKnownAsteroidToMine(lacking_resource1, getStarbase()); //ret rand aste or a known-good
+    if (a == null) {
+      Missilemada2.addToHUDMsgList("knowWhereToMine got a null asteroid", 0);
+    } else {
+      if (a.hasResource(lacking_resource1))
+        return true;
+    }
+    return false;
   }
   public int getShipCount() {
   return curr_shipcount;
@@ -1867,7 +1883,7 @@ public class Faction {
     }
   }
   public void addScoutReportAste(Ship reportingscout, ScoutReport sr, Asteroid as) {
-    drawFrontLineIndicator(2510.0 /*size*/, 1.001/*chance*/);
+    drawFrontLineIndicator(2910.0 /*size*/, 1.001/*chance*/);
     //if (this.isPlayerFaction() && !((Asteroid)sr.item).isResourceless()) {
     //  Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("scanner"/*sr.item.toString()*/, 4, "") /*Vector of pitches*/, 57 /*core note*/, 30 /*dist guit*/, 40, 1.71F /*note duration*/);
     //}

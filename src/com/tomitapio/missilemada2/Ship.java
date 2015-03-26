@@ -2919,10 +2919,12 @@ public class Ship extends MobileThing implements Comparable<Ship> {
 
     if (type.equals("STARBASE")) { //OLD: base has no moves or decisions.
       //xxxxxx
-      if (parentFaction.getDistanceBetwBaseAndFrontline() > 4000.0)
+      if (parentFaction.getDistanceBetwBaseAndFrontline() > 4000.0) {
         forceDestination(parentFaction.getFrontlineXYZ(), "BASE TO FL ALWAYS");
-      else
-        forceDestination(parentFaction.getScoutingCandidateSpot(), "BASE SCOUTSxxxxx");
+      } else {
+        forceDestination(parentFaction.getFrontlineXYZ(), "BASE TO FL,close");
+        //forceDestination(parentFaction.getScoutingCandidateSpot(), "BASE SCOUTSxxxxx");
+      }
       return;
     }
 

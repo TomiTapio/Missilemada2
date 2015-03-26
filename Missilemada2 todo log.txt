@@ -76,6 +76,7 @@ DONE: if ship sees 1+ foes, indicate that on leaderboard.
 DONE: if ship carrying mining cargo (not drones), indicate that on leaderboard. 
 DONE: debug string of why this destination, in the leaderboard.
 __cheating func key, toggle foe visibility on/off.
+__foe send ships to frontline MUUUUCH more often. If feels like X. 
 --xxxx starbase instaheals itself coz new itself
 
 
