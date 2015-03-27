@@ -212,8 +212,8 @@ public class Faction {
     return misl_fired_total;
   }
   public void shiftFrontLine(Vector XYZ, double weighting, Ship reportingShip) {
-    if (isPlayerFaction())
-      Missilemada2.changeWorldTimeIncrement(-1); //slow down world
+    //if (isPlayerFaction())
+    //  Missilemada2.changeWorldTimeIncrement(-1); //slow down world
 
     //System.out.print("shiftFL: before " + MobileThing.xyzToIntString(frontlineLocation));
     frontlineLocation = MobileThing.changeXYZTowards(frontlineLocation, XYZ, weighting * 7500.0);
@@ -1284,7 +1284,7 @@ public class Faction {
     Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("scrap get", 7, "") /*Vector of pitches*/, 34 /*core note*/, 113 /*agogo*/, 120, 2.9F /*note duration*/);
   }
   public Vector getFrontlineXYZ_vary(String a) {
-    return getFrontlineXYZ_vary(a, 0.09);
+    return getFrontlineXYZ_vary(a, 0.05);
   }
   public Vector getFrontlineXYZ_vary(String a, double vary) {
     if (getStarbase() == null)
@@ -2113,6 +2113,13 @@ public class Faction {
       //not random, and not from candi spots.
 
       ret = Missilemada2.getRandomLocationNear(base.getXYZ(), scouting_distance_avg, 0.20); //BASE vicinity and gradually incr range.
+
+      if (Missilemada2.areCoordsWithinPlayarea(ret)) {
+        //okay
+      } else {
+        System.out.println("debug: error, getRandomLocationNear(base.getXYZ(), gave out of play area.");
+        ret = Missilemada2.getRandomLocationNear(base.getXYZ(), base.getSensorRange(), 1); //BASE vicinity and gradually incr range.
+      }
       //System.out.println("2goto_near_base desti from faction.");
 
     }
@@ -2537,4 +2544,18 @@ public class Faction {
     cmdr.handleXP_scenariolost();
   }
 
+  public Ship gimmeRandMannedShip() { //for random rumors
+    Ship ret = null;
+    Vector ourships = Missilemada2.getShipsOfFaction(this);
+    int listsize = ourships.size();
+    int trycount = 0;
+    while (trycount < 150) {
+      //try rand, see if manned
+      ret = (Ship) ourships.elementAt(Missilemada2.gimmeRandInt(listsize));
+      if (ret.getCrewCount() > 0)
+        continue;
+      trycount++;
+    }
+    return ret;
+  }
 }

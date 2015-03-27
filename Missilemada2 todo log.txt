@@ -52,7 +52,7 @@ DONE: COUNTER: CREW AVAILABLE AT BASE. ("Commander, the stealth shuttle has brou
 
 -- speed up time button.
 
--- when scout is scouting, stay the fuck out of known_hostile area. estimateifcoordsarehostile(xyz) (dist to spotted base, dist to frontline, how much frontline away from ourbase.)
+
 -- start of secn2: base wants outside of play area... *sigh*
 
 __indicate by TEXT that these aste have the reso we are lacking!
@@ -77,6 +77,15 @@ DONE: if ship carrying mining cargo (not drones), indicate that on leaderboard.
 DONE: debug string of why this destination, in the leaderboard.
 __cheating func key, toggle foe visibility on/off.
 __foe send ships to frontline MUUUUCH more often. If feels like X. 
+___when scout is scouting, stay the fuck out of known_hostile area. estimateifcoordsarehostile(xyz) (dist to spotted base, dist to frontline, how much frontline away from ourbase.)
+
+done: avg system status in leaderboard. 
+__leaderb: Mode:  how??  mining, fleeing, fight, idle
+__leaderb: Color code foe factions' shiptype? 
+
+done: random rumor/event textlines in log!    space whale spotted
+__sendBattleDebrisTowardsCamera()
+
 --xxxx starbase instaheals itself coz new itself
 
 
@@ -167,8 +176,7 @@ BUTTON to toggle line-to-desti
 DONE: BUTTONS fl left flank, fl right flank!
 
 
-
-****AI to consider variantf of "FLAG" mode!!!!!!!!!!
+****AI to consider variant of "FLAG" mode!!!!!!!!!!
 
 
 
@@ -176,7 +184,7 @@ DONE: BUTTONS fl left flank, fl right flank!
 
 --possible: if floating expired-misl vfx next to ship, ship gain BC.
 
-- make MINER not accept desti near frontline!!!
+- make MINER not accept desti near frontline!!! if frontline not near base.
 - if have upgrade pending (merit > 2.1), and NEAR FAR BASE and not in battle, force exact base.
 
 --maybe gui buttons to tell faction what to mine!
@@ -212,7 +220,7 @@ DONE: gameover if N seconds of "foe is 1.9x more battlestr than us".
 --"warning: you are almost over crew allowance"...
 --why the fuck miners to far right. who adds such.
 
--- aste infotext, what it contains. if scouted.
+__aste infotext, what it contains. if scouted.
 
 -- SCOUTING location, pls scout elsewhere than FRONTLINE.
 
@@ -224,7 +232,7 @@ DONE: gameover if N seconds of "foe is 1.9x more battlestr than us".
 --Scenario: 3 fac, far, few aste, high initial budget. 
 
 -----------
---splash screen has list of 10 scenarios, and highscore(best time) of each scen.
+--maybe: splash screen has list of 10 scenarios, and highscore(best time) of each scen.
 
 --DONEEEEEEE: scenario config txtfile:
 		num foe fac=2; //1-5
@@ -312,7 +320,7 @@ maybe plr can create ship formations.
 --if camera too far, don't draw texts.
 done:----maybe atan2 is FUCKED because no longer in awt-2D engine coords? but was fine earlier and for ships?nope.
 ----stars/nebula background pic: SET EMISSION ONLY.
--- why base no spew missiles???
+done:-- why base no spew missiles???
 ---try base vs base only -battle!
 --if first good mining you find is near enemy base, YOU ARE GAMEOVER SCREWED...
 
@@ -352,7 +360,7 @@ ship explodes = 10 flatsprites? Some debris spheres or cubes, emission-glowing.
 
 -faction HUD log: ship reached 2 merits.
 - zaibatsu Y lost a ship somewhere
-- we destroyed enemy ship hhhhhh.
+done: - we destroyed enemy ship hhhhhh.
 
 ---near-camera silly debris whizzing past.
 ---possible: two factions/zaibatsus form a non-aggression pact. Resource transfer tribute from weaker?

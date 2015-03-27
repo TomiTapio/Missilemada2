@@ -739,6 +739,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
 
     s.append("_shie " + (int) (getShieldPerc() * 100.0)+"% ");
     s.append("hull " + (int) (getHullPerc() * 100.0)+"% ");
+    s.append("systems " + (int) (getSystemsStatusAvg() * 100.0)+"% ");
 
     //s.append(+ " cost " +Integer.toString((int)(buildcost/1.0)));
     if (max_crew_count > 0)
@@ -796,7 +797,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
       return 0.0;
     return curr_buildcredits / max_buildcredits;
   }
-  private String getName() {
+  public String getName() {
     return name;
   }
   public double gimmeBearingVariance(double br, double amt) {
@@ -1098,8 +1099,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
     return sensor_range;
   }
   public int getBuildTimeDelay() {
-    //return (int) (4.5 * buildcost);
-    return (int) (0.5 * buildcost);
+    return (int) (0.9 * buildcost); //0.5 too little, 4.5 too much.
   }
   public void getDestroyed(Ship scoring_ship, String damagetype) {
     try {
@@ -1198,8 +1198,8 @@ public class Ship extends MobileThing implements Comparable<Ship> {
       if (parentFaction != null)
         parentFaction.shipCountDown(this, damagetype); //deduct one ship from faction's counter.
       if (parentFaction == Missilemada2.getPlayerFaction()) {
-        //vfx of lost ship name to battlefield.
-        Missilemada2.addVfxOnMT(xcoord, ycoord, zcoord, "NAMEOFLOSTSHIP", 60000/*ms*/, 3380.0, 1.0/*transp*/, null, "", 1.0, "lost "+getName());
+        //vfx of lost ship name to battlefield. Memorial.
+        Missilemada2.addVfxOnMT(xcoord, ycoord, zcoord,"TEXT", 60000/*ms*/, 3380.0, 1.0/*transp*/, null, "", 1.0, "lost "+getName());
       }
       System.out.println("------SHIP DESTROYED by "+damagetype + ". It was " +toString());
 
@@ -1790,7 +1790,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
 
     if (isInPlayerFaction()) {
       setIsSeenByPlayer(true); //always see plr faction ships.
-      if (see_enemy_mislcount > 4) {
+      if (see_enemy_mislcount > 7) { //important time adjuster? 4 was no good.
         Missilemada2.changeWorldTimeIncrement(-1); //slow down world, because combat.
       }
     }
@@ -2501,12 +2501,16 @@ public class Ship extends MobileThing implements Comparable<Ship> {
     }
     if (isInPlayerFaction()) {
       if (see_enemy_count == 0) {
-        if (Missilemada2.gimmeRandInt(100) < 5)
+        if (Missilemada2.gimmeRandInt(100) < 25)
           Missilemada2.changeWorldTimeIncrement(1); //speed up world, GRADUALLY, because appears peaceful to this PLAYERFACTION ship.
       }
-      if (see_enemy_count > 2) {
+      if (see_enemy_count >= 3) {
         Missilemada2.changeWorldTimeIncrement(-1); //slow down world, because combat is happening.
       }
+      if (see_enemy_mislcount_close > 9) {
+        Missilemada2.changeWorldTimeIncrement(-1); //slow down world, self in trouble
+      }
+
     }
 
     //count enemy and friend missiles, for decisionmaking. was cpu-heavy at 150 ships times 400 missiles. Now RTree.
@@ -2531,8 +2535,8 @@ public class Ship extends MobileThing implements Comparable<Ship> {
             see_enemy_mislcount++;
             enemis = mi;
 
-            if (Missilemada2.gimmeRandDouble() < 0.01)
-              parentFaction.shiftFrontLine(mi.getXYZ(), 0.04, this); //oh there is enemy combat activity near me? move faction's frontline a tiny bit.
+            if (Missilemada2.gimmeRandDouble() < 0.01) //spotting foe missile happens VERY OFTEN.
+              parentFaction.shiftFrontLine(mi.getXYZ(), 0.02/*was0.04*/, this); //oh there is enemy combat activity near me? move faction's frontline a tiny bit.
 
 
             if (this.isInPlayerFaction())
@@ -2545,7 +2549,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
               see_enemy_mislcount_close++;
               am_under_fire = true;
             }
-            if (calcDistanceMTMT(this, mi) < getDefenseBeamRange() && mi.curr_hull_hp > 0.01)
+            if (calcDistanceMTMT(this, mi) < getDefenseBeamRange() && mi.curr_hull_hp > 0.01) //if within my defense beam range.
               tryShootDownMissile = mi;
 
 
@@ -2900,7 +2904,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
         playMissileFiringNote(misl_cost);
         //Missilemada2.addToHUDMsgList(Missilemada2.strCurrDaysHours() + this.toStringShort() + " fired a missile of cost " + (int)m.getCost()+"" ,0);
       }
-      if (isInPlayerFaction() && Missilemada2.gimmeRandDouble() < 0.4) {
+      if (isInPlayerFaction() && Missilemada2.gimmeRandDouble() < 0.08) {
         Missilemada2.changeWorldTimeIncrement(-1); //slow down world, because combat is happening.
       }
       return 1; //one missile was fired.
@@ -3965,32 +3969,34 @@ public class Ship extends MobileThing implements Comparable<Ship> {
     if (parentFaction == null)
       return null;
 
-    Vector v = getXYZ(); //default: stand and fight.
+    Vector ret = getXYZ(); //default: stand and fight.
     double dist_to_ene = calcDistanceMTMT(this, ene);
 
     //if ene too far for combat
     if (dist_to_ene > Missilemada2.getCombatDistMax(this)) {
       //xxxx closer desti
-      v = ene.getBattleDestiXYZ();
+      ret = ene.getBattleDestiXYZ();
 
     } else if (dist_to_ene < Missilemada2.getCombatDistMin(this)
             || dist_to_ene < 0.6*Missilemada2.getCombatDistMax(this)) { //if too close, go homeward
-      v = ene.getBattleDestiXYZ();
+      ret = ene.getBattleDestiXYZ();
       //shift towards home base
-      v = changeXYZTowards(v, parentFaction.getXYZ(), 15.5 * Missilemada2.getCombatDistMin(this));
+      ret = changeXYZTowards(ret, parentFaction.getXYZ(), 15.5 * Missilemada2.getCombatDistMin(this));
 
     } else { //not too far, not too close, have okay range ATM
       // new spot near self.
       //v = Missilemada2.getRandomLocationNear(this.getXYZ(), sensor_range / 0.3, 0.2);
       if (see_enemy_mislcount > see_friend_mislcount) {
         //move coz so many foe missiles
-        v = changeXYZTowards(v, parentFaction.getXYZ(), 20.5 * Missilemada2.getCombatDistMin(this));
+        ret = changeXYZTowards(ret, parentFaction.getXYZ(), 20.5 * Missilemada2.getCombatDistMin(this));
       } else {
         //stand and fight
-        v = getXYZ();
+        ret = getXYZ();
       }
     }
-    return v;
+    if (ret == null)
+      ret = parentFaction.getSafeLocation();
+    return ret;
   }
   public double getMaxBattleStr() {
     return max_battle_str;

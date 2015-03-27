@@ -1346,9 +1346,9 @@ public class Missilemada2 {
     //double nearbydist = 16.0* getScoutingDistance_crude();
     double nearbydist = 0.45*basedi;
     //double fardist = basedi * 2.5;
-    boolean approved = false;
+    boolean world_approved = false;
     int loopbreaker = 0;
-    while (!approved && loopbreaker < 200) {
+    while (!world_approved && loopbreaker < 200) {
       //start new try.
       asteroidList = new Vector (350, 120);
       flatsprite_permanent_List = new Vector (100, 200);
@@ -1378,9 +1378,9 @@ public class Missilemada2 {
       }
 
       if (aste_per_world < 70) //if scenario calls for very few aste, approve.
-        approved = true;
+        world_approved = true;
       else
-        approved = areAllResourcesAvailableNearPlayerBase(nearbydist); //try new rand placement until good for player.
+        world_approved = areAllResourcesAvailableNearPlayerBase(nearbydist); //try new rand placement until good for player.
       loopbreaker++;
     }
 
@@ -2070,8 +2070,8 @@ public class Missilemada2 {
     float zcoord = 0.0f;
     float xplace = hud_x;
     float yplace = hud_y;
-    float wid = 900.0f; //guess
-    float hei = rowheight * 12 + 5.0f;
+    float wid = VIEWWIDTH - hud_x;
+    float hei = rowheight * 14 + 5.0f;
     //we are in HUD-drawing coords.
     GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f); //dark gray
     //set texture
@@ -2097,7 +2097,7 @@ public class Missilemada2 {
 
   //for player faction:
     Color color_unhurt = new Color(170, 170, 190, 255/*this matters*/);
-    Color color_hurt = new Color(230, 140, 140, 255/*this matters*/);
+    Color color_hurt = new Color(190, 80, 110, 255/*this matters*/);
     int numships = getPlayerFaction().getShipCount();
 
     //sort by shoving from master alive shiplist into tree and reading in order.
@@ -2965,7 +2965,7 @@ public class Missilemada2 {
     return 0.59 * BASEDIST; //xxxxgameplay. 0.8 might be different gameplay. 1.0x and 2.2x is SHITE.
   }
   public static double getMissileCollisionRangeMin() { //scale to world tick, coz large tick is VERY IMPRECISE. //precision improved by 4x adv time per framedraw.
-    return 15300.0 * (worldTimeIncrement / 60.0) ; //26x gives about 14 300 km. when wti is 60.
+    return 17300.0 * (worldTimeIncrement / 60.0) ; //26x gives about 14 300 km. when wti is 60.
     //xxone must test at both 15 sec tick and 160 sec tick... well, combat is viewed with slow time..
   }
   public static double getMissileTurnMargin() { //scale to world tick, coz large tick is VERY IMPRECISE. //precision improved by 4x adv time per framedraw.
@@ -3028,6 +3028,20 @@ public class Missilemada2 {
       hudMsgList.remove(0); //oldest away
     hudMsgList.trimToSize(); //xxcan be omitted?
     System.out.println("HUD: "+a);
+    if (gimmeRandDouble() < 0.004) { //rare occurrence
+      randomRumorEvent();
+    }
+  }
+  private static void randomRumorEvent() {
+    Ship sh = getPlayerFaction().gimmeRandMannedShip();
+    String[] rumor = {"Nav array discounts this week!",
+          "The pilot of "+sh.getName()+" complains of insects.",
+          "Professor Ka'thur thinks she's found a new mineral. Again.",
+          "The crew of "+sh.getName()+" are glad to be heading back to base.",
+          "The crew of "+sh.getName()+" have eaten too many bean rations."
+           };
+
+    Missilemada2.addToHUDMsgList(Missilemada2.strCurrDaysHours() + rumor[gimmeRandInt(rumor.length)],0);
   }
   public static void removeStarBaseFromPlay(StarBase sb) {
     starBaseList.remove(sb);
@@ -3039,9 +3053,10 @@ public class Missilemada2 {
     System.out.println("A BASE WAS DESTROYED: "+sb.toString());
 
     if (sb.getFaction().getFactionId() == getPlayerFaction().getFactionId()) {
-      addToHUDMsgList("ALL IS LOST! OUR BASE IS GONE!",1);
+      addToHUDMsgList("ALL IS LOST! OUR BASE IS GONE! The President is very disappointed in your operation.",1);
       gameScenarioLost();
     } else {
+      //xxfork msg based on if we did it (we in its vicinity) or someone else did it.
       addToHUDMsgList("Commander! An enemy starbase (str "+sb.getBattleStr()+") has been destroyed!",3);
     }
   }
