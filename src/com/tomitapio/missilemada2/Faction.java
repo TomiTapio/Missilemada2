@@ -2490,7 +2490,7 @@ public class Faction {
   private void tryShiftFrontlineTowardsFoes(int howmanytoask, double weighting) {
     for (int i = 0; i < howmanytoask; i++) {
       //get random ally
-      Ship s = chooseRandomAlly();
+      Ship s = chooseRandomMannedAlly();
       //xx ask them who is biggest threat
       Ship foe = s.getTarget();
       if (foe != null) {
@@ -2499,7 +2499,7 @@ public class Faction {
       }
     }
   }
-  private Ship chooseRandomAlly() {
+  private Ship chooseRandomMannedAlly() {
     Vector v = Missilemada2.getShipsOfFaction(this);
     if (v.size() < 3) {
       return base;
@@ -2508,17 +2508,17 @@ public class Faction {
     for (int i = 0; i < 30; i++) {
       ret = (Ship) v.get(Missilemada2.gimmeRandInt(v.size()));
       if (ret == null) {
-        System.out.println("chooseRandomAlly: null entry in getShipsOfFaction result.");
+        System.out.println("chooseRandomMannedAlly: null entry in getShipsOfFaction result.");
         return base;
       } else {
-        if (ret.isSenSat() || ret.getType().equals("TINYMINER")) {
+          if (ret.isSenSat() || ret.isDrone()) {
           //continue;
-        } else { //acceptable
+        } else { //ret is acceptable
           break;
         }
       }
     }
-    //System.out.println("chooseRandomAlly gave "+ret.toString());
+    System.out.println("chooseRandomMannedAlly gave "+ret.toString());
     return ret;
   }
   public void toggleShowSensors() {

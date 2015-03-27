@@ -28,6 +28,7 @@
     </orderEntry>
     <orderEntry type="library" name="slick" level="project" />
     <orderEntry type="library" name="jsi-1.0" level="project" />
+    <orderEntry type="library" name="lwjgl-2.9" level="project" />
+    <orderEntry type="library" name="SlickUtil" level="project" />
   </component>
 </module>
-

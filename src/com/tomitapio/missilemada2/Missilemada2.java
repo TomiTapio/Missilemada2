@@ -522,9 +522,9 @@ public class Missilemada2 {
       worldTimeIncrement_min = StrToInt(mainProps.getProperty("TIME_INCREMENT_MINIMUM", "22"));
       worldTimeIncrement_max = StrToInt(mainProps.getProperty("TIME_INCREMENT_MAXIMUM", "88"));
       max_flatsprites = StrToInt(mainProps.getProperty("MAXIMUM_DEBRIS_FLATSPRITES", "6000"));
-      FONTSIZE1 = StrToInt(mainProps.getProperty("FONTSIZE1", "11")); //bad defaults on purpose
-      FONTSIZE2 = StrToInt(mainProps.getProperty("FONTSIZE2", "13"));
-      FONTSIZE3 = StrToInt(mainProps.getProperty("FONTSIZE3", "20"));
+      FONTSIZE1 = StrToInt(mainProps.getProperty("FONTSIZE1", "21")); //bad defaults on purpose
+      FONTSIZE2 = StrToInt(mainProps.getProperty("FONTSIZE2", "28"));
+      FONTSIZE3 = StrToInt(mainProps.getProperty("FONTSIZE3", "60"));
       FONTNAME = mainProps.getProperty("FONTNAME", "Times New Roman");
 
       fis.close();
