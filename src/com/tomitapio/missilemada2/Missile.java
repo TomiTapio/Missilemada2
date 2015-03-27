@@ -108,19 +108,19 @@ public class Missile extends MobileThing {
     double maxfuel = 31000 * (r4.nextDouble() + 0.60); //nerfed 2014-10-14
 
     double trrand = r5.nextDouble();
-    double turnrate = 0.00079/*was:0.012, 0.0004 is too little but fun. */ * (trrand + 0.29); //rads per second? or minute? I don't know.
+    double turnrate = 0.00108/*was:0.012, 0.0004 is too little but fun. */ * (trrand + 0.24); //rads per second? or minute? I don't know.
     if (trrand < 0.07) turnrate = turnrate * 0.79; //nerf turning of bottom 7 %.
     if (trrand > 0.93) turnrate = turnrate * 1.55; //boost turning of top 7 %.
 
     double yield_variance = r3.nextDouble();
     double yield = Missilemada2.getAvgMislYield() * (yield_variance + 0.50);
-    if (yield_variance < 0.10) { //then puny cheapo model, BUT PLENTIFUL. Hinders enemy defense-beam use.
+    if (yield_variance < 0.13) { //then puny cheapo model, BUT PLENTIFUL. Hinders enemy defense-beam use.
       yield = 0.65 * yield;
       turnrate = 0.7*turnrate;
       maxfuel = 0.95*maxfuel;
-      spd = 0.8*spd;
+      spd = 0.75*spd;
     }
-    if (yield_variance > 0.94) { //then high-dam elite, pricey.
+    if (yield_variance > 0.92) { //then high-dam elite, pricey.
       yield = 1.25 * yield;
       turnrate = 1.1*turnrate;
       maxfuel = 1.26*maxfuel;

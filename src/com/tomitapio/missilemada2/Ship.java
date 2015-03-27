@@ -49,6 +49,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
   boolean did_mining = false;
 
   int see_enemy_count = 0;
+  int count_missiles_hit_me = 0;
   boolean am_under_fire = false;
   boolean dodge_mode = false;
   Ship ene_closest = null;
@@ -246,7 +247,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
 
       max_shields = 7500500 * (maxshield_factor + 0.05); //in MJ. Even very puny shield helps versus mining debris.
       curr_shields = max_shields / 14.5;
-      shield_regen_per_min = 2000 * shieldregenpermin_factor; //in MJ / sec. also powers the beam weapons.
+      shield_regen_per_min = 1400 * shieldregenpermin_factor; //in MJ / sec. also powers the beam weapons.
 
       if (speedrand > 0.9) { //chance of elite speed.
         max_speed = 1.2*max_speed;
@@ -257,7 +258,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
       }
 
       //missile build credits nanotech - OLD:miner has none. NEW: 0.8 of scout.
-      buildcredits_gen_per_minute = bcps_scaling * 230 * (bcps_factor - 0.22); //cheap miner shouldn't have missiles.
+      buildcredits_gen_per_minute = bcps_scaling * 280 * (bcps_factor - 0.17); //cheap miner shouldn't have missiles.
       if (buildcredits_gen_per_minute < 0.0) {
         buildcredits_gen_per_minute = 0.0;
         max_buildcredits = 0.0;
@@ -274,7 +275,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
       cargo_capacity = 8.0 * (1.0 + 7.0*hull_factor); //tons
       sensor_range = senrange_core * 0.35 * (r5.nextDouble() + 0.30); //? needed for mining distance to be successful
       stealth = 0.0; //no stealth capability
-      curr_hull_hp = 0.55*getAvgScoutHullHP() * (0.29+hull_factor); //in MJ.
+      curr_hull_hp = 0.59*getAvgScoutHullHP() * (0.29+hull_factor); //in MJ.
       defense_beam_accuracy = 0.0; //defense beam to nullify missiles
       personality_aggro = 0.0;
 
@@ -301,7 +302,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
       curr_shields = max_shields / 14.5;
       shield_regen_per_min = 96500 * shieldregenpermin_factor; //in MJ / sec. also powers the beam weapons.
 
-      buildcredits_gen_per_minute = bcps_scaling * 2950 * (0.40 + bcps_factor);
+      buildcredits_gen_per_minute = bcps_scaling * 3150 * (0.38 + bcps_factor);
       if (bcps_factor > 0.85)
         buildcredits_gen_per_minute = 1.3 * buildcredits_gen_per_minute;
       max_buildcredits = bc_storage_scaling * 4.35 * 60.0 * buildcredits_gen_per_minute; //how many hours' worth of missiles piled up?
@@ -310,7 +311,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
     }
     if (type.equals("SCOUT")) { //spd "20"
       curr_crew_count = 2;
-      max_speed = (19.0/8.0) * miner_speed; //km per sec
+      max_speed = (18.5/8.0) * miner_speed; //km per sec
       //cargo_capacity = 32.0; //tons, 1/50th of miner. Like Star Trek runabout.
       cargo_capacity = 35.0 * ( -0.6 + 1.2*hull_factor); //tons
       if (hull_factor > 0.97)
@@ -325,22 +326,22 @@ public class Ship extends MobileThing implements Comparable<Ship> {
 
       max_shields = 25500500 * (maxshield_factor + 0.10); //in MJ
       curr_shields = max_shields / 14.5;
-      shield_regen_per_min = 19500 * shieldregenpermin_factor; //in MJ / sec. also powers the beam weapons.
+      shield_regen_per_min = 12500 * shieldregenpermin_factor; //in MJ / sec. also powers the beam weapons.
 
       if (speedrand < 0.15) { //chance of turtle speed -> more shields.
         stealth = 1.2 * stealth;
         max_shields = 1.15 * max_shields;
-        shield_regen_per_min = 1.15 * shield_regen_per_min;
+        shield_regen_per_min = 1.19 * shield_regen_per_min;
       }
-      buildcredits_gen_per_minute = bcps_scaling * 470 * (2.5*bcps_factor + 0.15);
-      max_buildcredits = bc_storage_scaling * 4.65 * 60.0 * buildcredits_gen_per_minute; //how many hours' worth of missiles piled up?
+      buildcredits_gen_per_minute = bcps_scaling * 510 * (2.5*bcps_factor + 0.15);
+      max_buildcredits = bc_storage_scaling * 4.75 * 60.0 * buildcredits_gen_per_minute; //how many hours' worth of missiles piled up?
       curr_buildcredits = max_buildcredits; //may have crap misl-production; start as full.
       carried_sensats = 1;
     }
     if (type.equals("MISSILEDRONE")) { //spd "x", simple drone, no shields no beam. GOOD SENSORS
       curr_crew_count = 0;
 
-      max_speed = (18.0/8.0) * miner_speed; //little slower than scout. must travel lots to resupply.
+      max_speed = (17.0/8.0) * miner_speed; //little slower than scout. must travel lots to resupply.
       cargo_capacity = 0.0; //tons
       /////sensor_range = senrange_core * 1.15 * (r5.nextDouble() + 0.21);
       sensor_range = senrange_core * 1.58 * (r5.nextDouble() + 0.47); //same as scout, coz otherwise useless...?
@@ -361,7 +362,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
     }
     if (type.equals("BEAMDRONE")) { //spd "15", because supposed to escort others more than the missiledrone. No missiles.
       curr_crew_count = 0;
-      max_speed = (15.0/8.0) * miner_speed; //km per sec
+      max_speed = (15.5/8.0) * miner_speed; //km per sec
       cargo_capacity = 0.0; //tons
       sensor_range = senrange_core * 1.0 * (r5.nextDouble() + 0.21); //worse than scout or missile drone, is defensive escorter.
       stealth = 0.0; //zero stealth, cheap and/or strong shields
@@ -369,10 +370,10 @@ public class Ship extends MobileThing implements Comparable<Ship> {
       defense_beam_accuracy = 0.44 + 0.9 * r8.nextDouble(); //defense beam to nullify missiles
       personality_aggro = 0.25;
 
-      max_shields = 16500500 * (maxshield_factor + 0.45); //in MJ
+      max_shields = 14500500 * (maxshield_factor + 0.45); //in MJ
       curr_shields = max_shields / 4.5;
 
-      shield_regen_per_min = 14500 * shieldregenpermin_factor; //in MJ / sec. also powers the beam weapons. strong.
+      shield_regen_per_min = 24500 * shieldregenpermin_factor; //in MJ / sec. also powers the beam weapons. strong.
       if (shregen_rand > 0.86) {
         shield_regen_per_min = 1.4 * shield_regen_per_min;
         max_shields = 1.2 * max_shields;
@@ -481,18 +482,18 @@ public class Ship extends MobileThing implements Comparable<Ship> {
     //separate int_vars so can human-read in debug. not 5.54624246234642E9
     //rebalanced 2014-06-23. rebalanced 2014-07-09.
     int cost_from_mass    = new Double(0.55*mass_kg).intValue();
-    int cost_from_crewarea= new Double(10500.0 * max_crew_count).intValue(); //crew don't have price yet -- this is lifesupport for miner 4ppl. //crew's repair tools cost too.
-    int cost_from_minertech=new Double(3100.0 * cargo_capacity).intValue(); //because MINER must be expensive.
-    int cost_from_HP      = new Double(0.00270 * curr_hull_hp).intValue();
-    int cost_from_spd     = new Double(4300.0 * (max_speed) * (Math.sqrt(mass_kg) / 1000.0)).intValue(); //was super puny 15000 cost on AC
-    int cost_from_maxbc   = new Double(400500.0 * (max_buildcredits/3200.0)).intValue(); /*for missiledrone's powerfulness */
+    int cost_from_crewarea= new Double(10900.0 * max_crew_count).intValue(); //crew don't have price yet -- this is lifesupport for miner 4ppl. //crew's repair tools cost too.
+    int cost_from_minertech=new Double(3200.0 * cargo_capacity).intValue(); //because MINER must be expensive.
+    int cost_from_HP      = new Double(0.00290 * curr_hull_hp).intValue();
+    int cost_from_spd     = new Double(4500.0 * (max_speed) * (Math.sqrt(mass_kg) / 1000.0)).intValue(); //was super puny 15000 cost on AC
+    int cost_from_maxbc   = new Double(420500.0 * (max_buildcredits/3200.0)).intValue(); /*for missiledrone's powerfulness */
     int cost_from_bcpm    = new Double(75500500.0*(buildcredits_gen_per_minute/24.0)).intValue();
-    int cost_from_maxshi  = new Double(0.0079 * max_shields).intValue();
-    int cost_from_shgen   = new Double(120.0 * shield_regen_per_min).intValue(); //YYYYxxxx was VERY dominant in str/cost !
-    int cost_from_sensors = new Double(0.42 * (sensor_range)).intValue(); //senra/Missilemada2.getArrivedDistance() was bad?
-    int cost_from_stealth = new Double(124500.0 * stealth).intValue();
-    int cost_from_defeAcc = new Double(380500.0 * defense_beam_accuracy).intValue();
-    buildcost = 3.9/*was4.4*/ * (
+    int cost_from_maxshi  = new Double(0.0085 * max_shields).intValue();
+    int cost_from_shgen   = new Double(130.0 * shield_regen_per_min).intValue(); //YYYYxxxx was VERY dominant in str/cost !
+    int cost_from_sensors = new Double(0.44 * (sensor_range)).intValue(); //senra/Missilemada2.getArrivedDistance() was bad?
+    int cost_from_stealth = new Double(128500.0 * stealth).intValue();
+    int cost_from_defeAcc = new Double(390500.0 * defense_beam_accuracy).intValue();
+    buildcost = 3.8/*was4.4*/ * (
                       cost_from_mass
                     + cost_from_crewarea
                     + cost_from_minertech
@@ -910,7 +911,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
     else
       return false;
   }
-  public void getDamaged(double in_joules, String damagetype, Ship scoring_ship, boolean bypass_shields) { // a single missile hit this.
+  public void getDamaged(double in_joules, String damagetype, Ship scoring_ship, boolean bypass_shields) { // a single missile hit this. Or a beam. Or are on fire.
     if (isDestroyed()) //if someone is hurting a destroyed ship, don't.
       return;
 
@@ -930,7 +931,8 @@ public class Ship extends MobileThing implements Comparable<Ship> {
 
     //if missile explosion, lose some speed ("stability compensators" or something)
     if (damagetype.equals("missile explosion")) {
-      reduceSpeed(0.99);
+      count_missiles_hit_me++;
+      reduceSpeed(0.98);
     }
 
     //if shields collapse or aren't there, or special damagetype(engine fire), take full input to hull
@@ -1099,7 +1101,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
     return sensor_range;
   }
   public int getBuildTimeDelay() {
-    return (int) (0.9 * buildcost); //0.5 too little, 4.5 too much.
+    return (int) (1.7 * buildcost); //0.5 too little, 4.5 too much.
   }
   public void getDestroyed(Ship scoring_ship, String damagetype) {
     try {
@@ -1503,7 +1505,9 @@ public class Ship extends MobileThing implements Comparable<Ship> {
       if (isInPlayerFaction())
         Missilemada2.addVfx2(getXYZ(), "TEXT", 5000, 190.0, 0.2/*transp*/, "", 1.0, "nodesti_inexemove_gotobase");
     }
-    des_x = (Double)current_destinationXYZ.get(0);
+    if (current_destinationXYZ == null || current_destinationXYZ.isEmpty())
+      current_destinationXYZ = parentFaction.getXYZ();
+    des_x = (Double)current_destinationXYZ.get(0); //had nullptr on victory.
     des_y = (Double)current_destinationXYZ.get(1);
     des_z = (Double)current_destinationXYZ.get(2);
     bear_to_desti_xy = Missilemada2.calcBearingXY(xcoord, ycoord, des_x, des_y); //cpu-intensive
@@ -3182,27 +3186,27 @@ public class Ship extends MobileThing implements Comparable<Ship> {
     if ((type.equals("MINER") || type.equals("TINYMINER"))) {
       String minermode = parentFaction.getMode("MINER");
       if (minermode.equals("BASE")) {
-        forceDestination(parentFaction.getXYZ_starbase_safer_side(), "miner stay home");
+        forceDestination(parentFaction.getXYZ_starbase_safer_side(), "miner ordered home");
         return;
       } else { //else: old logic, active mining.
         if (cargo_full) {
-          forceDestination(parentFaction.getXYZ_starbase_safer_side(), "miner to base for unloading");
+          destinationAsteroid = null;
+          forceDestination(parentFaction.getXYZ_starbase_safer_side(), "miner to unloading");
           //would be illogical to do other than unload now. Except flee. But this func is peacetime vis-a-vis this ship.
 
           return;
         } else { //need to find some mining, OR we are at desti aste already.
-          if (true  /*!have_destination*/
-                  /*|| destinationAsteroid == null*/
+          if (destinationAsteroid == null //xxxtry
                   ) { //xxxxxnewtry
             destinationAsteroid = null;
-            Asteroid as = parentFaction.chooseKnownAsteroidToMine("", this);
+            Asteroid as = parentFaction.chooseKnownAsteroidToMine("", this); //xx heavy operation
             if (as != null) {
               setDes(as.getMiningXYZ(), "miner to wantedRes As");
               destinationAsteroid = as;
 
               return;
             } else { //no known good asteroids
-              Asteroid asANY = parentFaction.chooseKnownAsteroidToMine("ANY", this);
+              Asteroid asANY = parentFaction.chooseKnownAsteroidToMine("ANY", this); //xx heavy operation
               if (asANY != null) {
                 setDes(asANY.getMiningXYZ(), "miner to ANY As");
                 destinationAsteroid = asANY;
@@ -4883,6 +4887,9 @@ public class Ship extends MobileThing implements Comparable<Ship> {
   }
   private boolean isInPlayerFaction() {
     return (parentFaction == Missilemada2.getPlayerFaction());
+  }
+  public int getCountMislHurts() {
+    return count_missiles_hit_me;
   }
   public void addVfxOfStr() {
     Missilemada2.addVfxOnMT(0, -5 * this.getRadius(), 0, "TEXT", 19000, 900.0, 1.0, this, "", 1.0, "str:" + this.getBattleStrIntDisp());

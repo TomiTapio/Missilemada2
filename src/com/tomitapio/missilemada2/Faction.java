@@ -866,7 +866,8 @@ public class Faction {
     curr_shipcount--;
 
     if (isPlayerFaction()) {
-      Missilemada2.addToHUDMsgList(Missilemada2.strCurrDaysHours() + "__LOST__ "+s.toStrTypeNName()+". Cause: "+reason,1);
+      Missilemada2.addToHUDMsgList(Missilemada2.strCurrDaysHours() + "__LOST__ "+s.toStrTypeNName()
+        +". Cause: "+reason+", "+s.getCountMislHurts()+" misl hits total",1);
     }
 
     //AI behaviour //xxgameplay important
@@ -1284,7 +1285,7 @@ public class Faction {
     Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("scrap get", 7, "") /*Vector of pitches*/, 34 /*core note*/, 113 /*agogo*/, 120, 2.9F /*note duration*/);
   }
   public Vector getFrontlineXYZ_vary(String a) {
-    return getFrontlineXYZ_vary(a, 0.05);
+    return getFrontlineXYZ_vary(a, 0.013);
   }
   public Vector getFrontlineXYZ_vary(String a, double vary) {
     if (getStarbase() == null)
@@ -1676,7 +1677,7 @@ public class Faction {
   private boolean isFrontlineNearBase() {
     return (MobileThing.calcDistanceVecVec(getFrontlineXYZ(), base.getXYZ()) < 6.0 * Missilemada2.getNearlyArrivedDistance());
   }
-  public Asteroid chooseKnownAsteroidToMine(String whatkind, Ship asker) {
+  public Asteroid chooseKnownAsteroidToMine(String whatkind, Ship asker) { //took 33% of cpu time duing big battle! may be fixed now.
     lacking_resource = predictResourceLack_Str(); //xxxhack
 
     Asteroid ret_as = null;
@@ -1738,8 +1739,10 @@ public class Faction {
             }
           }
           //if have okay one, curb scouting.
+          //and add text vfx on that aste.
           if (ret_as != null) {
             scouting_distance_avg = scouting_distance_avg - 1.0;
+            Missilemada2.addVfxOnMT(0, -5 * ret_as.getRadius(), 0, "TEXT", 19000, 900.0, 1.0, ret_as, "", 1.0, "has the wanted");
           }
         }
 
@@ -2548,12 +2551,16 @@ public class Faction {
     Ship ret = null;
     Vector ourships = Missilemada2.getShipsOfFaction(this);
     int listsize = ourships.size();
+    if (listsize < 3)
+      return null;
     int trycount = 0;
     while (trycount < 150) {
       //try rand, see if manned
       ret = (Ship) ourships.elementAt(Missilemada2.gimmeRandInt(listsize));
-      if (ret.getCrewCount() > 0)
+      if (ret.getCrewCount() > 0) {
+        trycount++;
         continue;
+      }
       trycount++;
     }
     return ret;

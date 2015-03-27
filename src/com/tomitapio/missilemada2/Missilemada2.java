@@ -2973,16 +2973,16 @@ public class Missilemada2 {
   }
   public static double getMissileSpeedMin() {
     //calc from ship speeds.
-    return 1.22 * Ship.getAvgScoutSpeed(); //crappiest missiles should catch up to mid-low scouts, barely.
+    return 1.17 * Ship.getAvgScoutSpeed(); //crappiest missiles should catch up to mid-low scouts, barely.
   }
   public static double getMissileSpeedMax() {
-    return 1.42 * Ship.getMaxScoutSpeed(); //elite missiles should catch up to average scouts most excellently.
+    return 1.46 * Ship.getMaxScoutSpeed(); //elite missiles should catch up to average scouts most excellently.
   }
   public static double getAvgMislYield() {
     return Ship.getAvgScoutHullHP() / 18.5; //gameplay: more missiles means more fun! (scout/12: not that fun.)
   }
   public static double getAsteDriftSpeed() {
-    return 0.00098; //xxgameplay
+    return 0.00118; //xxgameplay
   }
   public static Asteroid getRandomAsteroid() {
     try {
