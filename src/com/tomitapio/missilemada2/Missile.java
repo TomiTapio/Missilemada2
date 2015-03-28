@@ -105,10 +105,10 @@ public class Missile extends MobileThing {
     double senrand = r2.nextDouble();
     double senrange = Missilemada2.getSensorRangeMinMissile() * (1.05 + senrand); //gameplay
 
-    double maxfuel = 31000 * (r4.nextDouble() + 0.60); //nerfed 2014-10-14
+    double maxfuel = 29000 * (r4.nextDouble() + 0.60); //nerfed 2014-10-14
 
     double trrand = r5.nextDouble();
-    double turnrate = 0.00108/*was:0.012, 0.0004 is too little but fun. */ * (trrand + 0.24); //rads per second? or minute? I don't know.
+    double turnrate = 0.00108/*was:0.012, 0.0004 is too little but fun. */ * (trrand + 0.26); //rads per second? or minute? I don't know.
     if (trrand < 0.07) turnrate = turnrate * 0.79; //nerf turning of bottom 7 %.
     if (trrand > 0.93) turnrate = turnrate * 1.55; //boost turning of top 7 %.
 
@@ -298,7 +298,7 @@ public class Missile extends MobileThing {
 
         double usage = (1.0+0.09*max_speed+5.9*turning_rate)*(1.0+0.09*max_speed+5.9*turning_rate)
                 + 0.05*(0.9 + mass_kg/880)*(0.9 + mass_kg/880); //bloody difficult to balance
-        curr_fuel = curr_fuel - (0.0042 * usage * seconds); //gameplay tuning spot
+        curr_fuel = curr_fuel - (0.0049 * usage * seconds); //gameplay tuning spot
         //System.out.println("Missile of cost "+buildcost+" burn fuel in turning tick:" + usage + " blab is "+(-0.36 + 1.05*max_speed+3.5*turning_rate));
       }
       //flip across bearingXY boundary

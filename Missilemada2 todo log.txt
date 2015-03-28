@@ -76,8 +76,9 @@ DONE: if ship sees 1+ foes, indicate that on leaderboard.
 DONE: if ship carrying mining cargo (not drones), indicate that on leaderboard. 
 DONE: debug string of why this destination, in the leaderboard.
 __cheating func key, toggle foe visibility on/off.
-__foe send ships to frontline MUUUUCH more often. If feels like X. 
-___when scout is scouting, stay the fuck out of known_hostile area. estimateifcoordsarehostile(xyz) (dist to spotted base, dist to frontline, how much frontline away from ourbase.)
+__foe to send ships to frontline MUUUUCH more often. If feels like X. 
+___when scout is scouting, stay the fuck out of known_hostile area. 
+  done: estimateifcoordsarehostile(xyz) (dist to spotted base, dist to frontline, how much frontline away from ourbase.)
 
 done: avg system status in leaderboard. 
 __leaderb: Mode:  how??  mining, fleeing, fight, idle
@@ -92,7 +93,7 @@ __ possibly separate scrollable window of hudmsg-log.
 __ misl, if flew past curr target, calc if better target along forward trajectory. old: loop around to missed currtarget.
 __fixed? public Asteroid chooseKnownAsteroidToMine(String whatkind, Ship asker) { //xxxxxxxxxxtook 33% of cpu time duing big battle!!!!
 done: ship keeps track how many misl have hit it.
-
+==If took hull hit and damage number greater than 8th of hull, set one system to broken. Coz small ship.
 
 
 --xxxx starbase instaheals itself coz new itself
@@ -254,7 +255,7 @@ __aste infotext, what it contains. if scouted.
 -----------
     readHighScoresFromFile();
     saveHighScoresToFile();
---use merit of ships somehowww
+done: use merit of ships somehowww. Upgrades!
 done: ai volley when ship dead.
 ----use my_dist_from_frontline/basedist, my_dist_from_base/basedist somewhere in logic.
 
@@ -268,16 +269,17 @@ DONE visual space clutter, as flatsprites.
 
 ==SCORE of pts per Time elapsed, so plr can try to optimize. 
 ==Show ships lost counter (in cost units).
-==If took hull hit and damage number greater than 8th of hull, set one system to broken. Coz small ship.
+
 
 
 
 ---vfx that has xy bearing, for ARROW POINTING gfx.
 
-Crew promotions? Nah.
-Base put dudes in ships? Low-manned new ships when base low? 
+rejected: Crew promotions? Nah.
+done: Base put dudes in ships.
+rejected: Low-manned new ships when base low of crew_available? Nah, zaibatsu policy forbids.
 
-Merit points into upgrades! Sensors, shield, engine, cargo capa. Beam range. 
+done: Merit points into upgrades! Sensors, shield, engine, cargo capa. Beam range. 
 Miner get 1 merit every 800? Tons delivered. 
 Tiny drone, scout size smaller, only does Missile defense beam. No shields.
 Missile drone, 80%of scout, no shields, no beam, bad engine, good sensors.
@@ -285,9 +287,9 @@ Missile drone, 80%of scout, no shields, no beam, bad engine, good sensors.
 done by tagging nearby asteroids. isLocationACombatPlace() : if zero ships near that spot, assume it is hostile place. ??
 
 DONE:Mining accident. Systems blam.
--fuel accident, too cobbled-together systems. MIner that carry fuel. Base storing loads of fuel.
+-fuel accident, too cobbled-together systems. Miner that carry fuel. Base storing loads of fuel.
 
-Speedy travel, micrometeorite accident.
+--maybe: Speedy travel, micrometeorite accident.
 
 Test without ANY asteroids. 
 
@@ -298,8 +300,8 @@ done: fac.doWeHaveEnough(shiptype).
 ----differentiate FOE ships from MY ships!
 ---shield-flash _IS_ vfx overlay!
 --tinyminer needs a systems repair AT BASE.
---draw beam weapon as a quad, for N ticks.
---beam weap sound: seashore at pitch90? used guitar harmonics.
+done: draw beam weapon as a quad, for N ticks.
+done: beam weap sound: seashore at pitch90? used guitar harmonics.
 --54synthchoir as "battle start"? try 2.7 *12 note.
 --31 gt harmonics pitch 13 as beam or shields
 --7claviet pitch7 as mis shotdown.
@@ -322,9 +324,9 @@ Win condition: kill all foe starbases, or conquer them, or have N more combat sh
 
 
 NOPE: plr can take command of scout and AC. Not miner or defe.
-maybe plr can create ship formations.
+--maybe plr can create ship formations.
 
-----DONE:draw sensor range orb.
+DONE:draw sensor range orb.
 ----if have missiles, if fired them all, goto self.fallback position.
 --if camera too far, don't draw texts.
 done:----maybe atan2 is FUCKED because no longer in awt-2D engine coords? but was fine earlier and for ships?nope.
@@ -454,7 +456,3 @@ Faction set miner priority. Fuel metal 1 metal 2.
 Faction send miner to known asteroid. Maybe miner decision making is minimal. To asteroid, to base. 
 
 
-
-
-
-"C:\Program Files (x86)\Java\jre7\bin\java" -Dfile.encoding=UTF-8 -classpath "C:\Program Files (x86)\Java\jre7\lib\charsets.jar;C:\Program Files (x86)\Java\jre7\lib\deploy.jar;C:\Program Files (x86)\Java\jre7\lib\javaws.jar;C:\Program Files (x86)\Java\jre7\lib\jce.jar;C:\Program Files (x86)\Java\jre7\lib\jfr.jar;C:\Program Files (x86)\Java\jre7\lib\jfxrt.jar;C:\Program Files (x86)\Java\jre7\lib\jsse.jar;C:\Program Files (x86)\Java\jre7\lib\management-agent.jar;C:\Program Files (x86)\Java\jre7\lib\plugin.jar;C:\Program Files (x86)\Java\jre7\lib\resources.jar;C:\Program Files (x86)\Java\jre7\lib\rt.jar;C:\Program Files (x86)\Java\jre7\lib\ext\access-bridge-32.jar;C:\Program Files (x86)\Java\jre7\lib\ext\dnsns.jar;C:\Program Files (x86)\Java\jre7\lib\ext\jaccess.jar;C:\Program Files (x86)\Java\jre7\lib\ext\localedata.jar;C:\Program Files (x86)\Java\jre7\lib\ext\sunec.jar;C:\Program Files (x86)\Java\jre7\lib\ext\sunjce_provider.jar;C:\Program Files (x86)\Java\jre7\lib\ext\sunmscapi.jar;C:\Program Files (x86)\Java\jre7\lib\ext\sunpkcs11.jar;C:\Program Files (x86)\Java\jre7\lib\ext\zipfs.jar;C:\Users\RC\IdeaProjects\Missilemada2\out\production\Missilemada2;D:\DMISC\lwjgl-2.9.0;D:\DMISC\lwjgl-2.9.0\jar\jinput.jar;D:\DMISC\lwjgl-2.9.0\jar\lwjgl.jar;D:\DMISC\lwjgl-2.9.0\jar\lwjgl_util.jar;D:\DMISC\lwjgl-2.9.0\jar\lwjgl_util_applet.jar;D:\DMISC\lwjgl-2.9.0\jar\lzma.jar;D:\DMISC\Slick2D\lib\slick.jar;C:\Users\RC\IdeaProjects\jsi-1.0.0\jsi-1.0.0-javadoc.jar;C:\Users\RC\IdeaProjects\jsi-1.0.0\jsi-1.0.0-sources.jar;C:\Users\RC\IdeaProjects\jsi-1.0.0\jsi-1.0.0.jar;C:\Users\RC\IdeaProjects\jsi-1.0.0\trove4j-2.0.2.jar;C:\Users\RC\IdeaProjects\jsi-1.0.0\slf4j-api-1.6.3.jar;" com.tomitapio.missilemada2.Missilemada2

@@ -15,8 +15,8 @@ public class Faction {
   private double scouting_distance_avg = 0.9 * Missilemada2.getScoutingDistance_crude();
 
   private static final long ASTE_FORGET_SECONDS = 25 * 24 * 3600; //gameplay
-  private static final long SHIP_FORGET_SECONDS = 480 * 60; //gameplay
-  private static final long RESUPPLY_INTERVAL_SECONDS = 2*24*3600; //gameplay
+  private static final long SHIP_FORGET_SECONDS = 580 * 60; //gameplay
+  private static final long RESUPPLY_INTERVAL_SECONDS = 3*24*3600; //gameplay, was 2 days, too often
   private static final long RESUPPLY_DOCKDURATION_SECONDS = 4*3600; //gameplay
   private static final long SAVEXP_EVERY_SECONDS = 8/*days*/*24*3600; //anti-boosting, must play instead of start_new_scenario constantly.
 
@@ -1774,17 +1774,18 @@ public class Faction {
           //if (Missilemada2.gimmeRandDouble() < 0.09 && dist_aste_to_base > 0.3 * Missilemada2.getBaseDistance()) {
             //ret_as = null;
           //}
+
           //if aste tagged as combat zone, try some other aste.
           if (ret_as != null) {
-            if (ret_as.isNearBattle()) {
+            if (ret_as.isNearBattle()
+                || isLocationHostile(ret_as.getXYZ(), 0.9*Missilemada2.getSensorRangeMaxShip_something()) ) {
               //scouting_distance_avg = scouting_distance_avg - 5.0;
+              //System.out.println("Faction "+factionId + " not send a miner to asteroid "+ret_as.getId()+", because it's in a combat zone.");
               if (isPlayerFaction()) {
-                //System.out.println("Faction "+factionId + " not send a miner to asteroid "+ret_as.getId()+", because it's in a combat zone.");
-                if (Missilemada2.gimmeRandDouble() < 0.02) {
-                  //Missilemada2.addToHUDMsgList(Missilemada2.strCurrDaysHours() + " Asteroid "+ret_as.getId()+", too contested location to send miners to.");
+                if (Missilemada2.gimmeRandDouble() < 0.02) { //curb spam
+                  Missilemada2.addToHUDMsgList(Missilemada2.strCurrDaysHours() + " Asteroid "+ret_as.getId()+", too contested location for miners.");
                   Missilemada2.addVfx2(ret_as.getXYZ(), "ASTE IS BATTLEZONE, REJECTED", 16000, 3150.0, 0.7/*transp*/, "battlestart.png", 1.0, "");
                 }
-
               }
               ret_as = null; //try some other aste, on next iteration of loop.
             }
@@ -1796,7 +1797,7 @@ public class Faction {
     } else {
       //no asteroid reports! rare!
       if (isPlayerFaction()) {
-        //Missilemada2.addToHUDMsgList(Missilemada2.strCurrDaysHours() + " Zero scanned asteroids. Sending "+asker.toStringShort()+" to whichever asteroid.",0);
+        Missilemada2.addToHUDMsgList(Missilemada2.strCurrDaysHours() + " Zero analysed asteroids! Sending "+asker.toStringShort()+" to whichever asteroid.",0);
       }
       changeScoutingDist(1.005);
       return Missilemada2.getRandomAsteroid();
@@ -1924,7 +1925,7 @@ public class Faction {
     return false;
   }
   public boolean isShipScouted(Ship a) {
-    if (a.getFaction() == this) //own faction ships are always known, by subspace communications.
+    if (a.getFaction() == this) //own faction ships are always known.
       return true;
 
     int siz = scoutreports_ships.size();
@@ -1938,6 +1939,23 @@ public class Faction {
     }
     return false;
   }
+  public boolean isLocationHostile(Vector xyz, double radius_from_foe_ship) {
+  //xxxxxxxxxxxx use knowledge of known foe base locations
+
+  //avg sensor range versus spotted foe ship locations.
+    int siz = scoutreports_ships.size();
+    for (int i = 0; i < siz; i++) {
+      ScoutReport sr = (ScoutReport) scoutreports_ships.elementAt(i);
+      if (sr != null) {
+        Ship foe = (Ship) sr.item;
+        //if tested ship is too near xyz, then xyz is hostile spot.
+        if (MobileThing.calcDistanceVecVec(foe.getXYZ(), xyz) < radius_from_foe_ship)
+          return true;
+      }
+    }
+
+    return false;
+  }
   public boolean areAllResourceMinimumsSatisfied() {
     if ((resource_fuel > FUELMIN) && (resource_metal1 > M1MIN)
      && (resource_metal2 > M2MIN) && (resource_metal3 > M3MIN)) {
@@ -1947,13 +1965,10 @@ public class Faction {
   }
   private void increaseTypeWantCount() {
     //random or personality, xxxxxxxx
-
-
-
     if (curr_wanted_count_defender < 6)
       curr_wanted_count_defender++;
 
-    if (curr_wanted_count_scout < 16)
+    if (curr_wanted_count_scout < 11)
       curr_wanted_count_scout++;
 
     if (curr_wanted_count_tinyminer < 16)
@@ -2559,7 +2574,7 @@ public class Faction {
       ret = (Ship) ourships.elementAt(Missilemada2.gimmeRandInt(listsize));
       if (ret.getCrewCount() > 0) {
         trycount++;
-        continue;
+        break;
       }
       trycount++;
     }

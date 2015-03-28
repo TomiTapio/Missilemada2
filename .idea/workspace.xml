@@ -10,11 +10,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="0792e793-6ebd-4813-bf16-d1bcd60e4a73" name="Default" comment="test">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/Missilemada2/com/tomitapio/missilemada2/Faction.class" afterPath="$PROJECT_DIR$/out/production/Missilemada2/com/tomitapio/missilemada2/Faction.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/tomitapio/missilemada2/Faction.java" afterPath="$PROJECT_DIR$/src/com/tomitapio/missilemada2/Faction.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Missilemada2.iml" afterPath="$PROJECT_DIR$/Missilemada2.iml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/tomitapio/missilemada2/Missile.java" afterPath="$PROJECT_DIR$/src/com/tomitapio/missilemada2/Missile.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Missilemada2 todo log.txt" afterPath="$PROJECT_DIR$/Missilemada2 todo log.txt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/tomitapio/missilemada2/Missilemada2.java" afterPath="$PROJECT_DIR$/src/com/tomitapio/missilemada2/Missilemada2.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Missilemada2_commandersave.txt" afterPath="$PROJECT_DIR$/Missilemada2_commandersave.txt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/tomitapio/missilemada2/Ship.java" afterPath="$PROJECT_DIR$/src/com/tomitapio/missilemada2/Ship.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="Missilemada2.iws" />
@@ -353,29 +354,75 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="Missilemada2.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Missilemada2.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/tomitapio/missilemada2/Missilemada2.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.3165563" vertical-offset="8689" max-vertical-offset="56898">
-              <caret line="506" column="0" selection-start-line="506" selection-start-column="0" selection-end-line="506" selection-end-column="0" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="53298" max-vertical-offset="57780">
+              <caret line="3047" column="20" selection-start-line="3047" selection-start-column="20" selection-end-line="3047" selection-end-column="20" />
               <folding>
                 <element signature="imports" expanded="true" />
+                <element signature="e#143123#143124#0" expanded="true" />
+                <element signature="e#143143#143144#0" expanded="true" />
+                <element signature="e#143932#143933#0" expanded="true" />
+                <element signature="e#143975#143976#0" expanded="true" />
+                <element signature="e#144027#144028#0" expanded="true" />
+                <element signature="e#144067#144068#0" expanded="true" />
+                <element signature="e#146184#146185#0" expanded="true" />
+                <element signature="e#146214#146215#0" expanded="true" />
+                <element signature="e#146263#146264#0" expanded="true" />
+                <element signature="e#146293#146294#0" expanded="true" />
+                <element signature="e#147564#147565#0" expanded="true" />
+                <element signature="e#147597#147598#0" expanded="true" />
+                <element signature="e#147639#147640#0" expanded="true" />
+                <element signature="e#147675#147676#0" expanded="true" />
+                <element signature="e#147808#147809#0" expanded="true" />
+                <element signature="e#147852#147853#0" expanded="true" />
+                <element signature="e#147878#147879#0" expanded="true" />
+                <element signature="e#147952#147953#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Ship.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Ship.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/tomitapio/missilemada2/Ship.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="85599" max-vertical-offset="86616">
-              <caret line="4894" column="136" selection-start-line="4894" selection-start-column="4" selection-end-line="4894" selection-end-column="136" />
+            <state vertical-scroll-proportion="0.5350993" vertical-offset="76546" max-vertical-offset="87084">
+              <caret line="4362" column="79" selection-start-line="4362" selection-start-column="79" selection-end-line="4362" selection-end-column="79" />
               <folding>
-                <element signature="e#48199#48200#0" expanded="true" />
-                <element signature="e#48271#48272#0" expanded="true" />
-                <element signature="e#228418#228419#0" expanded="true" />
-                <element signature="e#228456#228457#0" expanded="true" />
+                <element signature="e#230220#230221#0" expanded="true" />
+                <element signature="e#230258#230259#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MobileThing.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/tomitapio/missilemada2/MobileThing.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="2178" max-vertical-offset="6930">
+              <caret line="171" column="5" selection-start-line="171" selection-start-column="5" selection-end-line="171" selection-end-column="5" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Vfx.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/tomitapio/missilemada2/Vfx.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-17.51724" vertical-offset="1346" max-vertical-offset="2556">
+              <caret line="109" column="29" selection-start-line="109" selection-start-column="25" selection-end-line="109" selection-end-column="29" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="FlatSprite.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/tomitapio/missilemada2/FlatSprite.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="1877" max-vertical-offset="3060">
+              <caret line="123" column="21" selection-start-line="123" selection-start-column="21" selection-end-line="123" selection-end-column="21" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -383,8 +430,18 @@
       <file leaf-file-name="Faction.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/tomitapio/missilemada2/Faction.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="44032" max-vertical-offset="45306">
-              <caret line="2513" column="27" selection-start-line="2513" selection-start-column="27" selection-end-line="2513" selection-end-column="27" />
+            <state vertical-scroll-proportion="-8.655172" vertical-offset="14977" max-vertical-offset="45576">
+              <caret line="869" column="46" selection-start-line="869" selection-start-column="46" selection-end-line="869" selection-end-column="46" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Missile.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/tomitapio/missilemada2/Missile.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.0" vertical-offset="4770" max-vertical-offset="9882">
+              <caret line="300" column="39" selection-start-line="300" selection-start-column="39" selection-end-line="300" selection-end-column="39" />
               <folding />
             </state>
           </provider>
@@ -411,9 +468,9 @@
         <option value="$PROJECT_DIR$/src/com/tomitapio/missilemada2/GUIButton.java" />
         <option value="$PROJECT_DIR$/src/com/tomitapio/missilemada2/MobileThing.java" />
         <option value="$PROJECT_DIR$/src/com/tomitapio/missilemada2/Missile.java" />
-        <option value="$PROJECT_DIR$/src/com/tomitapio/missilemada2/Ship.java" />
-        <option value="$PROJECT_DIR$/src/com/tomitapio/missilemada2/Faction.java" />
         <option value="$PROJECT_DIR$/src/com/tomitapio/missilemada2/Missilemada2.java" />
+        <option value="$PROJECT_DIR$/src/com/tomitapio/missilemada2/Faction.java" />
+        <option value="$PROJECT_DIR$/src/com/tomitapio/missilemada2/Ship.java" />
       </list>
     </option>
   </component>
@@ -530,6 +587,16 @@
           </PATH>
         </subPane>
       </pane>
+      <pane id="Scope">
+        <subPane subId="Project Files">
+          <PATH>
+            <PATH_ELEMENT USER_OBJECT="Root">
+              <option name="myItemId" value="" />
+              <option name="myItemType" value="" />
+            </PATH_ELEMENT>
+          </PATH>
+        </subPane>
+      </pane>
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -582,16 +649,6 @@
             <PATH_ELEMENT>
               <option name="myItemId" value="missilemada2" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-        </subPane>
-      </pane>
-      <pane id="Scope">
-        <subPane subId="Project Files">
-          <PATH>
-            <PATH_ELEMENT USER_OBJECT="Root">
-              <option name="myItemId" value="" />
-              <option name="myItemType" value="" />
             </PATH_ELEMENT>
           </PATH>
         </subPane>
@@ -902,6 +959,7 @@
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3289225" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.22014925" sideWeight="0.3430303" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24669187" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.22014925" sideWeight="0.6569697" order="1" side_tool="true" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -913,7 +971,6 @@
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32995737" sideWeight="0.5" order="6" side_tool="true" content_ui="tabs" />
       <window_info id="JetGradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.24669187" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -956,19 +1013,19 @@
         </line-breakpoint>
         <line-breakpoint type="java-line">
           <url>file://$PROJECT_DIR$/src/com/tomitapio/missilemada2/Ship.java</url>
-          <line>983</line>
+          <line>985</line>
           <properties />
           <option name="timeStamp" value="3" />
         </line-breakpoint>
         <line-breakpoint type="java-line">
           <url>file://$PROJECT_DIR$/src/com/tomitapio/missilemada2/Ship.java</url>
-          <line>3225</line>
+          <line>3254</line>
           <properties />
           <option name="timeStamp" value="4" />
         </line-breakpoint>
         <line-breakpoint type="java-line">
           <url>file://$PROJECT_DIR$/src/com/tomitapio/missilemada2/Ship.java</url>
-          <line>3234</line>
+          <line>3263</line>
           <properties />
           <option name="timeStamp" value="5" />
         </line-breakpoint>
@@ -980,19 +1037,19 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/com/tomitapio/missilemada2/Missilemada2.java</url>
-          <line>3094</line>
+          <line>3125</line>
           <properties />
           <option name="timeStamp" value="7" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/com/tomitapio/missilemada2/Ship.java</url>
-          <line>514</line>
+          <line>515</line>
           <properties />
           <option name="timeStamp" value="8" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/com/tomitapio/missilemada2/Ship.java</url>
-          <line>562</line>
+          <line>563</line>
           <properties />
           <option name="timeStamp" value="9" />
         </line-breakpoint>
@@ -1004,7 +1061,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/com/tomitapio/missilemada2/Faction.java</url>
-          <line>2134</line>
+          <line>2149</line>
           <properties />
           <option name="timeStamp" value="11" />
         </line-breakpoint>
@@ -1016,7 +1073,7 @@
         </line-breakpoint>
         <line-breakpoint type="java-line">
           <url>file://$PROJECT_DIR$/src/com/tomitapio/missilemada2/Ship.java</url>
-          <line>510</line>
+          <line>511</line>
           <properties />
           <option name="timeStamp" value="13" />
         </line-breakpoint>
@@ -1046,31 +1103,31 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="NONE" type="java-line">
           <url>file://$PROJECT_DIR$/src/com/tomitapio/missilemada2/Ship.java</url>
-          <line>637</line>
+          <line>638</line>
           <properties />
           <option name="timeStamp" value="22" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="NONE" type="java-line">
           <url>file://$PROJECT_DIR$/src/com/tomitapio/missilemada2/Ship.java</url>
-          <line>632</line>
+          <line>633</line>
           <properties />
           <option name="timeStamp" value="23" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/com/tomitapio/missilemada2/Ship.java</url>
-          <line>666</line>
+          <line>667</line>
           <properties />
           <option name="timeStamp" value="24" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/com/tomitapio/missilemada2/Ship.java</url>
-          <line>663</line>
+          <line>664</line>
           <properties />
           <option name="timeStamp" value="25" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="java-line">
           <url>file://$PROJECT_DIR$/src/com/tomitapio/missilemada2/Faction.java</url>
-          <line>2111</line>
+          <line>2126</line>
           <properties />
           <option name="timeStamp" value="26" />
         </line-breakpoint>
@@ -1090,13 +1147,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/com/tomitapio/missilemada2/GUIButton.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="553" max-vertical-offset="1674">
-          <caret line="57" column="15" selection-start-line="57" selection-start-column="15" selection-end-line="57" selection-end-column="15" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/tomitapio/missilemada2/Asteroid.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="144" max-vertical-offset="5562">
@@ -1118,10 +1168,8 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="85734">
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
-            <element signature="e#48199#48200#0" expanded="true" />
-            <element signature="e#48271#48272#0" expanded="true" />
-            <element signature="e#228418#228419#0" expanded="true" />
-            <element signature="e#228456#228457#0" expanded="true" />
+            <element signature="e#230220#230221#0" expanded="true" />
+            <element signature="e#230258#230259#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1148,6 +1196,24 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#143123#143124#0" expanded="true" />
+            <element signature="e#143143#143144#0" expanded="true" />
+            <element signature="e#143932#143933#0" expanded="true" />
+            <element signature="e#143975#143976#0" expanded="true" />
+            <element signature="e#144027#144028#0" expanded="true" />
+            <element signature="e#144067#144068#0" expanded="true" />
+            <element signature="e#146184#146185#0" expanded="true" />
+            <element signature="e#146214#146215#0" expanded="true" />
+            <element signature="e#146263#146264#0" expanded="true" />
+            <element signature="e#146293#146294#0" expanded="true" />
+            <element signature="e#147564#147565#0" expanded="true" />
+            <element signature="e#147597#147598#0" expanded="true" />
+            <element signature="e#147639#147640#0" expanded="true" />
+            <element signature="e#147675#147676#0" expanded="true" />
+            <element signature="e#147808#147809#0" expanded="true" />
+            <element signature="e#147852#147853#0" expanded="true" />
+            <element signature="e#147878#147879#0" expanded="true" />
+            <element signature="e#147952#147953#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1180,10 +1246,8 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="12331" max-vertical-offset="86094">
           <caret line="725" column="17" selection-start-line="725" selection-start-column="17" selection-end-line="725" selection-end-column="17" />
           <folding>
-            <element signature="e#48199#48200#0" expanded="true" />
-            <element signature="e#48271#48272#0" expanded="true" />
-            <element signature="e#228418#228419#0" expanded="true" />
-            <element signature="e#228456#228457#0" expanded="true" />
+            <element signature="e#230220#230221#0" expanded="true" />
+            <element signature="e#230258#230259#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1210,6 +1274,24 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#143123#143124#0" expanded="true" />
+            <element signature="e#143143#143144#0" expanded="true" />
+            <element signature="e#143932#143933#0" expanded="true" />
+            <element signature="e#143975#143976#0" expanded="true" />
+            <element signature="e#144027#144028#0" expanded="true" />
+            <element signature="e#144067#144068#0" expanded="true" />
+            <element signature="e#146184#146185#0" expanded="true" />
+            <element signature="e#146214#146215#0" expanded="true" />
+            <element signature="e#146263#146264#0" expanded="true" />
+            <element signature="e#146293#146294#0" expanded="true" />
+            <element signature="e#147564#147565#0" expanded="true" />
+            <element signature="e#147597#147598#0" expanded="true" />
+            <element signature="e#147639#147640#0" expanded="true" />
+            <element signature="e#147675#147676#0" expanded="true" />
+            <element signature="e#147808#147809#0" expanded="true" />
+            <element signature="e#147852#147853#0" expanded="true" />
+            <element signature="e#147878#147879#0" expanded="true" />
+            <element signature="e#147952#147953#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1249,10 +1331,8 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="12331" max-vertical-offset="86094">
           <caret line="725" column="17" selection-start-line="725" selection-start-column="17" selection-end-line="725" selection-end-column="17" />
           <folding>
-            <element signature="e#48199#48200#0" expanded="true" />
-            <element signature="e#48271#48272#0" expanded="true" />
-            <element signature="e#228418#228419#0" expanded="true" />
-            <element signature="e#228456#228457#0" expanded="true" />
+            <element signature="e#230220#230221#0" expanded="true" />
+            <element signature="e#230258#230259#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1287,6 +1367,24 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#143123#143124#0" expanded="true" />
+            <element signature="e#143143#143144#0" expanded="true" />
+            <element signature="e#143932#143933#0" expanded="true" />
+            <element signature="e#143975#143976#0" expanded="true" />
+            <element signature="e#144027#144028#0" expanded="true" />
+            <element signature="e#144067#144068#0" expanded="true" />
+            <element signature="e#146184#146185#0" expanded="true" />
+            <element signature="e#146214#146215#0" expanded="true" />
+            <element signature="e#146263#146264#0" expanded="true" />
+            <element signature="e#146293#146294#0" expanded="true" />
+            <element signature="e#147564#147565#0" expanded="true" />
+            <element signature="e#147597#147598#0" expanded="true" />
+            <element signature="e#147639#147640#0" expanded="true" />
+            <element signature="e#147675#147676#0" expanded="true" />
+            <element signature="e#147808#147809#0" expanded="true" />
+            <element signature="e#147852#147853#0" expanded="true" />
+            <element signature="e#147878#147879#0" expanded="true" />
+            <element signature="e#147952#147953#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1304,10 +1402,8 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="43006" max-vertical-offset="85374">
           <caret line="2460" column="42" selection-start-line="2460" selection-start-column="42" selection-end-line="2460" selection-end-column="42" />
           <folding>
-            <element signature="e#48199#48200#0" expanded="true" />
-            <element signature="e#48271#48272#0" expanded="true" />
-            <element signature="e#228418#228419#0" expanded="true" />
-            <element signature="e#228456#228457#0" expanded="true" />
+            <element signature="e#230220#230221#0" expanded="true" />
+            <element signature="e#230258#230259#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1342,6 +1438,24 @@
           <caret line="0" column="0" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#143123#143124#0" expanded="true" />
+            <element signature="e#143143#143144#0" expanded="true" />
+            <element signature="e#143932#143933#0" expanded="true" />
+            <element signature="e#143975#143976#0" expanded="true" />
+            <element signature="e#144027#144028#0" expanded="true" />
+            <element signature="e#144067#144068#0" expanded="true" />
+            <element signature="e#146184#146185#0" expanded="true" />
+            <element signature="e#146214#146215#0" expanded="true" />
+            <element signature="e#146263#146264#0" expanded="true" />
+            <element signature="e#146293#146294#0" expanded="true" />
+            <element signature="e#147564#147565#0" expanded="true" />
+            <element signature="e#147597#147598#0" expanded="true" />
+            <element signature="e#147639#147640#0" expanded="true" />
+            <element signature="e#147675#147676#0" expanded="true" />
+            <element signature="e#147808#147809#0" expanded="true" />
+            <element signature="e#147852#147853#0" expanded="true" />
+            <element signature="e#147878#147879#0" expanded="true" />
+            <element signature="e#147952#147953#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1359,10 +1473,8 @@
         <state vertical-scroll-proportion="0.0" vertical-offset="33534" max-vertical-offset="85374">
           <caret line="1919" column="66" selection-start-line="1919" selection-start-column="66" selection-end-line="1919" selection-end-column="66" />
           <folding>
-            <element signature="e#48199#48200#0" expanded="true" />
-            <element signature="e#48271#48272#0" expanded="true" />
-            <element signature="e#228418#228419#0" expanded="true" />
-            <element signature="e#228456#228457#0" expanded="true" />
+            <element signature="e#230220#230221#0" expanded="true" />
+            <element signature="e#230258#230259#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -1434,14 +1546,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/tomitapio/missilemada2/MobileThing.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="1068" max-vertical-offset="6930">
-          <caret line="86" column="92" selection-start-line="86" selection-start-column="6" selection-end-line="86" selection-end-column="92" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="jar://C:/MISC/Java/jdk1.7.0_75/src.zip!/java/lang/String.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.33290815" vertical-offset="40743" max-vertical-offset="54054">
@@ -1470,13 +1574,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/tomitapio/missilemada2/Vfx.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="953" max-vertical-offset="2556">
-          <caret line="75" column="26" selection-start-line="75" selection-start-column="26" selection-end-line="75" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/tomitapio/missilemada2/Commander.java">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0" vertical-offset="629" max-vertical-offset="5130">
@@ -1487,39 +1584,79 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/tomitapio/missilemada2/Missile.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.38938054" vertical-offset="1620" max-vertical-offset="9882">
-          <caret line="115" column="38" selection-start-line="115" selection-start-column="38" selection-end-line="115" selection-end-column="38" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="4770" max-vertical-offset="9882">
+          <caret line="300" column="39" selection-start-line="300" selection-start-column="39" selection-end-line="300" selection-end-column="39" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/tomitapio/missilemada2/Ship.java">
+    <entry file="file://$PROJECT_DIR$/src/com/tomitapio/missilemada2/FlatSprite.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="85599" max-vertical-offset="86616">
-          <caret line="4894" column="136" selection-start-line="4894" selection-start-column="4" selection-end-line="4894" selection-end-column="136" />
-          <folding>
-            <element signature="e#48199#48200#0" expanded="true" />
-            <element signature="e#48271#48272#0" expanded="true" />
-            <element signature="e#228418#228419#0" expanded="true" />
-            <element signature="e#228456#228457#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/tomitapio/missilemada2/Faction.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="44032" max-vertical-offset="45306">
-          <caret line="2513" column="27" selection-start-line="2513" selection-start-column="27" selection-end-line="2513" selection-end-column="27" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="1877" max-vertical-offset="3060">
+          <caret line="123" column="21" selection-start-line="123" selection-start-column="21" selection-end-line="123" selection-end-column="21" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/tomitapio/missilemada2/Missilemada2.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.3165563" vertical-offset="8689" max-vertical-offset="56898">
-          <caret line="506" column="0" selection-start-line="506" selection-start-column="0" selection-end-line="506" selection-end-column="0" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="53298" max-vertical-offset="57780">
+          <caret line="3047" column="20" selection-start-line="3047" selection-start-column="20" selection-end-line="3047" selection-end-column="20" />
           <folding>
             <element signature="imports" expanded="true" />
+            <element signature="e#143123#143124#0" expanded="true" />
+            <element signature="e#143143#143144#0" expanded="true" />
+            <element signature="e#143932#143933#0" expanded="true" />
+            <element signature="e#143975#143976#0" expanded="true" />
+            <element signature="e#144027#144028#0" expanded="true" />
+            <element signature="e#144067#144068#0" expanded="true" />
+            <element signature="e#146184#146185#0" expanded="true" />
+            <element signature="e#146214#146215#0" expanded="true" />
+            <element signature="e#146263#146264#0" expanded="true" />
+            <element signature="e#146293#146294#0" expanded="true" />
+            <element signature="e#147564#147565#0" expanded="true" />
+            <element signature="e#147597#147598#0" expanded="true" />
+            <element signature="e#147639#147640#0" expanded="true" />
+            <element signature="e#147675#147676#0" expanded="true" />
+            <element signature="e#147808#147809#0" expanded="true" />
+            <element signature="e#147852#147853#0" expanded="true" />
+            <element signature="e#147878#147879#0" expanded="true" />
+            <element signature="e#147952#147953#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/tomitapio/missilemada2/Vfx.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-17.51724" vertical-offset="1346" max-vertical-offset="2556">
+          <caret line="109" column="29" selection-start-line="109" selection-start-column="25" selection-end-line="109" selection-end-column="29" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/tomitapio/missilemada2/Faction.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-8.655172" vertical-offset="14977" max-vertical-offset="45576">
+          <caret line="869" column="46" selection-start-line="869" selection-start-column="46" selection-end-line="869" selection-end-column="46" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/tomitapio/missilemada2/MobileThing.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.0" vertical-offset="2178" max-vertical-offset="6930">
+          <caret line="171" column="5" selection-start-line="171" selection-start-column="5" selection-end-line="171" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/tomitapio/missilemada2/Ship.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.5350993" vertical-offset="76546" max-vertical-offset="87084">
+          <caret line="4362" column="79" selection-start-line="4362" selection-start-column="79" selection-end-line="4362" selection-end-column="79" />
+          <folding>
+            <element signature="e#230220#230221#0" expanded="true" />
+            <element signature="e#230258#230259#0" expanded="true" />
           </folding>
         </state>
       </provider>

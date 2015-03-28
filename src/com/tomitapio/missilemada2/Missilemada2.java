@@ -3022,26 +3022,57 @@ public class Missilemada2 {
     addToHUDMsgList(a, 0);
   }
   public static void addToHUDMsgList(String a, int colorcode/*0 default textcolor*/) {
-    if (a != null)
-      hudMsgList.add("" + colorcode + a);
-    if (hudMsgList.size() > MAXLINES_hudMsgList)
-      hudMsgList.remove(0); //oldest away
-    hudMsgList.trimToSize(); //xxcan be omitted?
-    System.out.println("HUD: "+a);
-    if (gimmeRandDouble() < 0.004) { //rare occurrence
-      randomRumorEvent();
+    if (a != null ) {
+      if (!doesHUDMsgListContainString(a)) { //a aint duplicate of prev. this reduces spammy.
+
+        hudMsgList.add("" + colorcode + a);
+        if (hudMsgList.size() > MAXLINES_hudMsgList)
+          hudMsgList.remove(0); //oldest away
+        hudMsgList.trimToSize(); //xxcan be omitted?
+        System.out.println("HUD: " + a);
+      }
+
+    } else {
+      System.out.println("HUD: DUPLICATE omitted: "+a);
     }
+    if (gimmeRandDouble() < 0.009) { //rare occurrence
+      randomRumorEvent();
+      changeWorldTimeIncrement(-15); //so player notices better?
+    }
+  }
+  private static boolean doesHUDMsgListContainString(String a) {
+    String msg;
+    int sizz = hudMsgList.size();
+    for (int i = 0; i < sizz; i++) {
+      if (a.contentEquals((String) hudMsgList.get(i))) {
+        return true;
+      }
+    }
+    return false;
   }
   private static void randomRumorEvent() {
     Ship sh = getPlayerFaction().gimmeRandMannedShip();
-    String[] rumor = {"Nav array discounts this week!",
+    String[] rumor = { /*0*/"Nav array design discounts this week!",
           "The pilot of "+sh.getName()+" complains of insects.",
           "Professor Ka'thur thinks she's found a new mineral. Again.",
           "The crew of "+sh.getName()+" are glad to be heading back to base.",
-          "The crew of "+sh.getName()+" have eaten too many bean rations."
+          "The crew of "+sh.getName()+" have eaten too many bean rations.",
+          "The crew of "+sh.getName()+" are arguing about taxes.",
+          "The crew of "+sh.getName()+" are arguing about thruster configurations.",
+          /*7*/"The crew of "+sh.getName()+" are testing thruster configurations.",
+      /*8*/"The crew of "+sh.getName()+" got a surprise donation from the public! Upgrades!",
+          "The crew of "+sh.getName()+" are playing chicken with their own missiles.",
+          "The crew of "+sh.getName()+" are playing mahjong.",
+          "The "+sh.getName()+" had a micrometeorite accident.",
+          "The "+sh.getName()+" lost a retro stabiliser.",
+          "The resupply shuttle brought extra noodle rations!",
+          "The resupply shuttle brought some purring hairballs.",
+          "The resupply shuttle brought contraband retro nudie magazines."
            };
-
-    Missilemada2.addToHUDMsgList(Missilemada2.strCurrDaysHours() + rumor[gimmeRandInt(rumor.length)],0);
+    int eventid = gimmeRandInt(rumor.length);
+    //xxtodo: if (eventid == 7 /*thruster*/)
+    //  sh.setSpeed_KE_dirXY(xxxx);
+    Missilemada2.addToHUDMsgList(Missilemada2.strCurrDaysHours() + rumor[eventid],0);
   }
   public static void removeStarBaseFromPlay(StarBase sb) {
     starBaseList.remove(sb);

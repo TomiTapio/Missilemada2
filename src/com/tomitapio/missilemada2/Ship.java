@@ -41,6 +41,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
 
   int see_asteroid_count = 0;
   Asteroid closestAsteroid; //good to know
+  Asteroid closestUnscannedAsteroid; //for smarter go-scan-coz-opportunity-now
   Asteroid destinationAsteroid; //only for miners
   Vector seenAsteroids_thistimetick; //this timetick seen ones, not other times
 
@@ -130,7 +131,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
   double engine_status = 1.0; //0.0 - 1.0 (100%)
   double lifesupport_status = 1.0;
   double sensors_status = 1.0;
-  double shield_status = 1.0;
+  double shieldsystem_status = 1.0;
 
   double missilesystem_status = 1.0;
   double beamsystem_status = 1.0; //atk and defe beam
@@ -587,7 +588,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
   public double getSystemsStatusAvg() { //1.0 is fully repaired!
     if (isDestroyed())
       return 0.0;
-    double ret = (lifesupport_status + engine_status + shield_status + beamsystem_status + missilesystem_status + sensors_status + miningsystem_status) / 7.0;
+    double ret = (lifesupport_status + engine_status + shieldsystem_status + beamsystem_status + missilesystem_status + sensors_status + miningsystem_status) / 7.0;
     if (ret < (6.5/7.0)) { //if some systems damage, a vfx icon.
       if (Missilemada2.gimmeRandDouble() < 0.02) {
         if (isInPlayerFaction() || Missilemada2.getPlayerFaction().isShipScouted(this)) {
@@ -741,6 +742,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
     s.append("_shie " + (int) (getShieldPerc() * 100.0)+"% ");
     s.append("hull " + (int) (getHullPerc() * 100.0)+"% ");
     s.append("systems " + (int) (getSystemsStatusAvg() * 100.0)+"% ");
+    s.append("merit " + (int) (merit_badges_lifetime * 100.0));
 
     //s.append(+ " cost " +Integer.toString((int)(buildcost/1.0)));
     if (max_crew_count > 0)
@@ -899,7 +901,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
     curr_crew_count = 0;
 
     engine_status = 0.0;
-    shield_status = 0.0;
+    shieldsystem_status = 0.0;
     beamsystem_status = 0.0;
     lifesupport_status = 0.0;
     miningsystem_status = 0.0;
@@ -930,7 +932,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
     } //else shipwide fire damage source, don't shift flag.
 
     //if missile explosion, lose some speed ("stability compensators" or something)
-    if (damagetype.equals("missile explosion")) {
+    if (damagetype.equals("missile")) {
       count_missiles_hit_me++;
       reduceSpeed(0.98);
     }
@@ -1028,9 +1030,9 @@ public class Ship extends MobileThing implements Comparable<Ship> {
             missilesystem_status = 0.0;
         }
         if (Missilemada2.gimmeRandDouble() < 0.05) {
-          shield_status = shield_status - 0.15;
-          if (shield_status < 0.02)
-            shield_status = 0.0;
+          shieldsystem_status = shieldsystem_status - 0.15;
+          if (shieldsystem_status < 0.02)
+            shieldsystem_status = 0.0;
         }
         if (Missilemada2.gimmeRandDouble() < 0.05) {
           miningsystem_status = miningsystem_status - 0.4; //more fragile
@@ -1047,9 +1049,9 @@ public class Ship extends MobileThing implements Comparable<Ship> {
         Missilemada2.createDebrisFlatSprite("shield_spark.png", 0.12*(0.10+Missilemada2.gimmeRandDouble()),
                 1150.0*(1.0+Missilemada2.gimmeRandDouble()), 1150.0*(1.0+Missilemada2.gimmeRandDouble()), this, false/*false=rand bearing*/);
 
-      shield_status = shield_status - 0.002;
-      if (shield_status < 0.08)
-        shield_status = 0.0;
+      shieldsystem_status = shieldsystem_status - 0.002;
+      if (shieldsystem_status < 0.08)
+        shieldsystem_status = 0.0;
 
       beamsystem_status = beamsystem_status - 0.002;
       if (beamsystem_status < 0.02)
@@ -1318,6 +1320,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
         //if cargo full, gonna leave this aste, so rescan it for faction-scoutreports.
         if (cargo_full && closestAsteroid != null) {
           parentFaction.addScoutReportAste(this, new ScoutReport(Missilemada2.getWorldTime(), closestAsteroid), closestAsteroid);
+          closestUnscannedAsteroid = null; //reset this knowledge, coz just scanned an aste.
         }
         return true;
       } else {
@@ -1641,7 +1644,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
       //we arrived, at base. if we  at base and hurt, stay there.
       if (isAtFactionBase()
               && !isStarbase()
-              && (engine_status < 0.9 || shield_status < 0.9 || sensors_status < 0.9 || miningsystem_status < 0.9) ) {
+              && (engine_status < 0.9 || shieldsystem_status < 0.9 || sensors_status < 0.9 || miningsystem_status < 0.9) ) {
         setDes(parentFaction.getXYZ_starbase_safer_side(), "systems damage, stay at base");
         //timestamp_next_allowed_accel = Missilemada2.getWorldTime() + 1600; //seconds
         have_destination = true;
@@ -2054,7 +2057,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
       if (getBattleStrPerc() < 0.30) { //if shipwide fire... and hullrepair...
         lifesupport_status = lifesupport_status + 0.05;
         engine_status = engine_status + 0.05;
-        shield_status = shield_status + 0.05;
+        shieldsystem_status = shieldsystem_status + 0.05;
       }
 
       //do systems repairs? yes, in its own func.
@@ -2164,8 +2167,8 @@ public class Ship extends MobileThing implements Comparable<Ship> {
           engine_status = engine_status + 0.05; //for better fleeing
         } else if (sensors_status < 0.95) {
           sensors_status = sensors_status + 0.05; //for better fleeing and fighting
-        } else if (shield_status < 0.95) {
-          shield_status = shield_status + 0.05; //for better surviving and fighting
+        } else if (shieldsystem_status < 0.95) {
+          shieldsystem_status = shieldsystem_status + 0.05; //for better surviving and fighting
         } else if (beamsystem_status < 0.95) {
           beamsystem_status = beamsystem_status + 0.05; //for better defense and fighting, also powered by shield generators.
         } else if (missilesystem_status < 0.95) {
@@ -2256,6 +2259,22 @@ public class Ship extends MobileThing implements Comparable<Ship> {
         //if (!Missilemada2.isAsteroidKnownToPlayer(s))
         //  System.out.println("Ship "+unique_id+" _saw_ unscouted asteroid " +s.toString() + " at dist "+calcDistanceMTMT(s, this)+" when senrange="+sensor_range);
 
+        if (closestUnscannedAsteroid == null) {
+          if (parentFaction.isAsteroidScouted(as)) {
+            // nah no need to scan this aste
+          } else {
+            //xx later add "closest" part
+            closestUnscannedAsteroid = as;
+            //add vfx
+            if (isInPlayerFaction()) {
+              //Missilemada2.addVfx2(as.getXYZ(), "TARGETLOCK", 4800/*sec*/, 7810.0/*siz*/, 0.95/*transp*/, "antiscan.png", 1.0, "");
+              Missilemada2.addVfx2(as.getMiningXYZ(), "BLAAH_ASTEROID", 13000, 2250.0, 0.95/*transp*/, "scan_cyan2.png", 1.0, "" );
+              //xxxx not working.
+            }
+
+            //don't  parentFaction.addScoutingCandidateSpot(as.getMiningXYZ());
+          }
+        }
 
         if (closestAsteroid != null) {
           if (calcDistanceMTMT(as, this) < calcDistanceMTMT(closestAsteroid, this)  ) {
@@ -2609,7 +2628,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
     double ret = 1.0; //default
     ret = ret - 0.45 * stealth;
 
-    if (getHullPerc() < 0.4 || engine_status < 0.7 || shield_status < 0.7)
+    if (getHullPerc() < 0.4 || engine_status < 0.7 || shieldsystem_status < 0.7)
       ret = ret * 1.15; //more visible coz banged up.
 
     return ret;
@@ -3074,7 +3093,11 @@ public class Ship extends MobileThing implements Comparable<Ship> {
       }
       if (!have_destination) {
         if (scoutmode.equals("MINERS")) { //mode: scouts protect miners; scouts do not scout or aste-mine.
-
+          //change: scout escorting miners AND sees unscanned aste, goes to scan it.
+          if (closestUnscannedAsteroid != null) { //if have an unscanned in my sights
+            forceDestination(closestUnscannedAsteroid.getXYZ(), "Scout to scan A while escorting miners");
+            return;
+          }
           //xxx parentFaction.addScoutingDist(-0.0011 * this.sensor_range);
 
           //if already have a MINER buddy, don't change it
@@ -3112,6 +3135,12 @@ public class Ship extends MobileThing implements Comparable<Ship> {
 
             return; //hope this dont break anything
           } else { //room in cargo hold, default scouting. FAR/NEAR effect is in Faction in this case.
+            //if have an unscanned in my sights, forcedly go there. More efficient scouting.
+            if (closestUnscannedAsteroid != null) {
+              forceDestination(closestUnscannedAsteroid.getXYZ(), "Scan aste while scouting");
+              return;
+            }
+
             //parentFaction.addScoutingDist(0.008 * this.sensor_range);
 
             if (see_asteroid_count > 0 && closestAsteroid != null) { //ensures have closestAsteroid
@@ -3796,7 +3825,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
 
       //if hurt, go home to repair. NOT FORCED!
       if (engine_status < 0.6
-              || shield_status < 0.6
+              || shieldsystem_status < 0.6
               || missilesystem_status < 0.6
               || lifesupport_status < 0.4
               || sensors_status < 0.8
@@ -4006,12 +4035,12 @@ public class Ship extends MobileThing implements Comparable<Ship> {
     return max_battle_str;
   }
   public double getBattleStr() { //varies as get systems damage and hull damage
-    double part1 = (beamsystem_status) * 350.0 * getAtkBeamStr()
-            + (0.3+missilesystem_status) * 24500.0 * (buildcredits_gen_per_minute)
-            + (0.3+missilesystem_status) * 18500.0 * (max_buildcredits /*201 ON MISDRONE I GUESS*/)
-            + shield_status * (44.0 * (0.1+shield_regen_per_min)   +   (0.1+max_shields)/150.0)
-            + beamsystem_status * defense_beam_accuracy/*0..1*/ * 12500500.0
-            + 300.0 * (curr_hull_hp / 1000500.0); //TOO DOMINANT?!?!? 20 mil on avg scout.
+    double part1 = (beamsystem_status) * 300.0 * getAtkBeamStr()
+            + (0.3+missilesystem_status) * 40500.0 * (buildcredits_gen_per_minute)
+            + (0.3+missilesystem_status) * 19500.0 * (max_buildcredits /*201 ON MISDRONE I GUESS*/)
+            + shieldsystem_status * (40.0 * (0.1+shield_regen_per_min)   +   (0.1+max_shields)/150.0)
+            + beamsystem_status * defense_beam_accuracy/*0..1*/ * 13500500.0
+            + 240.0 * (curr_hull_hp / 1000500.0); //TOO DOMINANT?!?!? 20 mil on avg scout.
     double part2 = sensors_status * 3500500.0 * ((sensor_range / Missilemada2.getSensorRangeMinShip()) - 1.0);
     double part3 = engine_status * 9500500.0 * (max_speed / (0.5*getAvgScoutSpeed()) - 1.0);
     if (part2 < 0.0)
@@ -4259,7 +4288,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
     }
 
     //draw line indicator how full of missiles I am.
-    if (getHullPerc() > 0.02) { //type.equals("MISSILEDRONE") || type.equals("AC")
+    if (getHullPerc() > 0.10 && max_buildcredits > 20.0) {
       Missilemada2.setOpenGLMaterial("LINE");
       Missilemada2.setOpenGLTextureGUILine();
       double x1 = xcoord - (260*radius);
@@ -4328,8 +4357,10 @@ public class Ship extends MobileThing implements Comparable<Ship> {
       if (calcDistanceVecVec(this.getXYZ(), current_destinationXYZ) > 1.1*Missilemada2.getArrivedDistance()) {
         Missilemada2.setOpenGLMaterial("LINE");
         Missilemada2.setOpenGLTextureGUILine();
-        GL11.glColor4f(0.99f, 0.99f, 0.2f, 0.2f); //yellow
-        FlatSprite.drawFlatLineVecVec(this.getXYZ(), current_destinationXYZ, 60.0*this.getRadius());
+        GL11.glColor4f(0.99f, 0.99f, 0.2f, 0.45f); //yellow
+        if (isScout() && see_enemy_mislcount == 0 && closestUnscannedAsteroid != null)
+          GL11.glColor4f(0.01f, 0.99f, 0.99f, 0.4f); //blue from scout to desti, when unscanned
+        FlatSprite.drawFlatLineVecVec(this.getXYZ(), current_destinationXYZ, 2500.0);
         Missilemada2.setOpenGLMaterial("SHIP");
       }
     }
@@ -4357,9 +4388,6 @@ public class Ship extends MobileThing implements Comparable<Ship> {
 //      FlatSprite.drawFlatLineVecVec(this.getXYZ(), closestAsteroid.getXYZ(), 190.5*this.getRadius());
 //      Missilemada2.setOpenGLMaterial("SHIP");
 //    }
-
-
-
 
     //DEBUG: sphere, draw sensors, before ship's-shape-deform-scale.
     if (parentFaction != null) {
