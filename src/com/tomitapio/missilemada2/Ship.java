@@ -4035,9 +4035,9 @@ public class Ship extends MobileThing implements Comparable<Ship> {
     return max_battle_str;
   }
   public double getBattleStr() { //varies as get systems damage and hull damage
-    double part1 = (beamsystem_status) * 300.0 * getAtkBeamStr()
-            + (0.3+missilesystem_status) * 40500.0 * (buildcredits_gen_per_minute)
-            + (0.3+missilesystem_status) * 19500.0 * (max_buildcredits /*201 ON MISDRONE I GUESS*/)
+    double part1 = (beamsystem_status) * 220.0 * getAtkBeamStr()
+            + (0.3+missilesystem_status) * 60500.0 * (buildcredits_gen_per_minute)
+            + (0.3+missilesystem_status) * 21500.0 * (max_buildcredits /*201 ON MISDRONE I GUESS*/)
             + shieldsystem_status * (40.0 * (0.1+shield_regen_per_min)   +   (0.1+max_shields)/150.0)
             + beamsystem_status * defense_beam_accuracy/*0..1*/ * 13500500.0
             + 240.0 * (curr_hull_hp / 1000500.0); //TOO DOMINANT?!?!? 20 mil on avg scout.

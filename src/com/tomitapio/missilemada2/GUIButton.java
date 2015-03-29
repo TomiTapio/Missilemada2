@@ -20,7 +20,7 @@ public class GUIButton {
 
   public GUIButton(int id_in, String c, double xplacei, double yplacei,
 
-                   double in_width, double in_height,  double z_in, float scale_in, float transp) {
+                   double in_width, double in_height,  double z_in, float scale_in, float transp_notused_defa00) {
     content = c;
     button_id = id_in;
 

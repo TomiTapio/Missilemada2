@@ -64,7 +64,7 @@ public class Missilemada2 {
   private static boolean FULLSCREEN = false;
   protected static boolean running = false;
   protected static TextureLoaderMy textureLoader;
-  static TextureMy texture_leaderboard;
+  static TextureMy texture_panel;
 
   static boolean show_splashscreen = false;
   static boolean show_leaderboard = true;
@@ -110,8 +110,8 @@ public class Missilemada2 {
   static Vector flatsprite_permanent_List; //clouds, fields
   static Vector hazardList;
   static Vector hudMsgList = new Vector (30, 30);
-  static int MAXLINES_hudMsgList = 18;
-  static Vector GUIButtonList = new Vector (20, 10);
+  private static int MAXLINES_hudMsgList = 18; //11 on 750px tall, 24 on 1080
+  private static Vector GUIButtonList = new Vector (20, 10);
 
   //RTree stuff
   static SpatialIndex si_misl;
@@ -516,6 +516,12 @@ public class Missilemada2 {
 
       VIEWHEIGHT = StrToInt(mainProps.getProperty("VIEWHEIGHT", "900")); //key, default.
       VIEWWIDTH  = StrToInt(mainProps.getProperty("VIEWWIDTH", "1300"));
+        //MAXLINES_hudMsgList = 18; //11 on 750px tall, 24 on 1080
+        if (VIEWHEIGHT < 790)
+          MAXLINES_hudMsgList = 11;
+        if (VIEWHEIGHT > 950)
+          MAXLINES_hudMsgList = 24;
+
       FPS        = StrToInt(mainProps.getProperty("FPS", "60"));
       //vsync? xx maybe.
       //flatworld? nah.
@@ -668,7 +674,7 @@ public class Missilemada2 {
           } else {
             pauseGame();
           }
-          inputsleep = 41;
+          inputsleep = 21;
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
           camera_x = camera_x + 5400f + Math.abs(0.04*camera_z);
@@ -705,7 +711,7 @@ public class Missilemada2 {
         }
         //F1 toggle help panel
         if (Keyboard.isKeyDown(Keyboard.KEY_F1)) {
-          show_leaderboard = !show_help;
+          show_help = !show_help;
           inputsleep = 21;
         }
         //F2 toggle ship leaderboard
@@ -981,10 +987,20 @@ public class Missilemada2 {
     //end radio button section, begin build-commands (no visual state)
     if (buttonId < 31) {
       return;
-    } else {
-    butn.setVisualState(false);
-    if (buttonId == 1000) { pf.volleyTowardsCoords(pf.getFrontlineXYZ()); }
-    if (buttonId == 1001) { pf.toggleShowSensors(); }
+    } else { //the rest of the buttons. they get visualstate_false.
+      butn.setVisualState(false);
+      if (buttonId == 1000) { pf.volleyTowardsCoords(pf.getFrontlineXYZ()); }
+      if (buttonId == 1001) { pf.toggleShowSensors(); }
+      if (buttonId == 1002) { show_help = !show_help; }
+      if (buttonId == 1003) { show_leaderboard = !show_leaderboard; }
+      if (buttonId == 1004) {
+        if (worldTimeIncrement == 0) {
+          unpauseGame();
+        } else {
+          pauseGame();
+        }
+      }
+    if (buttonId == 1005) { running = false; /*quit/exit game*/ }
 
     if (buttonId == 31) { pf.tryShipProduction("SCOUT", 1); }
     if (buttonId == 32) { pf.tryShipProduction("SCOUT", 2); }
@@ -1049,7 +1065,7 @@ public class Missilemada2 {
     float guirowheight = 32.0f;
     //first an informative text. as a button, because this func can't draw gfx.
     float lmargin = 4.0f;
-    float topmargin = 10.0f;
+    float topmargin = 7.0f;
     float buwid = 64.0f;
     float buhei = 29.0f;
     //scouts to: base, miners, near, far, flag
@@ -1061,9 +1077,9 @@ public class Missilemada2 {
     bu = new GUIButton(4/*id*/, "Far",  3*(buwid+4.0)+bla, topmargin,   buwid, buhei,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
 
 
-    bu = new GUIButton(6/*id*/, "LE",         4*(buwid+4.0)+bla, topmargin,   40f, buhei,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
-    bu = new GUIButton(5/*id*/, "MID",     5*(buwid+4.0)+bla, topmargin,   40f, buhei,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
-    bu = new GUIButton(7/*id*/, "RI",         6*(buwid+4.0)+bla, topmargin,   40f, buhei,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(6/*id*/, "LE",         4*(buwid+4.0)+bla, topmargin,   45f, buhei,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(5/*id*/, "MID",        5*(buwid+4.0)+bla, topmargin,   50f, buhei,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(7/*id*/, "RI",         6*(buwid+4.0)+bla, topmargin,   45f, buhei,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
 
     //def & ac & mildrones to: base, miners, near, far, flag
 
@@ -1072,11 +1088,10 @@ public class Missilemada2 {
     bu = new GUIButton(12/*id*/, "Miners",    1*(buwid+4.0)+bla, topmargin +guirowheight,   buwid, buhei,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
     bu = new GUIButton(13/*id*/, "Near",      2*(buwid+4.0)+bla, topmargin +guirowheight,   buwid, buhei,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
     bu = new GUIButton(14/*id*/, "Far",       3*(buwid+4.0)+bla, topmargin +guirowheight,   buwid, buhei,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
-    //bu = new GUIButton(15/*id*/, "Center", 4*(buwid+4.0)+bla, topmargin +guirowheight,   buwid, buhei,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
 
-    bu = new GUIButton(16/*id*/, "LE",        4*(buwid+4.0)+bla, topmargin +guirowheight,   40f, buhei,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
-    bu = new GUIButton(15/*id*/, "MID",    5*(buwid+4.0)+bla, topmargin +guirowheight,   40f, buhei,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
-    bu = new GUIButton(17/*id*/, "RI",        6*(buwid+4.0)+bla, topmargin +guirowheight,   40f, buhei,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(16/*id*/, "LE",        4*(buwid+4.0)+bla, topmargin +guirowheight,   45f, buhei,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(15/*id*/, "MID",    5*(buwid+4.0)+bla, topmargin +guirowheight,   50f, buhei,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(17/*id*/, "RI",        6*(buwid+4.0)+bla, topmargin +guirowheight,   45f, buhei,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
 
     //miners to: base, aste
     buwid = 85.0f;
@@ -1085,13 +1100,15 @@ public class Missilemada2 {
     bu = new GUIButton(22/*id*/, "Go mine",        1*(buwid+4.0)+bla, topmargin +2*guirowheight,   buwid, buhei,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
 
     //maybe: drone mode buttons
-
-    //faction commands: +3*guirowheight
     //everyone volley to attack flag vicinity!
-    bu = new GUIButton(1000/*id*/, "VOLLEY to FRONTLINE",       lmargin, topmargin + 3*guirowheight,   2.9*buwid, buhei-4,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(1000/*id*/, "VOLLEY to frontline",       lmargin, topmargin + 3*guirowheight,   2.9*buwid, buhei-5,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(1001/*id*/, "Show sensors",       lmargin+2.93*buwid, topmargin + 3*guirowheight,   1.7*buwid, buhei-5,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
 
-    //some new buttons?
-    bu = new GUIButton(1001/*id*/, "Show sensors",       lmargin+2.93*buwid, topmargin + 3*guirowheight,   2.0*buwid, buhei-4,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    buwid = 64.0f;
+    bu = new GUIButton(1002/*id*/, " Help panel",  7.2*(buwid+5.0)+bla, topmargin,   120f, buhei-7,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(1003/*id*/, " Ships panel", 9.2*(buwid+5.0)+bla, topmargin,   120f, buhei-7,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(1004/*id*/, " Pause",       11.2*(buwid+5.0)+bla, topmargin,   100f, buhei-7,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(1005/*id*/, " Quit",        15.2*(buwid+5.0)+bla, topmargin,   100f, buhei-7,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
 
     //build scout:
     buwid = 57.0f;
@@ -1587,9 +1604,9 @@ public class Missilemada2 {
     }
     return null;
   }
-  private static void gameStopRequest() {
+  /*private static void gameStopRequest() {
     running = false;
-  }
+  }*/
   protected static void initContextAndResources() {
     Keyboard.enableRepeatEvents(true);
     if (system_MIDISequencer != null) {
@@ -1663,7 +1680,7 @@ public class Missilemada2 {
     try {
       textureLoader = new TextureLoaderMy();
       texture_beams = Missilemada2.getTextureLoader().getTexture("beam.png");
-      texture_leaderboard = Missilemada2.getTextureLoader().getTexture("opaque_dgray.png");
+      texture_panel = Missilemada2.getTextureLoader().getTexture("opaque_dgray.png");
     } catch (Exception e) {
       e.printStackTrace();
     }
@@ -1977,12 +1994,13 @@ public class Missilemada2 {
     tx = "tempFlatSprites="+ flatsprite_temporary_List.size() + " meas.FPS="+(int)measured_FPS;
     font20.drawString(hud_x, VIEWHEIGHT-42f, tx, new Color(250, 50, 50, 255));
 
-    tx = "Our base str "+(int)(basestr / 1000000.0)
-            +", mining capa: "+(int)((pf.getMiningCapaTons()) / 100.0)
-            +". Scout dist="+(int)(pf.getScouting_distance_avg()/ 100000.0);
-    font20.drawString(hud_x, hud_y + 2 * rowheight, tx, new Color(250, 50, 50, 255));
-    tx = "Crew available:"+pf.getCrewIdleCount()+" Total:"+pf.getCrewAlive()+" Lost:"+pf.getCrewDeadCount();
+    tx = /*"Our base str "+(int)(basestr / 1000000.0)
+            +", " + */
+          "Mining capacity: "+(int)((pf.getMiningCapaTons()) / 10.0)
+            +" Scout dist:"+(int)(pf.getScouting_distance_avg()/ 100000.0);
+    font20.drawString(hud_x, hud_y, tx, new Color(250, 50, 50, 255));
 
+    tx = "Crew available:"+pf.getCrewIdleCount()+" Total:"+pf.getCrewAlive()+" Lost:"+pf.getCrewDeadCount();
     font30.drawString(hud_x, hud_y - (3.11f * rowheight), tx, new Color(250, 50, 50, 255));
 
     //double scora = getPlayerFaction().getScouting_distance_avg();
@@ -1999,14 +2017,14 @@ public class Missilemada2 {
     //draw my ships leaderboard (toggleable)
       //draw scoutreport_ship count?
     if (show_leaderboard)
-      drawLeaderB();
+      drawLeaderBShipsPanel();
+    if (show_help)
+      drawHelpPanel();
 
     //draw faction score (total battle str plus ship_cost destroyed?)
 
 
     //DONT: draw camera move buttons, six
-    //draw faction commands: go mine this reso,
-    //regroup at base -button, everyone attack -button
 
     //get out of ortho camera mode.
     glEnable(GL_CULL_FACE);
@@ -2016,12 +2034,15 @@ public class Missilemada2 {
     glEnable(GL_DEPTH_TEST); //HUD is on top on other stuff, so it had no depth test.
     glPopMatrix();
   }
-
     private static void drawMessageLog() {
-        float hud_x;
-        float hud_y;
-        float rowheight;
-        String tx;
+      float hud_x;
+      float hud_y;
+      float rowheight;
+      hud_x = 5.0f;
+      hud_y = 527.0f; //from top left
+      rowheight = 19.0f;
+
+      String tx;
         //material:
             ByteBuffer buffer2 = ByteBuffer.allocateDirect(64).order(ByteOrder.nativeOrder());
             float[] emission2 = {0.4f, 0.4f, 0.4f, 0.5f};
@@ -2029,9 +2050,6 @@ public class Missilemada2 {
             GL11.glMaterial(GL11.GL_FRONT_AND_BACK, GL11.GL_EMISSION, (FloatBuffer) buffer2.asFloatBuffer().put(emission2).flip());
             GL11.glMaterial(GL11.GL_FRONT_AND_BACK, GL11.GL_AMBIENT_AND_DIFFUSE, (FloatBuffer) buffer2.asFloatBuffer().put(amb_diffuse2).flip());
 
-        hud_x = 5.0f;
-        hud_y = 600.0f; //from top left
-        rowheight = 19.0f;
         int colorcode = 0; //default 0
         Color colo = new Color(170, 170, 190, 255/*this matters*/);
         int sizz = hudMsgList.size();
@@ -2059,9 +2077,9 @@ public class Missilemada2 {
           font20.drawString(hud_x, hud_y + i * rowheight, tx, colo);
         }
     }
-  private static void drawLeaderB() {
-    float hud_x = 600.0f;
-    float hud_y = 8.0f; //from top left
+  private static void drawLeaderBShipsPanel() {
+    float hud_x = 600.0f; //from top left
+    float hud_y = 29.0f;
     float rowheight = 16.0f;
 
     String tx;
@@ -2069,13 +2087,13 @@ public class Missilemada2 {
     //draw background rectangle
     float zcoord = 0.0f;
     float xplace = hud_x;
-    float yplace = hud_y;
+    float yplace = hud_y+4.0f;
     float wid = VIEWWIDTH - hud_x;
     float hei = rowheight * 14 + 5.0f;
     //we are in HUD-drawing coords.
-    GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f); //dark gray
+    GL11.glColor4f(0.2f, 0.2f, 0.35f, 0.5f); //dark gray
     //set texture
-    texture_leaderboard.bind();
+    texture_panel.bind();
     //draw quad
     GL11.glBegin(GL11.GL_QUADS);
     GL11.glTexCoord2f(0, 0);
@@ -2166,6 +2184,63 @@ public class Missilemada2 {
       j++;
     }
   }
+  private static void drawHelpPanel() { //on top of ships panel if must.
+    //on top of HUDmsglog older msgs! yay!
+    float hud_x = 5.0f; //from top left
+    float hud_y = 527.0f;
+    float rowheight = 16.0f;
+    String[] tx = {"Missilemada2 by TomiTapio, made 2013-11 to 2015-03",
+    "Yo Commander. Zaibatsu's local resources are at your command. Stop our rivals' asteroid mining operations.",
+    "A stealth shuttle will resupply you with crewmembers and the resource you lack most urgently.",
+    "",
+    "Leftclick on GUI buttons. Rightclick-drag to pan camera.",
+    "Mousewheel to zoom, wheelclick or SPACE to toggle pause.",
+    "Keyboard camera controls: INSERT/HOME to zoom, cursor keys pan.",
+    "ESC quit, SPACE pause, F1 toggle help, F2 toggle ship list, F5 restart scenario.",
+    "Commander's experience is saved every N days. Category xp unlocks better pricebrackets."
+    };
+    //draw background rectangle
+    float zcoord = 0.0f;
+    float xplace = hud_x;
+    float yplace = hud_y - 8.0f;
+    float wid = 780.0f;
+    float hei = rowheight * 9 + 15.0f;
+    //we are in HUD-drawing coords.
+    GL11.glColor4f(0.2f, 0.35f, 0.2f, 1.0f); //green
+    //set texture
+    texture_panel.bind();
+    //material:
+    ByteBuffer buffer2 = ByteBuffer.allocateDirect(64).order(ByteOrder.nativeOrder());
+    float[] emission2 = {0.4f, 0.4f, 0.4f, 0.5f};
+    float[] amb_diffuse2 = {0f, 0f, 0f, 0f};
+    GL11.glMaterial(GL11.GL_FRONT_AND_BACK, GL11.GL_EMISSION, (FloatBuffer) buffer2.asFloatBuffer().put(emission2).flip());
+    GL11.glMaterial(GL11.GL_FRONT_AND_BACK, GL11.GL_AMBIENT_AND_DIFFUSE, (FloatBuffer) buffer2.asFloatBuffer().put(amb_diffuse2).flip());
+
+    //draw quad
+    GL11.glBegin(GL11.GL_QUADS);
+    GL11.glTexCoord2f(0, 0);
+    GL11.glVertex3f((float) xplace, (float) yplace, (float)zcoord);
+    GL11.glNormal3f(0.0f, 0.0f, 1.0f);
+    GL11.glTexCoord2f(0, 1);
+    GL11.glVertex3f((float) xplace + wid, (float) yplace, (float)zcoord);
+    GL11.glNormal3f(0.0f, 0.0f, 1.0f);
+    GL11.glTexCoord2f(1,1);
+    GL11.glVertex3f((float) xplace + wid, (float) yplace+hei, (float)zcoord);
+    GL11.glNormal3f(0.0f, 0.0f, 1.0f);
+    GL11.glTexCoord2f(0,1);
+    GL11.glVertex3f((float) xplace, (float) yplace+hei, (float)zcoord);
+    GL11.glNormal3f(0.0f, 0.0f, 1.0f);
+    GL11.glEnd();
+
+
+    Color color_helppaneltext = new Color(220, 220, 220, 255/*this matters*/);
+    int i = 0;
+    while (i < 10) {
+      if (i< tx.length)
+        font20.drawString(hud_x + 15.0f, hud_y + i * rowheight, tx[i], color_helppaneltext);
+      i++;
+    }
+  }
     public static void addVfxOnMT(double x/*is offset, if attached.*/, double y, double z, String in_fx_str, int dur /*ms*/, double siz, double tra,
                                 MobileThing attachedto, String texture_filename, double in_texturescaling, String in_text) {
     //xxverify inputs...
@@ -2177,6 +2252,7 @@ public class Missilemada2 {
       int debugfoo = 0;
     }
   }
+
   public static void addVfx2(Vector xyz, String in_fx_str, int dur /*world sec*/, double siz, double tra,
                              String texture_filename, double in_texturescaling, String in_text) {
     if (xyz == null) {

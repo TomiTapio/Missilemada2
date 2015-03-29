@@ -55,11 +55,12 @@ DONE: COUNTER: CREW AVAILABLE AT BASE. ("Commander, the stealth shuttle has brou
 
 -- start of secn2: base wants outside of play area... *sigh*
 
-
+__maybe: draw faction commands: go mine this reso,
+__maybe: pick which aste to mine, from list of mineral-having scanned aste.
 __mute all sounds button, toggle.
 __seen derelicts as to-scout spots
 __indicate that you-commander dont have license to build AC yet! in the GUI.
-__pause button in top right, for mouse-only time.
+done: pause button, for mouse-only time. Pause is also wheelclick.
 
 __ when we lose a ship, vfx of ship name on the battlefield.
 DONE: fix transparency of draw background rectangle, want opaque.
@@ -106,7 +107,7 @@ Also have total xp. Total xp(influence?) goes down on ship destroyed, scenario l
    totalxp down on crew casualties.
 
 Commander class gets xp every shipbuild / shipcapture.
-every 2days, and scenario over, save xp to file. To prevent "start, build 9, quit".
+every 8 days, and scenario over, save xp to file. To prevent "start, build 9, quit".
 __on quit dectection... hmm...
 __N xp to all categories on scenario win! N = two shipbuild worth. (Zaibatsu gave more researchers / allowance.)
 

@@ -1797,10 +1797,19 @@ public class Faction {
     } else {
       //no asteroid reports! rare!
       if (isPlayerFaction()) {
-        Missilemada2.addToHUDMsgList(Missilemada2.strCurrDaysHours() + " Zero analysed asteroids! Sending "+asker.toStringShort()+" to whichever asteroid.",0);
+        Missilemada2.addToHUDMsgList(Missilemada2.strCurrDaysHours() + " Zero analysed asteroids! Sending "+asker.toStringShort()+" to nearby asteroid.",0);
       }
-      changeScoutingDist(1.005);
-      return Missilemada2.getRandomAsteroid();
+      //changeScoutingDist(1.005);
+      //ensure near our base.
+      Asteroid retrand = Missilemada2.getRandomAsteroid();
+      int trycount = 1;
+      while (true && trycount < 150) {
+        if (MobileThing.calcDistanceVecVec(getXYZ(), retrand.getXYZ()) < base.getSensorRange())
+          break;
+        retrand = Missilemada2.getRandomAsteroid();
+        trycount++;
+      }
+      return retrand;
     }
 
     //what, no wanted-reso aste nearby? Scout harder.
