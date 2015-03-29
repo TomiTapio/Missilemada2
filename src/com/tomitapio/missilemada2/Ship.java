@@ -950,7 +950,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
         if (isStarbase()
                 && parentFaction != Missilemada2.getPlayerFaction()
                 && scoring_ship.isInPlayerFaction() ) {
-          Missilemada2.addToHUDMsgList("Our " + scoring_ship.toStrTypeNName() + " damaged enemy base! ("+(in_joules/1000000.0)+" MJ)");
+          Missilemada2.addToHUDMsgList("Our " + scoring_ship.toStrTypeNName() + " damaged enemy base! ("+(int)(in_joules/1000.0)+" kJ)");
         }
       }
 
@@ -967,11 +967,11 @@ public class Ship extends MobileThing implements Comparable<Ship> {
         int wub = (int)(100*hulldamageperc_of_hit);
         if (isInPlayerFaction() && !isAtFactionBase()) {
           playGotHullDamage();
-          if (getHullPerc() < 0.755 && getHullPerc() > 0.70 && wub > 0) {
-            Missilemada2.addToHUDMsgList("Our " + this.toStrTypeNName() + " reports major hull damage! Last hit took "+wub+"% off hull!");
+          if (getHullPerc() < 0.755 && getHullPerc() > 0.72 && wub > 0) {
+            Missilemada2.addToHUDMsgList("" + this.toStrTypeNName() + " reports major hull damage! Last hit took "+wub+"% off!");
           }
-          if (getHullPerc() < 0.255 && getHullPerc() > 0.20 && wub > 0) {
-            Missilemada2.addToHUDMsgList("Our " + this.toStrTypeNName() + " reports critical hull damage! Last hit took "+wub+"% off hull!");
+          if (getHullPerc() < 0.255 && getHullPerc() > 0.27 && wub > 0) {
+            Missilemada2.addToHUDMsgList("" + this.toStrTypeNName() + " reports critical hull damage! Last hit took "+wub+"% off!");
           }
         }
       }
@@ -2249,9 +2249,11 @@ public class Ship extends MobileThing implements Comparable<Ship> {
             //huge Vfx.
             if (isInPlayerFaction()) {
               //old: Missilemada2.addVfxOnMT((getX() + as.getX()) / 2.0, (getY() + as.getY()) / 2.0, 2.0 * as.getZ(), "SCOUTEDASTEROID", 13000, 1850.0, 0.75/*transp*/, null, "scan_cyan2.png", 1.0, "");
-              Missilemada2.addVfx2(as.getXYZ(), "SCOUTEDASTEROID", 13000, 1850.0, 0.75/*transp*/, "scan_cyan2.png", 1.0, "" );
-              //if (!as.isResourceless())
-              //  Missilemada2.addToHUDMsgList(Missilemada2.strCurrDaysHours() + this.toStringShort()+" scanned usable asteroid "+as.getId() + " Merit get!");
+              Missilemada2.addVfx2(as.getMiningXYZ(), "SCOUTEDASTEROID", 17000, 2250.0, 0.75/*transp*/, "scan_cyan2.png", 1.0, "" );
+              if (!as.isResourceless())
+                Missilemada2.addToHUDMsgList(Missilemada2.strCurrDaysHours() + this.toStrTypeNName()+" scanned good asteroid "+as.getId() + " Merit get!");
+              else
+                Missilemada2.addToHUDMsgList(Missilemada2.strCurrDaysHours() + this.toStrTypeNName()+" scanned an useless asteroid.");
             }
             //System.out.println(type+" ship "+unique_id+" _scouted_ asteroid " +s.toString() + " when senrange="+sensor_range + " scanrange="+Missilemada2.getAsteroidScanningRange());
           }
@@ -2330,7 +2332,8 @@ public class Ship extends MobileThing implements Comparable<Ship> {
     if (buddy_mil != null) {
       if (calcDistanceMTMT(this, buddy_mil) > 1.3*curr_sensor_range || buddy_mil.isDestroyed()) {
         if (isDrone()) {
-          //drone shall not forget.
+          //BAD? drone shall not forget.
+          buddy_mil = null; //too far, forget (lose track).
         } else {
           buddy_mil = null; //too far, forget (lose track).
         }
@@ -4036,10 +4039,10 @@ public class Ship extends MobileThing implements Comparable<Ship> {
   }
   public double getBattleStr() { //varies as get systems damage and hull damage
     double part1 = (beamsystem_status) * 220.0 * getAtkBeamStr()
-            + (0.3+missilesystem_status) * 60500.0 * (buildcredits_gen_per_minute)
-            + (0.3+missilesystem_status) * 21500.0 * (max_buildcredits /*201 ON MISDRONE I GUESS*/)
-            + shieldsystem_status * (40.0 * (0.1+shield_regen_per_min)   +   (0.1+max_shields)/150.0)
-            + beamsystem_status * defense_beam_accuracy/*0..1*/ * 13500500.0
+            + (0.3+missilesystem_status) * 90500.0 * (buildcredits_gen_per_minute)
+            + (0.3+missilesystem_status) * 31500.0 * (max_buildcredits /*201 ON MISDRONE I GUESS*/)
+            + shieldsystem_status * (35.0 * (0.1+shield_regen_per_min)   +   (0.1+max_shields)/250.0)
+            + beamsystem_status * defense_beam_accuracy/*0..1*/ * 12500500.0
             + 240.0 * (curr_hull_hp / 1000500.0); //TOO DOMINANT?!?!? 20 mil on avg scout.
     double part2 = sensors_status * 3500500.0 * ((sensor_range / Missilemada2.getSensorRangeMinShip()) - 1.0);
     double part3 = engine_status * 9500500.0 * (max_speed / (0.5*getAvgScoutSpeed()) - 1.0);

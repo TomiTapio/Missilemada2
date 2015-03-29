@@ -66,9 +66,9 @@ public class Missilemada2 {
   protected static TextureLoaderMy textureLoader;
   static TextureMy texture_panel;
 
-  static boolean show_splashscreen = false;
+  static boolean show_splashscreen = false; //unused so far
   static boolean show_leaderboard = true;
-  static boolean show_help = false;
+  static boolean show_help = true;
 
   //static String splashscreen = "-- Missilemada 2 --\nA Java + OpenGL game by TomiTapio.\nVersion 2014-06-xx.\n\nESC to quit.";
   static String pause_and_infotext = ""; //if very short text, do not be in pause mode.
@@ -2204,7 +2204,7 @@ public class Missilemada2 {
     float xplace = hud_x;
     float yplace = hud_y - 8.0f;
     float wid = 780.0f;
-    float hei = rowheight * 9 + 15.0f;
+    float hei = rowheight * 9 + 25.0f;
     //we are in HUD-drawing coords.
     GL11.glColor4f(0.2f, 0.35f, 0.2f, 1.0f); //green
     //set texture
