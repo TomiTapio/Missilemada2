@@ -48,12 +48,9 @@ DONE: COUNTER: CREW AVAILABLE AT BASE. ("Commander, the stealth shuttle has brou
 --HAZARDZONES! isDestiInsideHazard(), isDestiInsideDAMAGINGHazard(), for mydetectedhazardslist do adjustDestiAwayFromHZCenter(Vector desti, Hazard hazard1).
 -attach vfx on hazardzone effecting us. attach vfx on grasvitywell-strong.
 
---reset camera-button.
-
+-- "reset camera" button.
 -- speed up time button.
 
-
--- start of secn2: base wants outside of play area... *sigh*
 
 __maybe: draw faction commands: go mine this reso,
 __maybe: pick which aste to mine, from list of mineral-having scanned aste.
@@ -62,12 +59,12 @@ __seen derelicts as to-scout spots
 __indicate that you-commander dont have license to build AC yet! in the GUI.
 done: pause button, for mouse-only time. Pause is also wheelclick.
 
-__ when we lose a ship, vfx of ship name on the battlefield.
+done?: when we lose a ship, vfx of ship name on the battlefield.
 DONE: fix transparency of draw background rectangle, want opaque.
 
 DONE: GUI button and func key F2 to toggle show list of my ships, in order of battlestr.
 DONE: show info on foe ships that we have in scoutreports.
-__ F1 toggle help panel
+DONE: F1 toggle help panel
 
 __on win/lose, pause and infotext.
 DONE: don't forget asteroidreport so soon.
@@ -88,7 +85,8 @@ __leaderb: Color code foe factions' shiptype?
 done: random rumor/event textlines in log!    space whale spotted
 __rand rumor: a rand ships gets N merits, someone made a donation!
 done: indicate by TEXT that these aste have the reso we are lacking!
-__sendBattleDebrisTowardsCamera()
+done: sendDebrisTowardsCamera("BATTLE/MINING", originator_mobilething)
+__ fix direction of sendDebrisTowardsCamera
 __ fac has array or spotted foe starbases. func: bool seenAnyBases(), func areCoordsNearFoeBases()
 __ possibly separate scrollable window of hudmsg-log.
 __ misl, if flew past curr target, calc if better target along forward trajectory. old: loop around to missed currtarget.
@@ -96,8 +94,9 @@ __fixed? public Asteroid chooseKnownAsteroidToMine(String whatkind, Ship asker) 
 done: ship keeps track how many misl have hit it.
 ==If took hull hit and damage number greater than 8th of hull, set one system to broken. Coz small ship.
 
+__maybe no foe after scen2 starts after win scen1..
 
---xxxx starbase instaheals itself coz new itself
+--starbase instaheals itself coz near itself??
 
 
 __________________________________________________________________________________________________

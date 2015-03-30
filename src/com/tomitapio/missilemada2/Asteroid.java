@@ -201,7 +201,7 @@ public class Asteroid extends MobileThing implements Comparable<Asteroid> { /* c
     }
     //asteroids flake debris sprites by themselves! makes world more alive.
     if (Missilemada2.gimmeRandDouble() < (0.000006 * seconds)) {
-      Missilemada2.createDebrisFlatSprite("mining_debris.png", 1.7*(0.10+Missilemada2.gimmeRandDouble()), 1350.0*(1.0+Missilemada2.gimmeRandDouble()), 900.0, this, false);
+      Missilemada2.createDebrisFlatSprite("mining_debris.png", 1.7*(0.10+Missilemada2.gimmeRandDouble()), 1350.0*(1.0+Missilemada2.gimmeRandDouble()), 900.0, this, false, false);
     }
   }
   public double/*tons gotten*/ mining(String res, double in_seconds, Ship mining_ship) {

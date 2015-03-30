@@ -133,7 +133,7 @@ public class Missilemada2 {
   //MIDI things:
   static Sequencer system_MIDISequencer;
   static MidiDevice system_MIDIDevice;
-  static Track MIDI_global_track;
+  //static Track MIDI_global_track;
   static double toomuchnotescounter = 0.0;
   static Vector melodyNotesPile;
   static long micros_per_quarternote = 0;
@@ -144,7 +144,7 @@ public class Missilemada2 {
   private static boolean mousedrag_camera = false;
   private static double camera_x = 0;
   private static double camera_y = 0;
-  private static double camera_z = 2500;
+  private static double camera_z = 2900;
   private static Vector camera_xyz;
 
   private static UnicodeFont font60;
@@ -1804,7 +1804,7 @@ public class Missilemada2 {
     j = 0;
     for (; j < listsize; j++) {
       Ship p = (Ship) shipList.elementAt(j);
-      if (p != null && p.isNearCamera_2d(camera_xyz, cam_isnearcam_dist) && camera_z < 0.15*world_x_max) {
+      if (p != null && p.isNearCamera_2d(camera_xyz, cam_isnearcam_dist) && camera_z < 0.07*world_x_max) { //only when close zoom.
         if (p.getFaction() == getPlayerFaction())
           p.drawShipInfoText();
       }
@@ -2282,7 +2282,7 @@ public class Missilemada2 {
     if (worldTimeIncrement < 1) {
       return; // the pause.
     }
-    camera_x = camera_x + (0.09*Math.sqrt(camera_z)); //drift the camera, to look more 3D.
+    camera_x = camera_x + (0.07*Math.sqrt(camera_z)); //drift the camera, to look more 3D.
 
     //world goes x seconds forward.
     worldTimeElapsed += worldTimeIncrement;
@@ -2576,7 +2576,7 @@ public class Missilemada2 {
       ra = Math.abs(ra);
     else //WTF huh
       ra = 2*Math.PI - ra;
-    //System.out.println("calcBearingXY: dx="+dx+ " dy="+dy+" and bearingXY="+ra );
+    //System.out.println("calcBearingXY2D: dx="+dx+ " dy="+dy+" and bearingXY="+ra );
     return ra;
   }
   public static double calcBearingXZ(MobileThing a, MobileThing b) { //asker, target
@@ -2592,7 +2592,7 @@ public class Missilemada2 {
     //System.out.println("calcBearingXZ: dx="+dx+ " dz="+dz+" and bearingXZ="+ra );
     return ra;
   }
-  public static double calcBearingXY(double ax, double ay, double bx, double by) { //asker, target //depending what numbers you give, can calc bearingXZ too.
+  public static double calcBearingXY2D(double ax, double ay, double bx, double by) { //asker, target //depending what numbers you give, can calc bearingXZ too.
     float dx = (float)(bx - ax);
     float dy = (float)(- (by - ay));
     double ra = ATAN2Lookup.atan2(dy, dx); //out comes -pi to +pi
@@ -2602,7 +2602,7 @@ public class Missilemada2 {
       ra = 2*Math.PI - ra;
     return ra;
   }
-  public static double calcDistanceXY(double ax, double ay, double bx, double by) { //asker, target
+  public static double calcDistanceXY2D(double ax, double ay, double bx, double by) { //asker, target
     return Math.sqrt( (ax - bx)*(ax - bx)  +  (ay - by)*(ay - by) );
   }
   public static void initAmbientLight() {
@@ -3113,7 +3113,12 @@ public class Missilemada2 {
     return false;
   }
   private static void randomRumorEvent() {
-    Ship sh = getPlayerFaction().gimmeRandMannedShip();
+    Faction pf = getPlayerFaction();
+    if (pf == null)
+      return;
+    Ship sh = pf.gimmeRandMannedShip();
+    if (sh == null)
+      return;
     String[] rumor = { /*0*/"Nav array design discounts this week!",
           "The pilot of "+sh.getName()+" complains of insects.",
           "Professor Ka'thur thinks she's found a new mineral. Again.",
@@ -3181,10 +3186,19 @@ public class Missilemada2 {
   public static double getCurrentExplosionRange() {
     return current_explosion_range;
   }
+  public static void sendDebrisTowardsCamera(String foo, MobileThing created_by_MT/*gives start location*/) {
+  if (foo.equals("BATTLE"))
+    Missilemada2.createDebrisFlatSprite("hull_bits.png", 6.88*(0.10+Missilemada2.gimmeRandDouble()),350.0*(1.0+Missilemada2.gimmeRandDouble()),
+     350.0*(1.0+Missilemada2.gimmeRandDouble()), created_by_MT, false, true/*to camera*/);
+  if (foo.equals("MINING"))
+    Missilemada2.createDebrisFlatSprite("mining_debris.png", 6.9*(0.10+Missilemada2.gimmeRandDouble()),350.0*(1.0+Missilemada2.gimmeRandDouble()),
+     350.0*(1.0+Missilemada2.gimmeRandDouble()), created_by_MT, false, true/*to camera*/);
+  }
   public static void createDebrisFlatSprite(String texturefilename, double spd/*ignored if copy bearing from creator*/,
-                                            double sizex, double sizey, MobileThing created_by_MT, boolean bearing_from_MT) {
+                                            double sizex, double sizey, MobileThing created_by_MT, boolean bearing_from_MT, boolean towards_camera) {
     if (created_by_MT == null) {
-      //err
+      //err, don't know where to create.
+      //throw new NullPointerException("");
       return;
     }
     //visual fun: create a flying piece of debris.
@@ -3200,17 +3214,29 @@ public class Missilemada2 {
             //debris.setSpeed_mag_dirXY(0.9*created_by_MT.getSpeedCurrent(), created_by_MT.getBearingXYfromSpeed());
             //give it some z-speed
             //debris.setSpeed(debris.getXSpeed(), debris.getYSpeed(), spd * 0.05*(Missilemada2.gimmeRandDouble() - 0.5) );
-
       //exact bearing from creator:
       debris.setSpeed(created_by_MT.getXSpeed(), created_by_MT.getYSpeed(), created_by_MT.getZSpeed());
       debris.reduceSpeed(0.95);
     } else {
-      //default: shall float in random direction.
-      debris.setSpeed(spd * (Missilemada2.gimmeRandDouble() - 0.5), spd * (Missilemada2.gimmeRandDouble() - 0.5), spd * (Missilemada2.gimmeRandDouble() - 0.5) );
+      if (towards_camera) { //fun debris
+        //maybe debris.setPermRotation(0.5f);
+        double rand = (0.1*camera_z) * (gimmeRandDouble()-0.5);
+        MobileThing camera_tempMT = new MobileThing(); camera_tempMT.setX(camera_x+rand); camera_tempMT.setY(camera_y+rand); camera_tempMT.setZ(camera_z);
+        //xyz sin cos math copied from missile turning.
+        //xxxxxxxxxxxxx seems to send to 0,0,camera_z, most odd.
+        double desired_bearingXY = Missilemada2.calcBearingXY(debris, camera_tempMT);
+        double desired_bearingXZ = Missilemada2.calcBearingXZ(debris, camera_tempMT);
+        debris.setSpeed(spd * Math.cos(desired_bearingXY),
+                        spd * Math.sin(desired_bearingXY),
+                        spd * Math.sin(desired_bearingXZ));
+
+      } else { //not towards camera, not towards originator's heading.
+        //default: shall float in random direction.
+        debris.setSpeed(spd * (gimmeRandDouble() - 0.5), spd * (gimmeRandDouble() - 0.5), spd * (gimmeRandDouble() - 0.5) );
+      }
     }
     //no-one updates this flatsprite unless it's in The List.
     addToFSTempList(debris);
-
     //possibly expire the oldest (first in fslist) ones
     if (flatsprite_temporary_List.size() > max_flatsprites) {
       int randint = gimmeRandInt(17);

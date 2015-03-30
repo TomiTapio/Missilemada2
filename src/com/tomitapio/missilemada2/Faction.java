@@ -1015,13 +1015,13 @@ public class Faction {
   }
   public void resupplyShuttleArrives() { //every 2 days. very stealth so enemy can't hurt it.
     //new crew came IF HAVE UNDER 21 IDLERS.
-    if (crew_idle < 21) {
-      this.addCrew(6);
+    if (crew_idle < 23) {
+      this.addCrew(7); //six per shuttle was poor for AC's 17-requirement.
       Missilemada2.updateBuildButtonColours();
       //vfx and HUD string if plr
       if (isPlayerFaction()) {
         Missilemada2.addVfx2(getXYZ_starbase_safer_side(), "RESUPPLYSHUTTLE", 460 * 45, 2910.0, 0.9/*transp*/, "resupplyshuttle.png", 1.0, "");
-        Missilemada2.addToHUDMsgList(Missilemada2.strCurrDaysHours() + "---RESUPPLY SHUTTLE brought 6 crew, some metals.---",2);
+        Missilemada2.addToHUDMsgList(Missilemada2.strCurrDaysHours() + "---RESUPPLY SHUTTLE brought 6 crew. some metals.---",2);
       }
     } else {
       //didn't bring crew
@@ -1042,27 +1042,25 @@ public class Faction {
       resource_metal3 = resource_metal3 + 25.0;
   }
   public void resupplyShuttleDeparts() { //every 2 days (172 800 sec), 4*3600 sec after it arrived.
-    //shuttle hauls away 60 tons of the most plentiful resource
+    //shuttle hauls away 90 tons of the most plentiful resource
     //what is most plentiful?
-
     double avg_reso = resource_fuel + resource_metal1 + resource_metal2 + resource_metal3;
     if (resource_metal1 > 1.2 * avg_reso) {
-      resource_metal1 = resource_metal1 - 60.0;
+      resource_metal1 = resource_metal1 - 90.0;
       return;
     }
     if (resource_metal2 > 1.2 * avg_reso) {
-      resource_metal2 = resource_metal2 - 60.0;
+      resource_metal2 = resource_metal2 - 90.0;
       return;
     }
     if (resource_metal3 > 1.2 * avg_reso) {
-      resource_metal3 = resource_metal3 - 60.0;
+      resource_metal3 = resource_metal3 - 90.0;
       return;
     }
     if (resource_fuel > 1.2 * avg_reso) {
-      resource_fuel = resource_fuel - 60.0;
+      resource_fuel = resource_fuel - 90.0;
       return;
     }
-
   }
 
   public void advance_time(double seconds) {
@@ -1295,7 +1293,7 @@ public class Faction {
 
     if (a.equals("CENTER")) { //exact spot, then shift towards random spot.
       ret = MobileThing.changeXYZTowards(frontlineLocation,
-            Missilemada2.getRandomLocationNear(frontlineLocation, 0.5 * Missilemada2.getMissileRangeMax(), vary),
+            Missilemada2.getRandomLocationNear(frontlineLocation, 0.12 * Missilemada2.getMissileRangeMax(), vary),
             0.12 * Missilemada2.getBaseDistance());
       if (isPlayerFaction())
         Missilemada2.addVfx2(ret, "aaa", (int) (5.7 * 60 * 60), 200, 0.35/*transp*/, "qm_green.png", 1.0, "");
@@ -1303,7 +1301,7 @@ public class Faction {
     if (a.equals("LEFT") || a.equals("RIGHT")) {
       Vector flankspot = getFrontlineXYZ(a);
       ret = MobileThing.changeXYZTowards(/*from*/ flankspot,
-              /*to*/ Missilemada2.getRandomLocationNear(flankspot, 0.4 * Missilemada2.getMissileRangeMax(), vary),
+              /*to*/ Missilemada2.getRandomLocationNear(flankspot, 0.12 * Missilemada2.getMissileRangeMax(), vary),
               0.18 * Missilemada2.getBaseDistance());
       if (isPlayerFaction())
         Missilemada2.addVfx2(ret, "aaa", (int) (5.7 * 60 * 60), 150, 0.35/*transp*/, "qm_blue.png", 1.0, "");
@@ -1462,7 +1460,8 @@ public class Faction {
         //is as near frontline, DON'T.
         if ((!isFrontlineNearBase()) && isXYZNearFrontline(as.getXYZ()))
           ret = null;
-        debugVFX_Text(ret, "mi2as");
+        if (ret != null)
+          debugVFX_Text(ret, "mi2as");
       } else { //wanted as was null, try grab unwanted stuff then.
         as = this.chooseKnownAsteroidToMine("ANY", asker);
         if (as != null) {
@@ -1782,7 +1781,7 @@ public class Faction {
               //scouting_distance_avg = scouting_distance_avg - 5.0;
               //System.out.println("Faction "+factionId + " not send a miner to asteroid "+ret_as.getId()+", because it's in a combat zone.");
               if (isPlayerFaction()) {
-                if (Missilemada2.gimmeRandDouble() < 0.02) { //curb spam
+                if (Missilemada2.gimmeRandDouble() < 0.002) { //curb spam
                   Missilemada2.addToHUDMsgList(Missilemada2.strCurrDaysHours() + " Asteroid "+ret_as.getId()+", too contested location for miners.");
                   Missilemada2.addVfx2(ret_as.getXYZ(), "ASTE IS BATTLEZONE, REJECTED", 16000, 3150.0, 0.7/*transp*/, "battlestart.png", 1.0, "");
                 }

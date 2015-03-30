@@ -73,7 +73,7 @@ public class Missile extends MobileThing {
 
     bearingXY = in_bearingXY;
     bearingXZ = in_bearingXZ;
-    //bearingXY = Missilemada2.calcBearingXY(this, in_target);
+    //bearingXY = Missilemada2.calcBearingXY2D(this, in_target);
     //bearingXZ = Missilemada2.calcBearingXZ(this, in_target);
     //xxxxxxxxxxx or ship gives its speed vector.
     xspeed = initialSpeed * Math.cos(bearingXY);
@@ -417,8 +417,10 @@ public class Missile extends MobileThing {
                 double randx = 29000*(Missilemada2.gimmeRandDouble() -0.5);
                 Missilemada2.addVfxOnMT(randx, 0.6 * randx, 0, "MISSILE_EXP", 1800/*sec*/, 1290.0 * (damage_yield / Missilemada2.getAvgMislYield())/*siz*/, 0.4/*transp*/, this, "orb_hotplasma.png", 1.0, "");
                 if (Missilemada2.gimmeRandDouble() < 0.3) {
-                  if (this.isSeenByPlayer())
-                    Missilemada2.createDebrisFlatSprite("missile-hit-ship_debris.png", 5.5*(0.50+Missilemada2.gimmeRandDouble()), 1350.0*(1.0+Missilemada2.gimmeRandDouble()),1350.0*(1.0+Missilemada2.gimmeRandDouble()), this, false);
+                  if (this.isSeenByPlayer()) {
+                    Missilemada2.createDebrisFlatSprite("missile-hit-ship_debris.png", 5.5 * (0.50 + Missilemada2.gimmeRandDouble()), 1350.0 * (1.0 + Missilemada2.gimmeRandDouble()), 1350.0 * (1.0 + Missilemada2.gimmeRandDouble()), this, false, false);
+                    Missilemada2.sendDebrisTowardsCamera("BATTLE", this);
+                  }
                 }
               }
               Missilemada2.removeMissile(this);
@@ -458,16 +460,15 @@ public class Missile extends MobileThing {
     }
 
     if (curr_fuel < 0.01) {
-      //System.out.println("Misl "+mislDNA+" (cost "+getCost()+") expired, distance flown: "+ distance_flown); //flown 422k - 635k
+      System.out.println("Misl "+mislDNA+" (cost "+getCost()+") expired, distance flown: "+ distance_flown); //flown 422k - 635k
       //Missilemada2.addToVFXList(xcoord, ycoord, "MISSILE_EXPIRED", 2800, null);
       if (isSeenByPlayer())
-        Missilemada2.createDebrisFlatSprite("missile_expired.png", getSpeedCurrent()*0.3, 950.0*(1.0+Missilemada2.gimmeRandDouble()), 950.0*(1.0+Missilemada2.gimmeRandDouble()), this, true);
+        Missilemada2.createDebrisFlatSprite("missile_expired.png", getSpeedCurrent()*0.3, 950.0*(1.0+Missilemada2.gimmeRandDouble()), 950.0*(1.0+Missilemada2.gimmeRandDouble()), this, true, false);
       Missilemada2.removeMissile(this); //missile is now useless, as it can be dodged very easily.
       parentShip.reportSampleMislFuelRange(distance_flown);
     }
 
-    //if extra much out of bounds, destroy.
-    //xx not needed, fuel limits.
+    //if extra much out of bounds, destroy. //xx not needed, fuel limits.
   }
   public double getDefenseBeamEvasion() {
     //xx want sort of 0.04 to 0.95

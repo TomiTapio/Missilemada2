@@ -53,6 +53,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
   int count_missiles_hit_me = 0;
   boolean am_under_fire = false;
   boolean panic = false;
+  boolean shipwide_fire = false;
   boolean dodge_mode = false;
   Ship ene_closest = null;
   Ship ene_least_dangerous = null;
@@ -300,9 +301,9 @@ public class Ship extends MobileThing implements Comparable<Ship> {
       defense_beam_accuracy = 1.0 + 0.93 * r8.nextDouble(); //defense beam to nullify missiles, defender's specialty
       personality_aggro = 0.7;
 
-      max_shields = 75500500 * (maxshield_factor + 0.35); //in MJ
+      max_shields = 62500500 * (maxshield_factor + 0.35); //in MJ
       curr_shields = max_shields / 14.5;
-      shield_regen_per_min = 96500 * shieldregenpermin_factor; //in MJ / sec. also powers the beam weapons.
+      shield_regen_per_min = 94500 * shieldregenpermin_factor; //in MJ / sec. also powers the beam weapons.
 
       buildcredits_gen_per_minute = bcps_scaling * 3150 * (0.38 + bcps_factor);
       if (bcps_factor > 0.85)
@@ -372,10 +373,10 @@ public class Ship extends MobileThing implements Comparable<Ship> {
       defense_beam_accuracy = 0.44 + 0.9 * r8.nextDouble(); //defense beam to nullify missiles
       personality_aggro = 0.25;
 
-      max_shields = 14500500 * (maxshield_factor + 0.45); //in MJ
+      max_shields = 13500500 * (maxshield_factor + 0.45); //in MJ
       curr_shields = max_shields / 4.5;
 
-      shield_regen_per_min = 24500 * shieldregenpermin_factor; //in MJ / sec. also powers the beam weapons. strong.
+      shield_regen_per_min = 22500 * shieldregenpermin_factor; //in MJ / sec. also powers the beam weapons. strong.
       if (shregen_rand > 0.86) {
         shield_regen_per_min = 1.4 * shield_regen_per_min;
         max_shields = 1.2 * max_shields;
@@ -734,6 +735,8 @@ public class Ship extends MobileThing implements Comparable<Ship> {
     //xx possibly crop name to 14 char if longer.
     s.append("STR " + (int) (max_battle_str / 1000000) + " " + type + " " + getName());
 
+    if (shipwide_fire)
+      s.append("-FIRE!-");
     if (see_enemy_count > 0)
       s.append("_" + see_enemy_count);
     else
@@ -958,11 +961,16 @@ public class Ship extends MobileThing implements Comparable<Ship> {
       //if fire damage, curb number of debris. else don't curb.
       //no debris trail if player doesn't see the ship!
       if (damagetype.equals("shipwide fire") || damagetype.equals("engine fire") ) {
-        if (this.isSeenByPlayer() && Missilemada2.gimmeRandDouble() < 0.07)
-          Missilemada2.createDebrisFlatSprite("hull_bits.png", 0.28*(0.10+Missilemada2.gimmeRandDouble()), 750.0*(1.0+Missilemada2.gimmeRandDouble()), 750.0*(1.0+Missilemada2.gimmeRandDouble()), this, false);
+        if (this.isSeenByPlayer() && Missilemada2.gimmeRandDouble() < 0.07) {
+          //smaller and slower debris
+          Missilemada2.createDebrisFlatSprite("hull_bits.png", 0.20 * (0.10 + Missilemada2.gimmeRandDouble()), 450.0 * (1.0 + Missilemada2.gimmeRandDouble()), 450.0 * (1.0 + Missilemada2.gimmeRandDouble()), this, false, false);
+          Missilemada2.sendDebrisTowardsCamera("BATTLE", this);
+        }
       } else { //regular damage.
-        if (this.isSeenByPlayer())
-          Missilemada2.createDebrisFlatSprite("hull_bits.png", 0.28*(0.10+Missilemada2.gimmeRandDouble()), 750.0*(1.0+Missilemada2.gimmeRandDouble()), 750.0*(1.0+Missilemada2.gimmeRandDouble()), this, false);
+        if (this.isSeenByPlayer()) {
+          Missilemada2.createDebrisFlatSprite("hull_bits.png", 0.28 * (0.10 + Missilemada2.gimmeRandDouble()), 750.0 * (1.0 + Missilemada2.gimmeRandDouble()), 750.0 * (1.0 + Missilemada2.gimmeRandDouble()), this, false, false);
+        }
+        Missilemada2.sendDebrisTowardsCamera("BATTLE", this);
 
         //too spammy: Missilemada2.putMelodyIntoQue(Missilemada2.DNAintoMelody(getDNA(), 3, "") /*Vector of pitches*/, corenote+2 /*core note*/, parentFaction.getMIDIInstrument() /*instrument*/, 1.4F /*note duration*/);
         int wub = (int)(100*hulldamageperc_of_hit);
@@ -1048,7 +1056,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
 
       if (this.isSeenByPlayer())
         Missilemada2.createDebrisFlatSprite("shield_spark.png", 0.12*(0.10+Missilemada2.gimmeRandDouble()),
-                1150.0*(1.0+Missilemada2.gimmeRandDouble()), 1150.0*(1.0+Missilemada2.gimmeRandDouble()), this, false/*false=rand bearing*/);
+                1150.0*(1.0+Missilemada2.gimmeRandDouble()), 1150.0*(1.0+Missilemada2.gimmeRandDouble()), this, false/*false=rand bearing*/, false);
 
       shieldsystem_status = shieldsystem_status - 0.002;
       if (shieldsystem_status < 0.08)
@@ -1104,7 +1112,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
     return sensor_range;
   }
   public int getBuildTimeDelay() {
-    return (int) (1.7 * buildcost); //0.5 too little, 4.5 too much.
+    return (int) (2.7 * buildcost); //0.5 and 1.7 too little, 4.5 too much.
   }
   public void getDestroyed(Ship scoring_ship, String damagetype) {
     try {
@@ -1117,11 +1125,6 @@ public class Ship extends MobileThing implements Comparable<Ship> {
       current_target = null;
       /* max_speed = 0.0;*/
       curr_hull_hp = 0.0; curr_shields = 0.0; engine_status = 0.0;
-
-      //keep track of KIA(killed in action) count.
-      if (curr_crew_count > 0 && parentFaction != null)
-        parentFaction.lostCrewmen(curr_crew_count);
-      curr_crew_count = 0;
 
       //faction focuses efforts this location, coz lost a ship.
       if (parentFaction != null) {
@@ -1151,7 +1154,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
 
         Faction scoring_fac = scoring_ship.getFaction();
         if (scoring_fac != null)
-          scoring_fac.addScoreShipKill(this.buildcost, this);
+          scoring_fac.addScoreShipKill(this.buildcost, this); //uses curr_crew_count.
         if (scoring_ship.getTargetId() == getId())
           scoring_ship.clearTarget(); //BUT scoring_ship might have gotten a new target many seconds ago.
 
@@ -1164,15 +1167,16 @@ public class Ship extends MobileThing implements Comparable<Ship> {
             Missilemada2.addToHUDMsgList(Missilemada2.strCurrDaysHours() + "We destroyed an enemy mining ship! Well done, "+scoring_ship.toStrTypeNName()+"!", 2);
             Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("yay MINER down", 5, "") /*Vector of pitches*/, 62 /*core note*/, 17 /*perc organ*/, 100, 2.9F /*note duration*/);
           }
-
-
-
-
-
+          //xxtodo something
         }
-    } else {
-      System.out.println("--part2 SHIP DESTROYED by unkn ship or a fire, "+damagetype + ".");
-    }
+        //keep track of KIA(killed in action) count.
+        if (curr_crew_count > 0 && parentFaction != null)
+          parentFaction.lostCrewmen(curr_crew_count);
+        curr_crew_count = 0;
+
+      } else {
+        System.out.println("--part2 SHIP DESTROYED by unkn ship or a fire, "+damagetype + ".");
+      }
 
       //explosion visible TO PLAYER at ANY RANGE. So big.
       Missilemada2.addVfx2(getXYZ(), "SHIP_EXPLODED", (int) (5.7 * 60 * 60), 31.0 * radius, 0.85/*transp*/, "boom4.png", 1.0, "");
@@ -1184,7 +1188,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
       if (this.isSeenByPlayer()) {
         for (int a = 0; a < bits_count; a++) {
           Missilemada2.createDebrisFlatSprite("hull_bits.png", 4.1*(0.10+Missilemada2.gimmeRandDouble()) /*spd*/,
-                  950.0*(1.0+Missilemada2.gimmeRandDouble()), 950.0*(1.0+Missilemada2.gimmeRandDouble()), this, false/*false==randomdir*/);
+                  950.0*(1.0+Missilemada2.gimmeRandDouble()), 950.0*(1.0+Missilemada2.gimmeRandDouble()), this, false/*false==randomdir*/, false);
         }
       }
 
@@ -1288,7 +1292,8 @@ public class Ship extends MobileThing implements Comparable<Ship> {
         if (isInPlayerFaction()) {
           if (Missilemada2.gimmeRandDouble() < 0.0008 * seconds) {
             Missilemada2.createDebrisFlatSprite("mining_debris.png", 1.1*(0.10+Missilemada2.gimmeRandDouble()) /*spd*/,
-                    750.0*(1.0+Missilemada2.gimmeRandDouble()), 750.0*(1.0+Missilemada2.gimmeRandDouble()), this, false);
+                    750.0*(1.0+Missilemada2.gimmeRandDouble()), 750.0*(1.0+Missilemada2.gimmeRandDouble()), this, false, false);
+            Missilemada2.sendDebrisTowardsCamera("MINING", this);
           }
         }
 
@@ -1470,8 +1475,12 @@ public class Ship extends MobileThing implements Comparable<Ship> {
       if (Missilemada2.gimmeRandDouble() < 0.07)
         engine_status = engine_status + 0.01; //auto-stabilizing tech, so don't burn forever if incompetent crew.
     }
-    if (getBattleStrPerc() < 0.30 && !isDestroyed()) //if very systems-damaged, are on fire, take more damage.
-      getDamaged(0.08 * (seconds/180.0) * Missilemada2.getAvgMislYield(), "shipwide fire", null, true/*bypass shields*/);
+    if (getBattleStrPerc() < 0.30 && !isDestroyed()) { //if very systems-damaged, are on fire, take more damage.
+      getDamaged(0.06 * (seconds / 180.0) * Missilemada2.getAvgMislYield(), "shipwide fire", null, true/*bypass shields*/);
+      shipwide_fire = true;
+    }
+    if (getBattleStrPerc() > 0.30)
+      shipwide_fire = false;
 
     if (isDestroyed()) { //must be AFTER fire-damage code.
       advance_time_derelict_drift(seconds);
@@ -1514,8 +1523,8 @@ public class Ship extends MobileThing implements Comparable<Ship> {
     des_x = (Double)current_destinationXYZ.get(0); //had nullptr on victory.
     des_y = (Double)current_destinationXYZ.get(1);
     des_z = (Double)current_destinationXYZ.get(2);
-    bear_to_desti_xy = Missilemada2.calcBearingXY(xcoord, ycoord, des_x, des_y); //cpu-intensive
-    bear_to_desti_xz = Missilemada2.calcBearingXY(xcoord, zcoord, des_x, des_z); //cpu-intensive
+    bear_to_desti_xy = Missilemada2.calcBearingXY2D(xcoord, ycoord, des_x, des_y); //cpu-intensive
+    bear_to_desti_xz = Missilemada2.calcBearingXY2D(xcoord, zcoord, des_x, des_z); //cpu-intensive
 
     //if still have a home base... and are near it, try to offload cargo / replenish misl buildcredits.
       if (parentFaction.getStarbase() != null) {
@@ -2404,7 +2413,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
             }
           } //else self, ignore.
           //possible 0.01 chance of friendly radio babble/chatter.
-          if (Missilemada2.gimmeRandDouble() < 0.0003 && isInPlayerFaction()) {
+          if (Missilemada2.gimmeRandDouble() < 0.0001 && isInPlayerFaction()) {
             Missilemada2.playRadioChatter(1/*which chatter*/, 70/*int*/, 65/*vol*/, 12/*pitch offset*/);
           }
         } else { //see an enemy
@@ -2745,9 +2754,9 @@ public class Ship extends MobileThing implements Comparable<Ship> {
                     if (isInPlayerFaction() /*|| targetmis.getFaction() == Missilemada2.getPlayerFaction() */ || targetmis.isSeenByPlayer()) {
                       Missilemada2.addVfx2(targetmis.getXYZ(), "MISL EXPLO", 1400/*sec*/,
                               1310.0 * (targetmis.getYield() / Missilemada2.getAvgMislYield())/*siz*/, 0.6/*transp*/, "missile_shotdown.png", 1.0, "");
-                      Missilemada2.createDebrisFlatSprite("missile-hit-defebeam_debris.png", targetmis.getSpeedCurrent(), 850.0*(1.0+Missilemada2.gimmeRandDouble()), 800, this, false);
-                      Missilemada2.createDebrisFlatSprite("missile-hit-defebeam_debris.png", targetmis.getSpeedCurrent(), 650.0*(1.0+Missilemada2.gimmeRandDouble()), 600, this, false);
-                      Missilemada2.createDebrisFlatSprite("missile-hit-defebeam_debris.png", targetmis.getSpeedCurrent(), 950.0*(1.0+Missilemada2.gimmeRandDouble()), 1100, this, false);
+                      Missilemada2.createDebrisFlatSprite("missile-hit-defebeam_debris.png", targetmis.getSpeedCurrent(), 850.0*(1.0+Missilemada2.gimmeRandDouble()), 800, this, false, false);
+                      Missilemada2.createDebrisFlatSprite("missile-hit-defebeam_debris.png", targetmis.getSpeedCurrent(), 650.0*(1.0+Missilemada2.gimmeRandDouble()), 600, this, false, false);
+                      Missilemada2.createDebrisFlatSprite("missile-hit-defebeam_debris.png", targetmis.getSpeedCurrent(), 950.0*(1.0+Missilemada2.gimmeRandDouble()), 1100, this, false, false);
                     }
                 } else {
                   //System.out.println("misl "+targetmis.getId()+" shootdown failure.");
@@ -2781,7 +2790,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
               //System.out.println("Ship " + unique_id + " used attack beam, dealt " + (int) getAtkBeamStr() + " damage at "+(int) getAttackBeamRange()+" range.");
               if (isInPlayerFaction()) {
                 Missilemada2.createDebrisFlatSprite("attackbeam_ship_debris.png", 5.5*(0.50+Missilemada2.gimmeRandDouble()),
-                        150.0*(1.0+Missilemada2.gimmeRandDouble()), 150.0*(1.0+Missilemada2.gimmeRandDouble()), this, true/*debris bearing from ship*/);
+                        150.0*(1.0+Missilemada2.gimmeRandDouble()), 150.0*(1.0+Missilemada2.gimmeRandDouble()), this, true/*debris bearing from ship*/, false);
                 playAtkBeamFiringNote();
               }
               if (isInPlayerFaction()) {
@@ -3015,10 +3024,11 @@ public class Ship extends MobileThing implements Comparable<Ship> {
           if (buddy_civilian.getType().equals("MINER")) {
             if ((type.equals("SCOUT") || type.equals("DEFENDER") || type.equals("BEAMDRONE"))
                 && !forceddestination){
-              forceDestination(buddy_civilian.getXYZ(), "minerbud.war+self.peace,sco/def/bd to miner");
+              setDes(buddy_civilian.getXYZ(), "minerbud.war+self.peace,sco/def/bd to miner");
               //am_under_fire = true;
               current_target = buddy_civilian.getTarget();
-              requestFireMissile(current_target.getXYZ(), current_target);
+              if (current_target != null)
+                requestFireMissile(current_target.getXYZ(), current_target);
             }
           }
         }
@@ -3026,7 +3036,21 @@ public class Ship extends MobileThing implements Comparable<Ship> {
     }
 
     //----section begin: if didn't decideBattleMoveDestination()
-      //not detect immediate danger, just 1-2 stray enemy missiles.
+      //not detect immediate danger, just 1-N stray enemy missiles.
+
+    //----if no battle, and derelict ship nearby, tractor it towards BASE.
+       //in USESENSORS:   Vector nearbyDeadShipsList = Missilemada2.getShips_XYNearest(xcoord, ycoord, 1.05 * this.getTractorRange(), 4);        //go thru list, decide on a buddy_derelict.
+    if (buddy_derelict != null && !tractormode) {
+      if (canTractorThisDerelict(buddy_derelict)) {
+        tractormode = true;
+        if (isInPlayerFaction())
+          Missilemada2.addToHUDMsgList(Missilemada2.strCurrDaysHours() + this.toStringShort()+" begins tractoring a derelict "+buddy_derelict.getType() + ". Dere spd="+buddy_derelict.getSpeedCurrent());
+      } else {
+        //too heavy for us.
+        if (isInPlayerFaction())
+          Missilemada2.addToHUDMsgList(Missilemada2.strCurrDaysHours() + this.toStrTypeNName() + " can't tractor derelict " + buddy_derelict.getType() + ", too large.",0);
+      }
+    } //else nothing.
 
     //----if tractor mode, set destination: near the derelict.
     if (tractormode) {
@@ -3065,19 +3089,6 @@ public class Ship extends MobileThing implements Comparable<Ship> {
         tractormode = false;
       }
     }
-    //----if no battle, and derelict ship nearby, tractor it towards BASE.
-    //in USESENSORS:   Vector nearbyDeadShipsList = Missilemada2.getShips_XYNearest(xcoord, ycoord, 1.05 * this.getTractorRange(), 4);        //go thru list, decide on a buddy_derelict.
-    if (buddy_derelict != null && !tractormode) {
-      if (canTractorThisDerelict(buddy_derelict)) {
-        tractormode = true;
-        //if (isInPlayerFaction())
-        //  Missilemada2.addToHUDMsgList(Missilemada2.strCurrDaysHours() + this.toStringShort()+" begins tractoring a derelict "+buddy_derelict.getType() + ". Dere spd="+buddy_derelict.getSpeedCurrent());
-      } else {
-        //too heavy for us.
-        if (isInPlayerFaction())
-          Missilemada2.addToHUDMsgList(Missilemada2.strCurrDaysHours() + this.toStringShort() + " can't tractor a derelict " + buddy_derelict.getType() + ", too large.",0);
-      }
-    } //else nothing.
 
     //----scouts' behaviour, including aste-scan and aste-mine
     if (type.equals("SCOUT")) {
@@ -3293,7 +3304,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
     } //end miner
 
     //----MIL-ships, when not in combat:
-    if ((type.equals("DEFENDER") || type.equals("AC") || type.equals("MISSILEDRONE") || type.equals("BEAMDRONE") )) {
+    if (isMil()) {
       String milmode = parentFaction.getMode("MIL");
 
       //if missiledrone empty missile bays, go fetch more from starbase.
@@ -3310,13 +3321,32 @@ public class Ship extends MobileThing implements Comparable<Ship> {
           return;
         }
         if ((milmode.equals("FLAG") || milmode.equals("FLAGLEFT") || milmode.equals("FLAGRIGHT")) && !forceddestination) {
-          if (isDrone()) { //drones can't go to FL alone / explore alone.
+          if (isDrone()) { //xxgameplay: ???,, drones can't go to FL alone / explore alone. keyword:beamdrone
             if (buddy_mil == null) {
-              //stay at base
+              //new: go to FL alone if lost track of milbud. Hope to find new milbud there.
+
+            //xxtodo: misldrone rear of FL, beamdrone front of FL.
+              if (milmode.equals("FLAG") )
+                forceDestination(parentFaction.getFrontlineXYZ_vary("CENTER"), "mildrone frontline");
+              if (milmode.equals("FLAGLEFT") )
+                forceDestination(parentFaction.getFrontlineXYZ_vary("LEFT"), "mildrone frontline LE");
+              if (milmode.equals("FLAGRIGHT") )
+                forceDestination(parentFaction.getFrontlineXYZ_vary("RIGHT"), "mildroine frontline RI");
+
+
+
+
+              /* old:    //stay at base
               setDes(parentFaction.getXYZ_starbase_safer_side(), "mil drone stay at base coz no bud");
+              if (buddy_civilian != null) {
+                setDes(buddy_civilian.getXYZ(), "drone stay with civbud coz no milbud");
+              }
+              */
             } else {
               //follow milbuddy.
-              setDes(predictTargetsPosition(buddy_mil, 6/*ticks*/), "mil drone follow milbud");
+              forceDestination(predictTargetsPosition(buddy_mil, 20/*ticks*/), "mil drone follow milbud");
+              if (current_target == null)
+                current_target = buddy_mil.getTarget();
             }
             return;
           } else {
@@ -4313,7 +4343,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
     }
 
     //draw line indicator how full of missiles I am.
-    if (getHullPerc() > 0.10 && max_buildcredits > 20.0) {
+/*    if (getHullPerc() > 0.10 && max_buildcredits > 20.0) {
       Missilemada2.setOpenGLMaterial("LINE");
       Missilemada2.setOpenGLTextureGUILine();
       double x1 = xcoord - (260*radius);
@@ -4330,7 +4360,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
       GL11.glVertex3f((float) x1, (float) (y1+tall), (float) z1);      GL11.glNormal3f(0.0f, 0.0f, 1.0f);
       GL11.glEnd();
       Missilemada2.setOpenGLMaterial("SHIP");
-    }
+    }*/
 
     //BORING: draw line to current target
 //    if (current_target != null && !isDestroyed() && isInPlayerFaction() ) {
@@ -4343,13 +4373,13 @@ public class Ship extends MobileThing implements Comparable<Ship> {
 
 
         //draw line to buddy if stance formation bool.
-        if (might_stay_in_formation_OBSO && see_friend_count > 1 && buddy_mil != null && !isDestroyed()) {
+/*        if (might_stay_in_formation_OBSO && see_friend_count > 1 && buddy_mil != null && !isDestroyed()) {
           Missilemada2.setOpenGLMaterial("LINE");
           Missilemada2.setOpenGLTextureGUILine();
           GL11.glColor4f(0.9f, 0.2f, 0.9f, 0.7f);
           FlatSprite.drawFlatLineVecVec(this.getXYZ(), buddy_mil.getXYZ(), 20.5*this.getRadius());
           Missilemada2.setOpenGLMaterial("SHIP");
-        }
+        }*/
 
 
     //draw line to milbuddy
@@ -4417,7 +4447,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
     //DEBUG: sphere, draw sensors, before ship's-shape-deform-scale.
     if (parentFaction != null) {
       if (parentFaction.show_sensors)
-        drawSensorRange();
+        drawSensorRange2D();
     }
 
     //draw shields if have them.
@@ -4604,7 +4634,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
 
     GL11.glPopMatrix();
   }
-  public void drawSensorRange() {
+  public void drawSensorRange2D() {
     Sphere s = new Sphere();
     Disk di = new Disk();
     GL11.glPushMatrix();
@@ -4614,7 +4644,9 @@ public class Ship extends MobileThing implements Comparable<Ship> {
     s.setDrawStyle(GLU.GLU_LINE); //fill, line, silhouette, point
     di.setDrawStyle(GLU.GLU_LINE); //fill, line, silhouette, point
 
-    GL11.glColor4f(0.9f, 0.9f, 0.45f, 0.31f); //yellow
+    GL11.glColor4f(0.9f, 0.9f, 0.45f, 0.26f); //yellow
+    if (isDrone()) //drones get stupid-blue
+      GL11.glColor4f(0.1f, 0.2f, 0.95f, 0.26f); //yellow
     if (see_enemy_count > 0)
       GL11.glColor4f(0.9f, 0.2f, 0.25f, 0.61f); //red
     di.draw(siz / 1.0001f, siz, 32, 1);
@@ -4871,8 +4903,8 @@ public class Ship extends MobileThing implements Comparable<Ship> {
     double des_y = (Double)desti_xyz.get(1);
     double des_z = (Double)desti_xyz.get(2);
 
-    double bear_to_desti_xy = Missilemada2.calcBearingXY(xcoord, ycoord, des_x, des_y); //cpu-intensive
-    double bear_to_desti_xz = Missilemada2.calcBearingXY(xcoord, zcoord, des_x, des_z); //cpu-intensive
+    double bear_to_desti_xy = Missilemada2.calcBearingXY2D(xcoord, ycoord, des_x, des_y); //cpu-intensive
+    double bear_to_desti_xz = Missilemada2.calcBearingXY2D(xcoord, zcoord, des_x, des_z); //cpu-intensive
 
     xspeed = xspeed + (amt * seconds) * Math.cos(bear_to_desti_xy);
     yspeed = yspeed + (amt * seconds) * Math.sin(bear_to_desti_xy);

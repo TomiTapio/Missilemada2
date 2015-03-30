@@ -116,7 +116,7 @@ public class MobileThing
   public double getSpeedCurrent() { //in km/sec
     return Math.sqrt(xspeed*xspeed + yspeed*yspeed + zspeed*zspeed);
   }
-  public Vector getXYZPredicted(int seconds) { //handy for escorting miners; don't aim at the spot they were at whem move-decision was made.
+  public Vector getXYZPredicted(int seconds) { //handy for escorting miners; don't aim at the spot they were at when move-decision was made.
     //extrapolate from thing's current_speed.
     Vector ret = new Vector(4,3);
     ret.add(0, new Double(xcoord + (xspeed * (seconds))));
@@ -262,7 +262,7 @@ public class MobileThing
     zspeed = 0.0;
   }
   public double getDirXY() { //for setSpeed_KE_dirXY()
-    return Missilemada2.calcBearingXY(xcoord, ycoord, xcoord + xspeed, ycoord + yspeed);
+    return Missilemada2.calcBearingXY2D(xcoord, ycoord, xcoord + xspeed, ycoord + yspeed);
   }
   public void setSpeed_KE_dirXY(double kinetic_energy, double dir /*0..2PI*/) {
     //speed is in sort-of-pixels per second. Let's say 1000px is two meters.
@@ -335,8 +335,8 @@ public class MobileThing
     double devi_bearing = (personality_LR - 0.5) * (3.14 / 2.5);
 
     //advance from self_xyz along the two bearings, to find out desired xyz.
-    double bear_XY = devi_bearing + Missilemada2.calcBearingXY((Double)(self_xyz.get(0)), (Double)(self_xyz.get(1)),
-            (Double)(other_xyz.get(0)), (Double)(other_xyz.get(1)));
+    double bear_XY = devi_bearing + Missilemada2.calcBearingXY2D((Double) (self_xyz.get(0)), (Double) (self_xyz.get(1)),
+          (Double) (other_xyz.get(0)), (Double) (other_xyz.get(1)));
     //com.tomitapio.missilemada2.ATAN2Lookup.atan2((float)LR_devi, (float)chosen_dist_from_self);
     double bear_XZ = bear_XY;
     Vector ret = new Vector(4,3);
