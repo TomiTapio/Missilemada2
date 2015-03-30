@@ -2589,4 +2589,14 @@ public class Faction {
     }
     return ret;
   }
+  public static Ship getNearestFriendlyAC(Ship repairwanter) {
+    //Faction fa = repairwanter.getFaction();
+
+    //also needs to be out of combat, for hullrepair.
+
+    //xxxx getShipsOfFaction(fa);
+
+    return null;
+  }
+
 }

@@ -52,6 +52,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
   int see_enemy_count = 0;
   int count_missiles_hit_me = 0;
   boolean am_under_fire = false;
+  boolean panic = false;
   boolean dodge_mode = false;
   Ship ene_closest = null;
   Ship ene_least_dangerous = null;
@@ -686,10 +687,10 @@ public class Ship extends MobileThing implements Comparable<Ship> {
     //  System.out.println(this.toStringShort() + " got forced desti: "+debugwhy+": "+ (Double) xyz.get(0) +"--"+ (Double) xyz.get(1) +"--"+ (Double) xyz.get(2));
 
     if (xyz == null) {
-      //throw new NullPointerException();
       debugVFXText(this.getXYZ(), "NULL_FORCE!"+debugwhy);
       have_destination = false;
       forceddestination = false;
+      throw new NullPointerException();
     } else {
       current_destinationXYZ = xyz;
       have_destination = true;
@@ -706,6 +707,8 @@ public class Ship extends MobileThing implements Comparable<Ship> {
     //buddy_derelict = null; //?
     destinationAsteroid = null;
     // xxx  visited_destinations_XYZs_fooooooo.add(currentlocationvec)
+    if (getHullPerc() > 0.78)
+      panic = false;
   }
   public boolean equals(Object o) { //for score list
     if (!(o instanceof Ship))
@@ -871,20 +874,18 @@ public class Ship extends MobileThing implements Comparable<Ship> {
   }
   private void gotShieldsToFull() {
     setIsNearBattle(false);
+    am_under_fire = false;
+    panic = false;
     if (isInPlayerFaction() && type.equals("AC")) {
-      Missilemada2.addToHUDMsgList("Our Cruiser " + this.toStringShort() + " got shields back to FULL.");
+      Missilemada2.addToHUDMsgList("Our Cruiser " + this.toStrTypeNName() + " got shields back to FULL.");
     }
-
-/*
-    int a = getMIDIInstrument();
+/*    int a = getMIDIInstrument();
     setMIDIInstrument(71*/
 /*clarinet*//*
-);
-    playNote(10, 90, 8);
+);    playNote(10, 90, 8);
     setMIDIInstrument(a);
 */
   }
-
   public String getDNA() {
     return shipDNA;
   }
@@ -1565,6 +1566,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
 
       if (forceddestination) {
         forceddestination = false; //order (or panic) completed, out of forceddestination mode.
+        panic = false;
         have_destination = false;
         if (isMiner()) {
           //if miner forced-arrived at base(or other FORCED desti), then stay there for a while, don't RUN STRAIGHT OUT TO DANGERS
@@ -1620,6 +1622,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
           slowdown = false; //zoom past at high speed
         } else {
           slowdown = true;
+          panic = false;
         }
 
         //we scout/mil arrived, somewhere. if not at base, and hurt, and no foes, go to base.
@@ -1875,7 +1878,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
       executeTractor(seconds);
 
       if (getSystemsStatusAvg() < 0.991) //992 is limit for one 5-percent thing.
-        executeCrewRepairs(seconds); //never hull hp repairs by crew.
+        executeSystemRepairs(seconds); //never hull hp repairs by crew.
       if (curr_crew_count < max_crew_count && isAtFactionBase() && !isStarbase() && !isDrone())
         tryGetReplacementCrew();
 
@@ -2080,7 +2083,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
     }
 
     //if near an AC, assault cruiser.
-    Ship an_ac = Missilemada2.getNearestFriendlyAC(this);
+    Ship an_ac = parentFaction.getNearestFriendlyAC(this);
     if (an_ac != null && an_ac != this) { //AC can't repair at_self!
       if (calcDistanceMTMT(this, an_ac) < Missilemada2.getMiningDistance()
           && an_ac.getHullPerc() > 0.4) {
@@ -2106,12 +2109,14 @@ public class Ship extends MobileThing implements Comparable<Ship> {
           Missilemada2.addVfxOnMT(getX(), getY(), getZ(), "HULLREPAIRS", 19000, 1380.0, 1.0/*transp*/, null, "hull_repair.png", 1.0, "");
         }
       }
+    } else {
+      // no friendly AC exist, or self is only friendly AC.
     }
   }
   public void changeBuildCreditsPlusMinus(double v) {
     curr_buildcredits = curr_buildcredits + v;
   }
-  private void executeCrewRepairs(double seconds) {
+  private void executeSystemRepairs(double seconds) {
     if (isDrone()) {
       if (isAtFactionBase()) {
         //ok you can get repairs, are at base.
@@ -2148,7 +2153,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
     //insert repair crew if at base.
     if (isAtFactionBase() && parentFaction.isBaseAlive() && !type.equals("STARBASE")) {
       curr_crew_count = curr_crew_count + 8;
-      //System.out.println("Ship "+unique_id+" got base's repair crew onboard. currcrew="+curr_crew_count);
+      System.out.println("Ship "+unique_id+" got base's repair crew onboard. currcrew="+curr_crew_count);
     }
     for (int i = 1; i <= curr_crew_count; i++) { //for each crewman, try a repair.
       if (Missilemada2.gimmeRandDouble() < (0.000012 * seconds)) { //0.x% of repair success PER N SECONDS PER CREWMAN. then see what got repaired.
@@ -2182,7 +2187,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
     //remove repair crew if at base.
     if (isAtFactionBase()  && parentFaction.isBaseAlive()  && !type.equals("STARBASE")) {
       curr_crew_count = curr_crew_count - 8;
-      //System.out.println("Ship "+unique_id+" removed base's repair crew.  currcrew="+curr_crew_count);
+      System.out.println("Ship "+unique_id+" removed base's repair crew.  currcrew="+curr_crew_count);
     }
   }
   private void useSensors() {
@@ -2973,7 +2978,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
     //----EVERYONE: detect if we are in combat, maybe flee or advance or hold position or goto buddy.
     checkIfBuddiesDead();
     boolean buddy_in_battle = areMyBuddiesInCombat();
-    if (see_enemy_count > 0 || see_enemy_mislcount > 2) { //got interrupted by enemy sighting, gotta decide new destination.
+    if (see_enemy_count > 0 || see_enemy_mislcount > 4/*important?*/) { //my peacestuff got interrupted by enemy sighting, gotta decide new destination.
       if (!am_under_fire) { //on first bool flip, vfx.
         have_destination = false;
         am_under_fire = true;
@@ -2984,10 +2989,11 @@ public class Ship extends MobileThing implements Comparable<Ship> {
         //ship was already in combat from earlier.
         //am_under_fire = true;
       }
-      //CHANGED, tractormode = false; //xxgameplay: don't tractor while in battle.
+      //CHANGED, tractormode = false; //xxxgameplay: don't tractor while in battle.
       decideBattleMoveDestination();
       return;
     }
+    //here, we are not in combat.
     if (buddy_in_battle) { //spammy on battlestart.png
       //if dist to mil bud is x and milbud in battle, do x
             //      if (buddy_mil != null) {
@@ -3003,15 +3009,16 @@ public class Ship extends MobileThing implements Comparable<Ship> {
             //          return;
             //        }
             //      }
-      //if dist to civ bud(MINER) is x and civbud in battle, do x(rush to its aid)
+      //if dist to civ bud(MINER) is x and civbud in battle, do rush to miner's aid.
       if (buddy_civilian != null) {
         if (calcDistanceMTMT(this, buddy_civilian) < 0.9*sensor_range) {
           if (buddy_civilian.getType().equals("MINER")) {
             if ((type.equals("SCOUT") || type.equals("DEFENDER") || type.equals("BEAMDRONE"))
                 && !forceddestination){
-              forceDestination(buddy_civilian.getXYZ(), "peacetime scout/def/bd to minerbuddy.");
+              forceDestination(buddy_civilian.getXYZ(), "minerbud.war+self.peace,sco/def/bd to miner");
               //am_under_fire = true;
               current_target = buddy_civilian.getTarget();
+              requestFireMissile(current_target.getXYZ(), current_target);
             }
           }
         }
@@ -3731,7 +3738,8 @@ public class Ship extends MobileThing implements Comparable<Ship> {
 
         }
       }
-      if ((milmode.equals("FLAG") || milmode.equals("FLAGLEFT") || milmode.equals("FLAGRIGHT")) && !forceddestination) {
+      if ((milmode.equals("FLAG") || milmode.equals("FLAGLEFT") || milmode.equals("FLAGRIGHT")) /*&& !forceddestination may have been catastrophic*/) {
+        buddy_civilian = null;
         //yup, force frontline, player commanded so. Big trouble can cancel the force_desti however.
             Vector spot = null;
             if (milmode.equals("FLAG") )
@@ -3741,23 +3749,29 @@ public class Ship extends MobileThing implements Comparable<Ship> {
             if (milmode.equals("FLAGRIGHT") )
               spot = parentFaction.getFrontlineXYZ_vary("RIGHT");
         if (haveShieldSystem()) {
-          if (getShieldPerc() > 0.5 && getMissileStorePerc() > 0.15) {
-            forceDestination(spot, "combat: mil stay at very frontline");
-            return;
+          if (getShieldPerc() > 0.5 && ( getMissileStorePerc() > 0.15 || type.equals("BEAMDRONE") )) {
+            setDes(spot, "combat: mil at very frontline"); //beamdrones should
+            might_stay_in_formation_OBSO = true;
+            if (getHullPerc() < 0.6) { //low HP, go repair
+              forceDestination(parentFaction.getXYZ_starbase_safer_side(), "combat: hull damage,go repair");
+              return;
+            }
+
           } else { //fall back coz low shields
-            Vector spotsafer = MobileThing.changeXYZTowards(spot, parentFaction.getXYZ(), 0.2*sensor_range);
-            forceDestination(spotsafer, "combat: mil stay at rear of frontline coz need to recharge");
-            return;
+            Vector spotsafer = MobileThing.changeXYZTowards(spot, parentFaction.getXYZ(), 0.3*sensor_range);
+            setDes(spotsafer, "combat: rearFL,need to recharge");
+            //return;
           }
         } else {
           //no shield capability, am cheapo or missiledrone
-          if (getHullPerc() > 0.6) {
-            Vector spotsafer = MobileThing.changeXYZTowards(spot, parentFaction.getXYZ(), 0.1*sensor_range);
-            forceDestination(spotsafer, "combat: mil stay at rear of frontline coz owns no shields");
-            return;
+          if (getHullPerc() > 0.65) {
+            Vector spotsafer = MobileThing.changeXYZTowards(spot, parentFaction.getXYZ(), 0.25*sensor_range);
+            setDes(spotsafer, "combat: rearFL,own no shields");
+            //return;
           } else {
             //low HP, go repair
-            forceDestination(parentFaction.getXYZ_starbase_safer_side(), "low hull, owns no shields, go repair from frontline");
+            forceDestination(parentFaction.getXYZ_starbase_safer_side(), "combat: low hull, owns no shields, go repair");
+            might_stay_in_formation_OBSO = false;
             return;
           }
         }
@@ -3768,6 +3782,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
       String mo = parentFaction.getMode("MINER");
       if (mo.equals("BASE") && !forceddestination && !isAtFactionBase()) {
         forceDestination(parentFaction.getXYZ_starbase_safer_side(), "miners in base mode");
+        might_stay_in_formation_OBSO = false;
         return;
       }
       //xxx might go slightly away from frontlineflag-n-base combo?
@@ -3826,38 +3841,45 @@ public class Ship extends MobileThing implements Comparable<Ship> {
         }
       }
 
-      //if hurt, go home to repair. NOT FORCED!
+      //if hurt, go home to repair. FORCED!
       if (engine_status < 0.6
               || shieldsystem_status < 0.6
               || missilesystem_status < 0.6
               || lifesupport_status < 0.4
               || sensors_status < 0.8
               || getHullPerc() < 0.8) { //was: || see_enemy_mislcount > 1.2*see_friend_mislcount
-        if (Missilemada2.gimmeRandDouble() < 0.01) { //don't spam the "ow ow ow"
+        if (Missilemada2.gimmeRandDouble() < 0.02) { //don't spam the "ow ow ow"
           if (isInPlayerFaction()) {
             Missilemada2.addVfxOnMT(getX(), getY() - 10.0 * radius, getZ() + 4.0 * radius, "GONEREPAIRING", 9000, 880.0, 0.5/*transp*/, null, "going_to_repair.png", 1.0, "");
             //xx spammyMissilemada2.addToHUDMsgList(Missilemada2.strCurrDaysHours() + " "+getType()+" "+getId()+", cost "+(int)getCost()+", (str "+getBattleStrIntDisp()+") heading to repair at base.");
           }
         }
         //to base or random spot
-        if (parentFaction.getStarbase() != null)
-          setDes(parentFaction.getXYZ_starbase_safer_side(), "hurt, to base");
-        else
-          setDes(Missilemada2.getRandomAsteroid().getMiningXYZ(), "hurt, base dead, to random aste");
+        if (parentFaction.getStarbase() != null) {
+          forceDestination(parentFaction.getXYZ_starbase_safer_side(), "hurt, to base");
+          return;
+        } else {
+          forceDestination(Missilemada2.getRandomAsteroid().getMiningXYZ(), "hurt, base dead, to random aste");
+          return;
+        }
 
       }
       //if panic, forced go home, "rotate crew to less scared crew over there"[no code for such].
       if (getShieldPerc() < 0.4 && Missilemada2.gimmeRandDouble() < 0.015 && see_enemy_mislcount > (see_friend_mislcount+3)) {
-        if (parentFaction.getStarbase() != null)
-          forceDestination(parentFaction.getXYZ_starbase_safer_side(), "veryhurt, panic; to base"); //note: not docking spot, but safer closer spot (underneath/behind).
-        else
-          forceDestination(Missilemada2.getRandomAsteroid().getMiningXYZ(), "hurt, base dead, to random aste");
-
-        if (Missilemada2.gimmeRandDouble() < 0.04) {
+        panic = true;
+        if (Missilemada2.gimmeRandDouble() < 0.09) {
           if (isInPlayerFaction()) {
             Missilemada2.addVfxOnMT(-20.0 * radius, -10.0 * radius, 4.0 * radius, "PANIC", 1000, 880.0, 1.0/*transp*/, this, "sweatdrop.png", 1.0, "");
           }
         }
+        if (parentFaction.getStarbase() != null) {
+          forceDestination(parentFaction.getXYZ_starbase_safer_side(), "veryhurt, panic; to base"); //note: not docking spot, but safer closer spot (underneath/behind).
+          return;
+        } else {
+          forceDestination(Missilemada2.getRandomAsteroid().getMiningXYZ(), "hurt, base dead, to random aste");
+          return;
+        }
+
       }
 
       //----decide distance to foe, or flee overwhelming force.
@@ -3985,7 +4007,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
         reason = "hacked";
       parentFaction.shipCountDown(this, reason); //faction A lost a ship.
       parentFaction = surrender_to_fac; //change allegiance
-      parentFaction.shipCountUp(this, reason);//faction B gained a ship. xxxdid they gain crew? no.
+      parentFaction.shipCountUp(this, reason);//faction B gained a ship. xxdid they gain crew? no.
       parentFaction.addXPToCommander(this, "SURRENDERED"/*includes hacked*/);
     } catch (Exception e) {
       e.printStackTrace();
@@ -4319,7 +4341,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
 //      Missilemada2.setOpenGLMaterial("SHIP");
 //    }
 
-        /*
+
         //draw line to buddy if stance formation bool.
         if (might_stay_in_formation_OBSO && see_friend_count > 1 && buddy_mil != null && !isDestroyed()) {
           Missilemada2.setOpenGLMaterial("LINE");
@@ -4327,16 +4349,16 @@ public class Ship extends MobileThing implements Comparable<Ship> {
           GL11.glColor4f(0.9f, 0.2f, 0.9f, 0.7f);
           FlatSprite.drawFlatLineVecVec(this.getXYZ(), buddy_mil.getXYZ(), 20.5*this.getRadius());
           Missilemada2.setOpenGLMaterial("SHIP");
-        }*/
+        }
 
 
     //draw line to milbuddy
-//    if (buddy_mil != null && isInPlayerFaction()) {
-//      Missilemada2.setOpenGLMaterial("LINE");
-//      Missilemada2.setOpenGLTextureGUILine();
-//      GL11.glColor4f(0.99f, 0.0f, 0.0f, 0.9f);
-//      FlatSprite.drawFlatLineVecVec(this.getXYZ(), buddy_mil.getXYZ(), 10.5*this.getRadius());
-//    }
+    if (buddy_mil != null && isInPlayerFaction()) {
+      Missilemada2.setOpenGLMaterial("LINE");
+      Missilemada2.setOpenGLTextureGUILine();
+      GL11.glColor4f(0.99f, 0.0f, 0.0f, 0.9f);
+      FlatSprite.drawFlatLineVecVec(this.getXYZ(), buddy_mil.getXYZ(), 10.5*this.getRadius());
+    }
 
     //draw line to civbuddy
 //    if (buddy_civilian != null && isInPlayerFaction()) {
@@ -4595,7 +4617,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
     GL11.glColor4f(0.9f, 0.9f, 0.45f, 0.31f); //yellow
     if (see_enemy_count > 0)
       GL11.glColor4f(0.9f, 0.2f, 0.25f, 0.61f); //red
-    di.draw(siz/1.0001f, siz, 32, 1);
+    di.draw(siz / 1.0001f, siz, 32, 1);
     //sphere
     //s.draw(siz, 8, 5);
     GL11.glPopMatrix();

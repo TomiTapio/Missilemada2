@@ -1804,7 +1804,7 @@ public class Missilemada2 {
     j = 0;
     for (; j < listsize; j++) {
       Ship p = (Ship) shipList.elementAt(j);
-      if (p != null && p.isNearCamera_2d(camera_xyz, cam_isnearcam_dist) && camera_z < 0.05*world_x_max) {
+      if (p != null && p.isNearCamera_2d(camera_xyz, cam_isnearcam_dist) && camera_z < 0.15*world_x_max) {
         if (p.getFaction() == getPlayerFaction())
           p.drawShipInfoText();
       }
@@ -3055,7 +3055,7 @@ public class Missilemada2 {
     return 1.46 * Ship.getMaxScoutSpeed(); //elite missiles should catch up to average scouts most excellently.
   }
   public static double getAvgMislYield() {
-    return Ship.getAvgScoutHullHP() / 18.5; //gameplay: more missiles means more fun! (scout/12: not that fun.)
+    return Ship.getAvgScoutHullHP() / 19.3; //gameplay: more missiles means more fun! (scout/12: not that fun.)
   }
   public static double getAsteDriftSpeed() {
     return 0.00118; //xxgameplay
@@ -3072,20 +3072,6 @@ public class Missilemada2 {
   public static UnicodeFont getFont60fornowwww(int i) {
     //xxxx
     return font60;
-  }
-  public static Ship getNearestFriendlyAC(Ship repairwanter) {
-    Faction fa = repairwanter.getFaction();
-
-    //also needs to be out of combat, for hullrepair.
-
-
-
-    //xxxx getShipsOfFaction(fa);
-
-
-
-
-    return null;
   }
   public static void removeMissile(Missile m) {
     missileList.remove(m);
