@@ -95,7 +95,7 @@ done: ship keeps track how many misl have hit it.
 ==If took hull hit and damage number greater than 8th of hull, set one system to broken. Coz small ship.
 
 __maybe no foe after scen2 starts after win scen1..
-
+__ on ship creation, a "Notes" stringbuffer that has builder dudes' notes like "slow model, so extra shields". But where to show it?
 --starbase instaheals itself coz near itself??
 
 

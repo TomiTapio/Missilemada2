@@ -1,0 +1,31 @@
+Missilemada2 by TomiTapio.
+
+- Extract to C:\MM2_distrib.
+Use Command Prompt, cd (change working directory) to C:\MM2_distrib
+
+commandline is
+<path to your JRE\bin>java.exe -Djava.library.path=C:\MM2_distrib\lib -Dfile.encoding=UTF-8 -classpath "LOOOOONG LIST" com.tomitapio.missilemada2.Missilemada2
+the lib dir is where the Windows-specific LWJGL OpenGL DLLs are.
+
+you must replace the "C:\MISC\Java\jdk1.7.0_75\jre" string with path to your JRE. 
+I cannot guess where your Java is installed, and whether you have version 1.6 or 1.7 or 1.8.
+
+
+
+my custom commandline:
+mark 3:
+C:\MISC\Java\jdk1.7.0_75\jre\bin\java -Djava.library.path=C:\MM2_distrib\lib -Dfile.encoding=UTF-8 -classpath "C:\MISC\Java\jdk1.7.0_75\jre\lib\charsets.jar;C:\MISC\Java\jdk1.7.0_75\jre\lib\deploy.jar;C:\MISC\Java\jdk1.7.0_75\jre\lib\javaws.jar;C:\MISC\Java\jdk1.7.0_75\jre\lib\jce.jar;C:\MISC\Java\jdk1.7.0_75\jre\lib\jfr.jar;C:\MISC\Java\jdk1.7.0_75\jre\lib\jfxrt.jar;C:\MISC\Java\jdk1.7.0_75\jre\lib\jsse.jar;C:\MISC\Java\jdk1.7.0_75\jre\lib\management-agent.jar;C:\MISC\Java\jdk1.7.0_75\jre\lib\plugin.jar;C:\MISC\Java\jdk1.7.0_75\jre\lib\resources.jar;C:\MISC\Java\jdk1.7.0_75\jre\lib\rt.jar;C:\MISC\Java\jdk1.7.0_75\jre\lib\ext\access-bridge-64.jar;C:\MISC\Java\jdk1.7.0_75\jre\lib\ext\dnsns.jar;C:\MISC\Java\jdk1.7.0_75\jre\lib\ext\jaccess.jar;C:\MISC\Java\jdk1.7.0_75\jre\lib\ext\localedata.jar;C:\MISC\Java\jdk1.7.0_75\jre\lib\ext\sunec.jar;C:\MISC\Java\jdk1.7.0_75\jre\lib\ext\sunjce_provider.jar;C:\MISC\Java\jdk1.7.0_75\jre\lib\ext\sunmscapi.jar;C:\MISC\Java\jdk1.7.0_75\jre\lib\ext\zipfs.jar;C:\MM2_distrib\Missilemada2\out\production\Missilemada2;C:\MM2_distrib\lib\lwjgl-2.9.0\jar\lzma.jar;C:\MM2_distrib\lib\lwjgl-2.9.0\jar\lwjgl.jar;C:\MM2_distrib\lwjgl-2.9.0\jar\jinput.jar;C:\MM2_distrib\lwjgl-2.9.0\jar\lwjgl_test.jar;C:\MM2_distrib\lwjgl-2.9.0\jar\lwjgl_util.jar;C:\MM2_distrib\lwjgl-2.9.0\jar\lwjgl-debug.jar;C:\MM2_distrib\lwjgl-2.9.0\jar\asm-debug-all.jar;C:\MM2_distrib\lwjgl-2.9.0\jar\lwjgl_util_applet.jar;C:\MM2_distrib\lwjgl-2.9.0\jar\AppleJavaExtensions.jar;C:\MM2_distrib\Slick2D\lib\ibxm.jar;C:\MM2_distrib\Slick2D\lib\jnlp.jar;C:\MM2_distrib\Slick2D\lib\lwjgl.jar;C:\MM2_distrib\Slick2D\lib\slick.jar;C:\MM2_distrib\Slick2D\lib\jinput.jar;C:\MM2_distrib\Slick2D\lib\jogg-0.0.7.jar;C:\MM2_distrib\Slick2D\lib\lwjgl_util.jar;C:\MM2_distrib\Slick2D\lib\tinylinepp.jar;C:\MM2_distrib\Slick2D\lib\natives-mac.jar;C:\MM2_distrib\Slick2D\lib\jorbis-0.0.15.jar;C:\MM2_distrib\Slick2D\lib\natives-linux.jar;C:\MM2_distrib\Slick2D\lib\slick-examples.jar;C:\MM2_distrib\Slick2D\lib\natives-windows.jar;C:\MM2_distrib\Slick2D\lib\lwjgl_util_applet.jar;C:\MM2_distrib\jsi-1.0.0\jsi-1.0.0.jar;C:\MM2_distrib\jsi-1.0.0\trove4j-2.0.2.jar;C:\MM2_distrib\\jsi-1.0.0\slf4j-api-1.6.3.jar;C:\C:\MM2_distrib\jsi-1.0.0\jsi-1.0.0-javadoc.jar;C:\MM2_distrib\jsi-1.0.0\jsi-1.0.0-sources.jar;C:\MM2_distrib\Missilemada2\out\production\Missilemada2" com.tomitapio.missilemada2.Missilemada2
+
+
+---------------
+Esc quit, or close window
+F1 toggle help (not implemented)
+F2 toggle ship list
+space pause
+rightclick-drag
+mousewheel zoom
+left click on GUI buttons.
+
+
+
+

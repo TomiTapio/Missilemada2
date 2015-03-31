@@ -1270,14 +1270,14 @@ public class Faction {
     }
   }
   private void playFactionBuildNoAfford(String type) {
-    Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("a"+type, 2, "") /*Vector of pitches*/, 49 /*core note*/, 114 /*steeldrum*/, 110, 4.0F /*note duration*/);
+    Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("a"+type, 2, "") /*Vector of pitches*/, 49 /*core note*/, 114 /*steeldrum*/, 55, 4.0F /*note duration*/);
   }
   private void playCantBuildCozDelay() {
-    Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("zabusy", 2, "") /*Vector of pitches*/, 46 /*core note*/, 114 /*steeldrum*/, 80, 1.9F /*note duration*/);
+    Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("zabusy", 2, "") /*Vector of pitches*/, 46 /*core note*/, 114 /*steeldrum*/, 55, 1.9F /*note duration*/);
   }
   private void playCanBuildNow() {
     //Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("canbuildnow", 2, "") /*Vector of pitches*/, 50 /*core note*/, 12 /*marimba*/, 72, 2.8F /*note duration*/);
-    Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody(Missilemada2.getRandomDNA(), 3, "") /*Vector of pitches*/, 53 /*core note*/, 12 /*marimba*/, 72, 2.8F /*note duration*/);
+    Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody(Missilemada2.getRandomDNA(), 3, "") /*Vector of pitches*/, 50 /*core note*/, 12 /*marimba*/, 92, 2.8F /*note duration*/);
   }
   private void playFactionScrappedYay() {
     Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("scrap get", 7, "") /*Vector of pitches*/, 34 /*core note*/, 113 /*agogo*/, 120, 2.9F /*note duration*/);
@@ -2563,14 +2563,12 @@ public class Faction {
       cmdr.addXP(s, why);
     //AI not have xp across scenarios.
   }
-  public void commanderScenarioWon() {
-    cmdr.handleXP_scenariowon();
-  }
+  public void commanderScenarioWon() { cmdr.handleXP_scenariowon(); }
   public void commanderScenarioLost() {
     cmdr.handleXP_scenariolost();
   }
 
-  public Ship gimmeRandMannedShip() { //for random rumors
+  public Ship gimmeRandMannedShip() { //for random rumors. Can return null.
     Ship ret = null;
     Vector ourships = Missilemada2.getShipsOfFaction(this);
     int listsize = ourships.size();

@@ -348,20 +348,20 @@ public class Missilemada2 {
   public static void playRadioChatter(int a, int ins /*70 bassoon*/, int vol, int offset) {
     StampedNote s;
     if (a == 1) { // pa-poo-pa!
-      s = new StampedNote(worldTimeElapsed,     ins, 37+offset, vol, 0.20, false/*noteoff*/); melodyNotesPile.add(s);
+      s = new StampedNote(worldTimeElapsed,     ins, 37+offset, vol, 0.90, false/*noteoff*/); melodyNotesPile.add(s);
       s = new StampedNote(worldTimeElapsed+2500, ins, 32+offset, vol, 0.90, false/*noteoff*/); melodyNotesPile.add(s);
-      s = new StampedNote(worldTimeElapsed+6000, ins, 36+offset, vol, 0.40, false/*noteoff*/); melodyNotesPile.add(s);
+      s = new StampedNote(worldTimeElapsed+6000, ins, 36+offset, vol, 0.70, false/*noteoff*/); melodyNotesPile.add(s);
     }
     if (a == 2) { // dun dah, dun doh. //actual: du daa do daa.
-      s = new StampedNote(worldTimeElapsed /*what worldtime ms to play at*/, ins, 33+offset, vol, 0.45, false/*noteoff*/); melodyNotesPile.add(s);
-      s = new StampedNote(worldTimeElapsed+2000 /*what worldtime ms to play at*/, ins, 38+offset, vol, 0.49, false/*noteoff*/); melodyNotesPile.add(s);
-      s = new StampedNote(worldTimeElapsed+6000 /*what worldtime ms to play at*/, ins, 33+offset, vol, 0.45, false/*noteoff*/); melodyNotesPile.add(s);
-      s = new StampedNote(worldTimeElapsed+800 /*what worldtime ms to play at*/, ins, 34+offset, vol, 0.45, false/*noteoff*/); melodyNotesPile.add(s);
+      s = new StampedNote(worldTimeElapsed /*what worldtime ms to play at*/, ins, 33+offset, vol, 0.65, false/*noteoff*/); melodyNotesPile.add(s);
+      s = new StampedNote(worldTimeElapsed+2000 /*what worldtime ms to play at*/, ins, 38+offset, vol, 0.78, false/*noteoff*/); melodyNotesPile.add(s);
+      s = new StampedNote(worldTimeElapsed+6000 /*what worldtime ms to play at*/, ins, 33+offset, vol, 0.65, false/*noteoff*/); melodyNotesPile.add(s);
+      s = new StampedNote(worldTimeElapsed+800 /*what worldtime ms to play at*/, ins, 34+offset, vol, 0.65, false/*noteoff*/); melodyNotesPile.add(s);
     }
-    if (a == 3) { // dyy daa-de.
-      s = new StampedNote(worldTimeElapsed,     ins, 38+offset, vol, 0.80, false/*noteoff*/); melodyNotesPile.add(s);
-      s = new StampedNote(worldTimeElapsed+4500, ins, 33+offset, vol, 0.40, false/*noteoff*/); melodyNotesPile.add(s);
-      s = new StampedNote(worldTimeElapsed+6500, ins, 29+offset, vol, 0.25, false/*noteoff*/); melodyNotesPile.add(s);
+    if (a == 3) { // dyy daa-de. LONG for peacetime aste_scoutreport
+      s = new StampedNote(worldTimeElapsed,     ins, 38+offset, vol, 2.80, false/*noteoff*/); melodyNotesPile.add(s);
+      s = new StampedNote(worldTimeElapsed+7500, ins, 33+offset, vol, 2.40, false/*noteoff*/); melodyNotesPile.add(s);
+      s = new StampedNote(worldTimeElapsed+9500, ins, 29+offset, vol, 2.25, false/*noteoff*/); melodyNotesPile.add(s);
     }
     if (a == 4) { // dyy daa-de pok pok.
       s = new StampedNote(worldTimeElapsed,     ins, 39+offset, vol, 0.60, false/*noteoff*/); melodyNotesPile.add(s);
@@ -377,6 +377,12 @@ public class Missilemada2 {
       s = new StampedNote(worldTimeElapsed+4700, ins, 27+offset, vol, 0.25, false/*noteoff*/); melodyNotesPile.add(s);
       s = new StampedNote(worldTimeElapsed+5900, ins, 27+offset, vol, 0.29, false/*noteoff*/); melodyNotesPile.add(s);
     }
+    if (a == 6) { // LONG for peacetime spotted_a_derelict
+      s = new StampedNote(worldTimeElapsed,     ins, 35+offset, vol, 2.10, false/*noteoff*/); melodyNotesPile.add(s);
+      s = new StampedNote(worldTimeElapsed+6500, ins, 33+offset, vol, 2.40, false/*noteoff*/); melodyNotesPile.add(s);
+      s = new StampedNote(worldTimeElapsed+8500, ins, 27+offset, vol, 2.25, false/*noteoff*/); melodyNotesPile.add(s);
+    }
+
   }
   public static void putMelodyNotes(Vector v /*Vector of pitches and pauses*/, int corenote, int instrument /*instrument*/, int vol, double dur_ticks /*note duration*/) {
     //double worldseconds_per_quarternote = worldTimeIncrement * (millis_per_quarternote/* is 500*/ / 1000.0);
@@ -3229,6 +3235,17 @@ public class Missilemada2 {
         debris.setSpeed(spd * Math.cos(desired_bearingXY),
                         spd * Math.sin(desired_bearingXY),
                         spd * Math.sin(desired_bearingXZ));
+
+        //DEBUG: from camera to MT
+        //first make a temp thing at camer... wait.
+        FlatSprite bebugdebris = new FlatSprite(sizex, sizey, x, y, z, texturefilename, 1.0, 1.0f/*transp*/);
+        desired_bearingXY = Missilemada2.calcBearingXY(camera_tempMT, bebugdebris);
+        desired_bearingXZ = Missilemada2.calcBearingXZ(camera_tempMT, bebugdebris);
+        bebugdebris.setSpeed(spd * Math.cos(desired_bearingXY),
+              spd * Math.sin(desired_bearingXY),
+              spd * Math.sin(desired_bearingXZ));
+        addToFSTempList(bebugdebris);
+
 
       } else { //not towards camera, not towards originator's heading.
         //default: shall float in random direction.
