@@ -243,14 +243,14 @@ public class Ship extends MobileThing implements Comparable<Ship> {
       max_speed = miner_speed; //km per sec
       cargo_capacity = 200.0 * (1.0 + 0.4*hull_factor); //tons
       sensor_range = senrange_core * 1.44 * (r5.nextDouble() + 0.36);
-      stealth = 0.15 * r9.nextDouble(); //minimal stealth capability, low shields low engines.
+      stealth = 0.17 * r9.nextDouble(); //minimal stealth capability, low shields low engines.
       curr_hull_hp = (60.0/25.0) * getAvgScoutHullHP() * (0.14+hull_factor); //in MJ. NN teraJ avg...
       defense_beam_accuracy = 0.0; //defense beam to nullify missiles. miner has only attack beam.
       personality_aggro = 0.0;
 
       max_shields = 7500500 * (maxshield_factor + 0.05); //in MJ. Even very puny shield helps versus mining debris.
-      curr_shields = max_shields / 14.5;
-      shield_regen_per_min = 1400 * shieldregenpermin_factor; //in MJ / sec. also powers the beam weapons.
+      curr_shields = max_shields / 4.5;
+      shield_regen_per_min = 7500 * shieldregenpermin_factor; //in MJ / sec. also powers the beam weapons.
 
       if (speedrand > 0.9) { //chance of elite speed.
         max_speed = 1.2*max_speed;
@@ -930,7 +930,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
     damage_sustained = damage_sustained + in_joules;
 
     if (scoring_ship != null) {
-      parentFaction.shiftFrontLine(getXYZ(), 0.8, this);
+      parentFaction.shiftFrontLine(getXYZ(), 0.2, this);
       setIsNearBattle(true);
     } //else shipwide fire damage source, don't shift flag.
 
@@ -2267,7 +2267,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
               //old: Missilemada2.addVfxOnMT((getX() + as.getX()) / 2.0, (getY() + as.getY()) / 2.0, 2.0 * as.getZ(), "SCOUTEDASTEROID", 13000, 1850.0, 0.75/*transp*/, null, "scan_cyan2.png", 1.0, "");
               Missilemada2.addVfx2(as.getMiningXYZ(), "SCOUTEDASTEROID", 17000, 2250.0, 0.75/*transp*/, "scan_cyan2.png", 1.0, "" );
               if (!as.isResourceless()) {
-                Missilemada2.addToHUDMsgList(Missilemada2.strCurrDaysHours() + this.toStrTypeNName() + " scanned good asteroid " + as.getId() + " Merit get!");
+                Missilemada2.addToHUDMsgList(Missilemada2.strCurrDaysHours() + this.toStrTypeNName() + " scanned good asteroid. Merit get!");
                 Missilemada2.playRadioChatter(3/*which chatter*/, 88/*leba*/, 70/*vol*/, 2/*pitch offset*/);
               } else {
                 Missilemada2.addToHUDMsgList(Missilemada2.strCurrDaysHours() + this.toStrTypeNName() + " scanned an useless asteroid.");
@@ -2457,8 +2457,8 @@ public class Ship extends MobileThing implements Comparable<Ship> {
             }
           }
           //shift frontline towards the ship (this) that saw enemy!! and towards the foe.
-          if (Missilemada2.gimmeRandDouble() < 0.07) { //many usesensors calls per frame.
-            parentFaction.shiftFrontLine(this.getXYZ(), 0.20, this);
+          if (Missilemada2.gimmeRandDouble() < 0.04) { //many usesensors calls per frame.
+            parentFaction.shiftFrontLine(this.getXYZ(), 0.04, this);
             parentFaction.shiftFrontLine(seen_ship.getXYZ(), 0.10, this);
           }
           //System.out.println("Ship "+unique_id+" saw enemy ship " +s.toString() + " when senrange="+sensor_range);
@@ -2562,10 +2562,9 @@ public class Ship extends MobileThing implements Comparable<Ship> {
       if (see_enemy_mislcount_close > 9) {
         Missilemada2.changeWorldTimeIncrement(-1); //slow down world, self in trouble
       }
-
     }
 
-    //count enemy and friend missiles, for decisionmaking. was cpu-heavy at 150 ships times 400 missiles. Now RTree.
+  //count enemy and friend missiles, for decisionmaking. was cpu-heavy at 150 ships times 400 missiles. Now RTree spatial index.
     //OLD: Vector seen_mis = Missilemada2.getMissilesWithin(getXYZ(), curr_sensor_range); //costly op
     Vector seen_mis = Missilemada2.getMissiles_XYNearest_ones(getX(), getY(),
              1.02 * curr_sensor_range, 60/*how many to return, note:can be lots, NOT THAT CPU-COSTLY */); //RTree version for speedup when 150+ missiles.
@@ -2587,8 +2586,11 @@ public class Ship extends MobileThing implements Comparable<Ship> {
             see_enemy_mislcount++;
             enemis = mi;
 
-            if (Missilemada2.gimmeRandDouble() < 0.01) //spotting foe missile happens VERY OFTEN.
-              parentFaction.shiftFrontLine(mi.getXYZ(), 0.02/*was0.04*/, this); //oh there is enemy combat activity near me? move faction's frontline a tiny bit.
+            if (Missilemada2.gimmeRandDouble() < 0.015) { //spotting foe missile happens VERY OFTEN.
+              //shift FL if misl not near me -- ones chasing me shift FL badly.
+              if (MobileThing.calcDistanceMTMT(this,enemis) > 0.6*sensor_range)
+                parentFaction.shiftFrontLine(enemis.getXYZ(), 0.02/*was0.04*/, this); //oh there is enemy combat activity near me? move faction's frontline a tiny bit.
+            }
 
 
             if (this.isInPlayerFaction())
@@ -2597,29 +2599,25 @@ public class Ship extends MobileThing implements Comparable<Ship> {
               mi.setIsNearBattle(true);
             }
 
-            if (calcDistanceMTMT(this, mi) < 0.3*sensor_range && mi.curr_hull_hp > 0.01) {
+            if (calcDistanceMTMT(this, mi) < 0.25*sensor_range && mi.curr_hull_hp > 0.01) {
               see_enemy_mislcount_close++;
               am_under_fire = true;
             }
             if (calcDistanceMTMT(this, mi) < getDefenseBeamRange() && mi.curr_hull_hp > 0.01) //if within my defense beam range.
-              tryShootDownMissile = mi;
-
-
-
-            ///////if (s.getTarget)
-
+              tryShootDownMissile = mi; //remember this misl
           }
         }
-      } //else m is null, bad.
+      } //else mi is null, bad.
     } //end foreach seen missile
 
-    //if see lone ene-missile AND the frontline is close to base, shift frontline.
+    //if see few ene-missile AND the frontline is close to base, shift frontline towards misl.
     double distance_betw_base_and_FL = calcDistanceVecVec(parentFaction.getXYZ(), parentFaction.getFrontlineXYZ());
     if (see_enemy_count == 0
-            && see_enemy_mislcount == 1
+            && see_enemy_mislcount > 0
+            && see_enemy_mislcount < 4
             && enemis != null
             && enemis.curr_hull_hp > 0.01
-            && distance_betw_base_and_FL < 0.18 * Missilemada2.getBaseDistance()) {
+            && distance_betw_base_and_FL < 0.22 * Missilemada2.getBaseDistance()) {
       parentFaction.shiftFrontLine(enemis.getXYZ(), 0.002, this); //oh there is enemy combat activity near me? move faction's frontline a tiny bit.
     }
 
@@ -2798,7 +2796,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
 
               ene_closest.getDamaged(getAtkBeamStr(), "attack beam", this, false);
               damage_dealt = damage_dealt + getAtkBeamStr();
-              parentFaction.shiftFrontLine(this.getXYZ(), 0.2, this);
+              parentFaction.shiftFrontLine(this.getXYZ(), 0.1, this);
               //System.out.println("Ship " + unique_id + " used attack beam, dealt " + (int) getAtkBeamStr() + " damage at "+(int) getAttackBeamRange()+" range.");
               if (isInPlayerFaction()) {
                 Missilemada2.createDebrisFlatSprite("attackbeam_ship_debris.png", 5.5*(0.50+Missilemada2.gimmeRandDouble()),
@@ -3520,7 +3518,6 @@ public class Ship extends MobileThing implements Comparable<Ship> {
   }
   private void decideBattleMoveDestination() {//flee or fight? set destination. // Always use full power of weapons if foe in range.(in other function)
     dodge_mode = false;
-
     //if scout or defender, and in heavy battle, request a volley.
     if ( (isScout() || getType().equals("DEFENDER"))
             && see_enemy_mislcount > 8) {
@@ -3530,16 +3527,15 @@ public class Ship extends MobileThing implements Comparable<Ship> {
       }
     }
 
-
     //maybe surrender-defect, if overwhelming foe str and we are damaged. Then enemy missiles will ummmmm ignore us.
-    if (getHullPerc() < 0.33
+    if (getHullPerc() < 0.45
             && see_total_enemy_battlestr > 1.5*see_total_friend_battlestr
             && curr_crew_count > 0
             && !isStarbase()
             && Missilemada2.gimmeRandInt(100) < 25) { //must have crew alive for surrender chance.
       //surrender! but still might die of engine fire. Or from previous-parentfaction attacks.
       //also, battlestr of factions changes as a result of this defecting, so, more defecting may chain.
-      this.surrender_or_got_captured(ene_closest /*surrender-to*/, false/*not hacked*/);
+      this.surrender_or_got_captured(ene_closest /*surrender-to*/, false);
     }
 
     //calc fuzzy logic danger.
@@ -3551,11 +3547,11 @@ public class Ship extends MobileThing implements Comparable<Ship> {
       danger_meter = danger_meter + 0.6;
 
     if (see_enemy_mislcount > (0.7*see_friend_mislcount))
-      danger_meter = danger_meter + 0.6;
+      danger_meter = danger_meter + 0.7;
     if (see_enemy_mislcount > (1.25*see_friend_mislcount))
-      danger_meter = danger_meter + 1.0;
+      danger_meter = danger_meter + 1.2;
     if (see_enemy_mislcount > (1.2*see_friend_mislcount))
-      danger_meter = danger_meter + 1.6;
+      danger_meter = danger_meter + 1.7;
     if (see_enemy_mislcount_close*(0.8*Missilemada2.getAvgMislYield()) > 0.2*curr_hull_hp) //if fatal amt of missiles near, argle.
       danger_meter = danger_meter + 2.8;
     if (see_enemy_mislcount*(Missilemada2.getAvgMislYield()) > 0.9*max_shields)
@@ -3638,6 +3634,11 @@ public class Ship extends MobileThing implements Comparable<Ship> {
         //do scout near base AND ARE IN COMBAT. (pls not so close to frontline)
         //NEAR is the less-courage mode.
 
+        if (see_enemy_count > 0 && see_enemy_mislcount > 3) { //optional: one misl must be close to me.
+          setDes(parentFaction.getXYZ_starbase_safer_side(), "scout fall back to base on NEARscout and foe 4+ misl seen");
+          return;
+        }
+
         if (current_destinationXYZ != null) { // if have desti, shift it nearer
           // if in combat and far from base, umm go closer to base.
           if ( getDestinationsDistanceFromBase() > 0.4*parentFaction.getScouting_distance_avg()) {
@@ -3661,8 +3662,8 @@ public class Ship extends MobileThing implements Comparable<Ship> {
       }
       if (scoutmode.equals("FAR") && !forceddestination) {
         //do scout far from base AND ARE IN COMBAT. the old logic.
-        if (see_enemy_mislcount > 10) { //optional: one misl must be close to me.
-          setDes(parentFaction.getXYZ_starbase_safer_side(), "scout fall back to base on FARscout and foe 10 misl seen");
+        if (see_enemy_count > 0 && see_enemy_mislcount > 1) { //optional: one misl must be close to me.
+          setDes(parentFaction.getXYZ_starbase_safer_side(), "scout fall back to base on FARscout and foe 2+ misl seen");
           return;
         }
 

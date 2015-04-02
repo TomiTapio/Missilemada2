@@ -150,6 +150,16 @@ public class Missilemada2 {
   private static UnicodeFont font60;
   private static UnicodeFont font20;
   private static UnicodeFont font30;
+  private static String[] helppaneltext = {"Missilemada2 by TomiTapio, made 2013-11 to 2015-04",
+        "Yo Commander. Zaibatsu's local resources are at your command. Stop our rivals' asteroid mining operations.",
+        "A stealth shuttle will resupply you with crewmembers and the resource you lack most urgently.",
+        "",
+        "Leftclick on GUI buttons. Rightclick-drag to pan camera.",
+        "Mousewheel to zoom, wheelclick or SPACE to toggle pause.",
+        "Keyboard camera controls: INSERT/HOME to zoom, cursor keys pan.",
+        "ESC quit, SPACE pause, F1 toggle help, F2 toggle ship list, F5 restart scenario.",
+        "Commander's experience is saved every N days. Category xp unlocks better pricebrackets."
+  };
 
   public static void main(String[] args) throws LWJGLException {
     new com.tomitapio.missilemada2.Missilemada2().start();
@@ -2024,8 +2034,10 @@ public class Missilemada2 {
       //draw scoutreport_ship count?
     if (show_leaderboard)
       drawLeaderBShipsPanel();
-    if (show_help)
-      drawHelpPanel();
+    if (show_help) {
+      GL11.glColor4f(0.2f, 0.35f, 0.2f, 1.0f); //green background of panel
+      drawTextPanel(helppaneltext, 5.0f/*x*/, 527.0f/*y*/, 780.0f/*width*/, 16.0f* 9f + 25.0f/*total hei*/, 16.0f/*rowhei*/);
+    }
 
     //draw faction score (total battle str plus ship_cost destroyed?)
 
@@ -2190,31 +2202,14 @@ public class Missilemada2 {
       j++;
     }
   }
-  private static void drawHelpPanel() { //on top of ships panel if must.
-    //on top of HUDmsglog older msgs! yay!
-    float hud_x = 5.0f; //from top left
-    float hud_y = 527.0f;
-    float rowheight = 16.0f;
-    String[] tx = {"Missilemada2 by TomiTapio, made 2013-11 to 2015-03",
-    "Yo Commander. Zaibatsu's local resources are at your command. Stop our rivals' asteroid mining operations.",
-    "A stealth shuttle will resupply you with crewmembers and the resource you lack most urgently.",
-    "",
-    "Leftclick on GUI buttons. Rightclick-drag to pan camera.",
-    "Mousewheel to zoom, wheelclick or SPACE to toggle pause.",
-    "Keyboard camera controls: INSERT/HOME to zoom, cursor keys pan.",
-    "ESC quit, SPACE pause, F1 toggle help, F2 toggle ship list, F5 restart scenario.",
-    "Commander's experience is saved every N days. Category xp unlocks better pricebrackets."
-    };
+  private static void drawTextPanel(String[] textrows, float hud_x, float hud_y, float wid, float hei, float rowhei) {
+    //help panel on top of HUDmsglog older msgs! yay!
     //draw background rectangle
     float zcoord = 0.0f;
     float xplace = hud_x;
     float yplace = hud_y - 8.0f;
-    float wid = 780.0f;
-    float hei = rowheight * 9 + 25.0f;
     //we are in HUD-drawing coords.
-    GL11.glColor4f(0.2f, 0.35f, 0.2f, 1.0f); //green
-    //set texture
-    texture_panel.bind();
+    texture_panel.bind(); //set texture
     //material:
     ByteBuffer buffer2 = ByteBuffer.allocateDirect(64).order(ByteOrder.nativeOrder());
     float[] emission2 = {0.4f, 0.4f, 0.4f, 0.5f};
@@ -2238,12 +2233,11 @@ public class Missilemada2 {
     GL11.glNormal3f(0.0f, 0.0f, 1.0f);
     GL11.glEnd();
 
-
-    Color color_helppaneltext = new Color(220, 220, 220, 255/*this matters*/);
+    Color color_textpaneltext = new Color(220, 220, 220, 255/*this matters*/);
     int i = 0;
     while (i < 10) {
-      if (i< tx.length)
-        font20.drawString(hud_x + 15.0f, hud_y + i * rowheight, tx[i], color_helppaneltext);
+      if (i < textrows.length)
+        font20.drawString(hud_x + 15.0f, hud_y + i * rowhei, textrows[i], color_textpaneltext);
       i++;
     }
   }

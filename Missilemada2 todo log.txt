@@ -76,11 +76,11 @@ DONE: debug string of why this destination, in the leaderboard.
 __cheating func key, toggle foe visibility on/off.
 __foe to send ships to frontline MUUUUCH more often. If feels like X. 
 ___when scout is scouting, stay the fuck out of known_hostile area. 
-  done: estimateifcoordsarehostile(xyz) (dist to spotted base, dist to frontline, how much frontline away from ourbase.)
+__xxx___done: estimateifcoordsarehostile(xyz) (dist to spotted base, dist to frontline, how much frontline away from ourbase.)
 
 done: avg system status in leaderboard. 
 __leaderb: Mode:  how??  mining, fleeing, fight, idle
-__leaderb: Color code foe factions' shiptype? 
+rejected: leaderb: Color code foe factions' shiptype? 
 
 done: random rumor/event textlines in log!    space whale spotted
 __rand rumor: a rand ships gets N merits, someone made a donation!
