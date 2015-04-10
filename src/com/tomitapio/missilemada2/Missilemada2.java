@@ -1082,34 +1082,35 @@ public class Missilemada2 {
     //first an informative text. as a button, because this func can't draw gfx.
     float lmargin = 4.0f;
     float topmargin = 7.0f;
-    float buwid = 64.0f;
-    float buhei = 29.0f;
+    float buwid = 60.5f;
+    float buhei = 23.0f; //was 29
     //scouts to: base, miners, near, far, flag
     float bla = 140f;
     bu = new GUIButton(9001 , "Scouts ", lmargin, topmargin,   10.0f, buhei,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
     bu = new GUIButton(1/*id*/, "Base",       0*(buwid+4.0)+bla, topmargin,   buwid, buhei,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
     bu = new GUIButton(2/*id*/, "Miners",     1*(buwid+4.0)+bla, topmargin,   buwid, buhei,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
-    bu = new GUIButton(3/*id*/, "Near", 2*(buwid+4.0)+bla, topmargin,   buwid, buhei,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
-    bu = new GUIButton(4/*id*/, "Far",  3*(buwid+4.0)+bla, topmargin,   buwid, buhei,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(3/*id*/, "Near", 2*(buwid+4.0)+bla, topmargin,   buwid-6, buhei,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(4/*id*/, "Far",  3*(buwid+4.0)+bla, topmargin,   buwid-11, buhei,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
 
 
-    bu = new GUIButton(6/*id*/, "LE",         4*(buwid+4.0)+bla, topmargin,   45f, buhei,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
-    bu = new GUIButton(5/*id*/, "MID",        5*(buwid+4.0)+bla, topmargin,   50f, buhei,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
-    bu = new GUIButton(7/*id*/, "RI",         6*(buwid+4.0)+bla, topmargin,   45f, buhei,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(6/*id*/, "Lflank",     4*(buwid+4.0)+bla, topmargin,   buwid, buhei,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(5/*id*/, "Frontline",  5*(buwid+4.0)+bla, topmargin,   75, buhei,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(7/*id*/, "Rflank",     5*(buwid+4.0)+bla+87f, topmargin,   buwid, buhei,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
 
     //def & ac & mildrones to: base, miners, near, far, flag
 
     bu = new GUIButton(9002 , "Warships ", lmargin, topmargin +guirowheight,   10.0f, buhei,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
     bu = new GUIButton(11/*id*/, "Base",      0*(buwid+4.0)+bla, topmargin +guirowheight,   buwid, buhei,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
     bu = new GUIButton(12/*id*/, "Miners",    1*(buwid+4.0)+bla, topmargin +guirowheight,   buwid, buhei,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
-    bu = new GUIButton(13/*id*/, "Near",      2*(buwid+4.0)+bla, topmargin +guirowheight,   buwid, buhei,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
-    bu = new GUIButton(14/*id*/, "Far",       3*(buwid+4.0)+bla, topmargin +guirowheight,   buwid, buhei,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(13/*id*/, "Near",      2*(buwid+4.0)+bla, topmargin +guirowheight,   buwid-6, buhei,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(14/*id*/, "Far",       3*(buwid+4.0)+bla, topmargin +guirowheight,   buwid-11, buhei,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
 
-    bu = new GUIButton(16/*id*/, "LE",        4*(buwid+4.0)+bla, topmargin +guirowheight,   45f, buhei,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
-    bu = new GUIButton(15/*id*/, "MID",    5*(buwid+4.0)+bla, topmargin +guirowheight,   50f, buhei,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
-    bu = new GUIButton(17/*id*/, "RI",        6*(buwid+4.0)+bla, topmargin +guirowheight,   45f, buhei,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(16/*id*/, "Lflank",    4*(buwid+4.0)+bla, topmargin +guirowheight,   buwid, buhei,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(15/*id*/, "Frontline", 5*(buwid+4.0)+bla, topmargin +guirowheight,   75f, buhei,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(17/*id*/, "Rflank",    5*(buwid+4.0)+bla+87f, topmargin +guirowheight,   buwid, buhei,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
 
     //miners to: base, aste
+    //buwid = 64.0f;
     buwid = 85.0f;
     bu = new GUIButton(9003 , "Miners ", lmargin, topmargin+2*guirowheight,   10.0f, buhei,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
     bu = new GUIButton(21/*id*/, "At base",       bla, topmargin +2*guirowheight,   buwid, buhei,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
@@ -1117,67 +1118,68 @@ public class Missilemada2 {
 
     //maybe: drone mode buttons
     //everyone volley to attack flag vicinity!
-    bu = new GUIButton(1000/*id*/, "VOLLEY to frontline",       lmargin, topmargin + 3*guirowheight,   2.9*buwid, buhei-5,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
-    bu = new GUIButton(1001/*id*/, "Show sensors",       lmargin+2.93*buwid, topmargin + 3*guirowheight,   1.7*buwid, buhei-5,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(1000/*id*/, "VOLLEY to frontline",       lmargin, topmargin + 3*guirowheight,   2.9*buwid, buhei,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(1001/*id*/, "Show sensors",       lmargin+2.93*buwid, topmargin + 3*guirowheight,   1.7*buwid, buhei,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
 
     buwid = 64.0f;
-    bu = new GUIButton(1002/*id*/, " Help panel",  7.2*(buwid+5.0)+bla, topmargin,   120f, buhei-7,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
-    bu = new GUIButton(1003/*id*/, " Ships panel", 9.2*(buwid+5.0)+bla, topmargin,   120f, buhei-7,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
-    bu = new GUIButton(1004/*id*/, " Pause",       11.2*(buwid+5.0)+bla, topmargin,   100f, buhei-7,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
-    bu = new GUIButton(1005/*id*/, " Quit",        15.2*(buwid+5.0)+bla, topmargin,   100f, buhei-7,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(1002/*id*/, " Help panel",  7.2*(buwid+5.0)+bla, topmargin,   120f, buhei-2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(1003/*id*/, " Ships panel", 9.2*(buwid+5.0)+bla, topmargin,   120f, buhei-2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(1004/*id*/, " Pause",       11.2*(buwid+5.0)+bla, topmargin,   100f, buhei-2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(1005/*id*/, " Quit",        15.2*(buwid+5.0)+bla, topmargin,   100f, buhei-2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
 
     //build scout:
     buwid = 57.0f;
+    float buhei2 = 27.0f;
     ///can't draw text in this func. So, info texts as no-action buttons.
     float introwidth = lmargin+buwid+75.0f;
-    bu = new GUIButton(9031/*id*/, "Build scout: ", lmargin, 5*guirowheight,   introwidth/10.0f, guirowheight - 5.0f,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
-    bu = new GUIButton(31/*id*/, "Dingy", 0*(buwid+4.0)+introwidth, 5*guirowheight,   buwid, guirowheight - 5.0f,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
-    bu = new GUIButton(32/*id*/, "Cheap", 1*(buwid+4.0)+introwidth, 5*guirowheight,   buwid, guirowheight - 5.0f,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
-    bu = new GUIButton(33/*id*/, "Avg",   2*(buwid+4.0)+introwidth, 5*guirowheight,   buwid, guirowheight - 5.0f,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
-    bu = new GUIButton(34/*id*/, "Nice",  3*(buwid+4.0)+introwidth, 5*guirowheight,   buwid, guirowheight - 5.0f,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
-    bu = new GUIButton(35/*id*/, "Elite", 4*(buwid+4.0)+introwidth, 5*guirowheight,   buwid, guirowheight - 5.0f,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(9031/*id*/, "Build scout: ", lmargin, 5*guirowheight,   introwidth/10.0f, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(31/*id*/, "Dingy", 0*(buwid+4.0)+introwidth, 5*guirowheight,   buwid, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(32/*id*/, "Cheap", 1*(buwid+4.0)+introwidth, 5*guirowheight,   buwid, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(33/*id*/, "Avg",   2*(buwid+4.0)+introwidth, 5*guirowheight,   buwid, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(34/*id*/, "Nice",  3*(buwid+4.0)+introwidth, 5*guirowheight,   buwid, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(35/*id*/, "Elite", 4*(buwid+4.0)+introwidth, 5*guirowheight,   buwid, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
     //build tinyminer:
-    bu = new GUIButton(9041/*id*/, "Mining drone: ", lmargin, 6*guirowheight,   introwidth/10.0f, guirowheight - 5.0f,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
-    bu = new GUIButton(41/*id*/, "Dingy", 0*(buwid+4.0)+introwidth, 6*guirowheight,   buwid, guirowheight - 5.0f,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
-    bu = new GUIButton(42/*id*/, "Cheap", 1*(buwid+4.0)+introwidth, 6*guirowheight,   buwid, guirowheight - 5.0f,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
-    bu = new GUIButton(43/*id*/, "Avg",   2*(buwid+4.0)+introwidth, 6*guirowheight,   buwid, guirowheight - 5.0f,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
-    bu = new GUIButton(44/*id*/, "Nice",  3*(buwid+4.0)+introwidth, 6*guirowheight,   buwid, guirowheight - 5.0f,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
-    bu = new GUIButton(45/*id*/, "Elite", 4*(buwid+4.0)+introwidth, 6*guirowheight,   buwid, guirowheight - 5.0f,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(9041/*id*/, "Mining drone: ", lmargin, 6*guirowheight,   introwidth/10.0f, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(41/*id*/, "Dingy", 0*(buwid+4.0)+introwidth, 6*guirowheight,   buwid, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(42/*id*/, "Cheap", 1*(buwid+4.0)+introwidth, 6*guirowheight,   buwid, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(43/*id*/, "Avg",   2*(buwid+4.0)+introwidth, 6*guirowheight,   buwid, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(44/*id*/, "Nice",  3*(buwid+4.0)+introwidth, 6*guirowheight,   buwid, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(45/*id*/, "Elite", 4*(buwid+4.0)+introwidth, 6*guirowheight,   buwid, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
     //build miner:
-    bu = new GUIButton(9051/*id*/, "Build miner: ", lmargin, 7*guirowheight,   introwidth/10.0f, guirowheight - 5.0f,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
-    bu = new GUIButton(51/*id*/, "Dingy", 0*(buwid+4.0)+introwidth, 7*guirowheight,   buwid, guirowheight - 5.0f,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
-    bu = new GUIButton(52/*id*/, "Cheap", 1*(buwid+4.0)+introwidth, 7*guirowheight,   buwid, guirowheight - 5.0f,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
-    bu = new GUIButton(53/*id*/, "Avg",   2*(buwid+4.0)+introwidth, 7*guirowheight,   buwid, guirowheight - 5.0f,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
-    bu = new GUIButton(54/*id*/, "Nice",  3*(buwid+4.0)+introwidth, 7*guirowheight,   buwid, guirowheight - 5.0f,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
-    bu = new GUIButton(55/*id*/, "Elite", 4*(buwid+4.0)+introwidth, 7*guirowheight,   buwid, guirowheight - 5.0f,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(9051/*id*/, "Build miner: ", lmargin, 7*guirowheight,   introwidth/10.0f, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(51/*id*/, "Dingy", 0*(buwid+4.0)+introwidth, 7*guirowheight,   buwid, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(52/*id*/, "Cheap", 1*(buwid+4.0)+introwidth, 7*guirowheight,   buwid, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(53/*id*/, "Avg",   2*(buwid+4.0)+introwidth, 7*guirowheight,   buwid, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(54/*id*/, "Nice",  3*(buwid+4.0)+introwidth, 7*guirowheight,   buwid, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(55/*id*/, "Elite", 4*(buwid+4.0)+introwidth, 7*guirowheight,   buwid, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
     //build defender:
-    bu = new GUIButton(9061/*id*/, "Defender: ",           lmargin, 8*guirowheight,   introwidth/10.0f, guirowheight - 5.0f,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
-    bu = new GUIButton(61/*id*/, "Dingy", 0*(buwid+4.0)+introwidth, 8*guirowheight,   buwid, guirowheight - 5.0f,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
-    bu = new GUIButton(62/*id*/, "Cheap", 1*(buwid+4.0)+introwidth, 8*guirowheight,   buwid, guirowheight - 5.0f,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
-    bu = new GUIButton(63/*id*/, "Avg",   2*(buwid+4.0)+introwidth, 8*guirowheight,   buwid, guirowheight - 5.0f,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
-    bu = new GUIButton(64/*id*/, "Nice",  3*(buwid+4.0)+introwidth, 8*guirowheight,   buwid, guirowheight - 5.0f,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
-    bu = new GUIButton(65/*id*/, "Elite", 4*(buwid+4.0)+introwidth, 8*guirowheight,   buwid, guirowheight - 5.0f,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(9061/*id*/, "Defender: ",           lmargin, 8*guirowheight,   introwidth/10.0f, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(61/*id*/, "Dingy", 0*(buwid+4.0)+introwidth, 8*guirowheight,   buwid, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(62/*id*/, "Cheap", 1*(buwid+4.0)+introwidth, 8*guirowheight,   buwid, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(63/*id*/, "Avg",   2*(buwid+4.0)+introwidth, 8*guirowheight,   buwid, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(64/*id*/, "Nice",  3*(buwid+4.0)+introwidth, 8*guirowheight,   buwid, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(65/*id*/, "Elite", 4*(buwid+4.0)+introwidth, 8*guirowheight,   buwid, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
     //build AC:
-    bu = new GUIButton(9071/*id*/, "Asslt Cruiser: ",       lmargin, 9*guirowheight,   introwidth/10.0f, guirowheight - 5.0f,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
-    bu = new GUIButton(71/*id*/, "Dingy", 0*(buwid+4.0)+introwidth, 9*guirowheight,   buwid, guirowheight - 5.0f,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
-    bu = new GUIButton(72/*id*/, "Cheap", 1*(buwid+4.0)+introwidth, 9*guirowheight,   buwid, guirowheight - 5.0f,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
-    bu = new GUIButton(73/*id*/, "Avg",   2*(buwid+4.0)+introwidth, 9*guirowheight,   buwid, guirowheight - 5.0f,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
-    bu = new GUIButton(74/*id*/, "Nice",  3*(buwid+4.0)+introwidth, 9*guirowheight,   buwid, guirowheight - 5.0f,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
-    bu = new GUIButton(75/*id*/, "Elite", 4*(buwid+4.0)+introwidth, 9*guirowheight,   buwid, guirowheight - 5.0f,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(9071/*id*/, "Asslt Cruiser: ",       lmargin, 9*guirowheight,   introwidth/10.0f, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(71/*id*/, "Dingy", 0*(buwid+4.0)+introwidth, 9*guirowheight,   buwid, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(72/*id*/, "Cheap", 1*(buwid+4.0)+introwidth, 9*guirowheight,   buwid, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(73/*id*/, "Avg",   2*(buwid+4.0)+introwidth, 9*guirowheight,   buwid, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(74/*id*/, "Nice",  3*(buwid+4.0)+introwidth, 9*guirowheight,   buwid, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(75/*id*/, "Elite", 4*(buwid+4.0)+introwidth, 9*guirowheight,   buwid, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
     //build beamdrone:
-    bu = new GUIButton(9081/*id*/, "Beam drone: ",         lmargin, 10*guirowheight,   introwidth/10.0f, guirowheight - 5.0f,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
-    bu = new GUIButton(81/*id*/, "Dingy", 0*(buwid+4.0)+introwidth, 10*guirowheight,   buwid, guirowheight - 5.0f,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
-    bu = new GUIButton(82/*id*/, "Cheap", 1*(buwid+4.0)+introwidth, 10*guirowheight,   buwid, guirowheight - 5.0f,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
-    bu = new GUIButton(83/*id*/, "Avg",   2*(buwid+4.0)+introwidth, 10*guirowheight,   buwid, guirowheight - 5.0f,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
-    bu = new GUIButton(84/*id*/, "Nice",  3*(buwid+4.0)+introwidth, 10*guirowheight,   buwid, guirowheight - 5.0f,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
-    bu = new GUIButton(85/*id*/, "Elite", 4*(buwid+4.0)+introwidth, 10*guirowheight,   buwid, guirowheight - 5.0f,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(9081/*id*/, "Beam drone: ",         lmargin, 10*guirowheight,   introwidth/10.0f, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(81/*id*/, "Dingy", 0*(buwid+4.0)+introwidth, 10*guirowheight,   buwid, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(82/*id*/, "Cheap", 1*(buwid+4.0)+introwidth, 10*guirowheight,   buwid, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(83/*id*/, "Avg",   2*(buwid+4.0)+introwidth, 10*guirowheight,   buwid, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(84/*id*/, "Nice",  3*(buwid+4.0)+introwidth, 10*guirowheight,   buwid, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(85/*id*/, "Elite", 4*(buwid+4.0)+introwidth, 10*guirowheight,   buwid, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
     //build missiledrone:
-    bu = new GUIButton(9091/*id*/, "Missile drone: ",      lmargin, 11*guirowheight,   introwidth/10.0f, guirowheight - 5.0f,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
-    bu = new GUIButton(91/*id*/, "Dingy", 0*(buwid+4.0)+introwidth, 11*guirowheight,   buwid, guirowheight - 5.0f,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
-    bu = new GUIButton(92/*id*/, "Cheap", 1*(buwid+4.0)+introwidth, 11*guirowheight,   buwid, guirowheight - 5.0f,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
-    bu = new GUIButton(93/*id*/, "Avg",   2*(buwid+4.0)+introwidth, 11*guirowheight,   buwid, guirowheight - 5.0f,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
-    bu = new GUIButton(94/*id*/, "Nice",  3*(buwid+4.0)+introwidth, 11*guirowheight,   buwid, guirowheight - 5.0f,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
-    bu = new GUIButton(95/*id*/, "Elite", 4*(buwid+4.0)+introwidth, 11*guirowheight,   buwid, guirowheight - 5.0f,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(9091/*id*/, "Missile drone: ",      lmargin, 11*guirowheight,   introwidth/10.0f, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(91/*id*/, "Dingy", 0*(buwid+4.0)+introwidth, 11*guirowheight,   buwid, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(92/*id*/, "Cheap", 1*(buwid+4.0)+introwidth, 11*guirowheight,   buwid, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(93/*id*/, "Avg",   2*(buwid+4.0)+introwidth, 11*guirowheight,   buwid, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(94/*id*/, "Nice",  3*(buwid+4.0)+introwidth, 11*guirowheight,   buwid, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(95/*id*/, "Elite", 4*(buwid+4.0)+introwidth, 11*guirowheight,   buwid, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
   }
   public static void updateBuildButtonColours() {
     //if can't afford, grey(default). if can afford, light green.
@@ -1810,7 +1812,7 @@ public class Missilemada2 {
       if (p != null /*&& p.isNearCamera_2d(camera_xyz, cam_isnearcam_dist)*/) {
         //draw only if belongs to player faction or has been spotted by pf recently.
         if (p.isSeenByPlayer()) {
-          p.drawShip(0.9f*visualscaling);
+          p.drawShip(0.97f*visualscaling, (camera_z > 0.16*world_x_max) ); /*draw health bar if far zoom*/
           shipdrawcount++;
         }
       }
@@ -1833,7 +1835,7 @@ public class Missilemada2 {
       if (p != null /*&& p.isNearCamera_2d(camera_xyz, cam_isnearcam_dist)*/) {
         //draw only if usesensors tagged it.
         //xxxtemp if (p.isSeenByPlayer()) {
-          p.drawShip(0.9f*visualscaling);
+          p.drawShip(0.97f*visualscaling, false);
         //}
       }
     }
@@ -2096,8 +2098,8 @@ public class Missilemada2 {
         }
     }
   private static void drawLeaderBShipsPanel() {
-    float hud_x = 600.0f; //from top left
-    float hud_y = 29.0f;
+    float hud_x = 633.0f; //from top left
+    float hud_y = 28.0f;
     float rowheight = 16.0f;
 
     String tx;
@@ -2282,7 +2284,7 @@ public class Missilemada2 {
     if (worldTimeIncrement < 1) {
       return; // the pause.
     }
-    camera_x = camera_x + (0.07*Math.sqrt(camera_z)); //drift the camera, to look more 3D.
+    //camera_x = camera_x + (0.07*Math.sqrt(camera_z)); //drift the camera, to look more 3D.
 
     //world goes x seconds forward.
     worldTimeElapsed += worldTimeIncrement;
@@ -3058,7 +3060,7 @@ public class Missilemada2 {
     return Ship.getAvgScoutHullHP() / 19.3; //gameplay: more missiles means more fun! (scout/12: not that fun.)
   }
   public static double getAsteDriftSpeed() {
-    return 0.00118; //xxgameplay
+    return 0.09318; //0.00118; //gameplay
   }
   public static Asteroid getRandomAsteroid() {
     try {

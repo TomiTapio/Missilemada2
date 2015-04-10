@@ -37,7 +37,7 @@ public class GUIButton {
   public void drawText(Color col) {
     //are in HUD-drawing coords
     //can't use Missilemada2.drawTextXYZ coz that one is for while-in-3d-space
-    Missilemada2.drawTextHUD(Missilemada2.getFont60fornowwww(0), textscale, (float) xplace, (float) yplace, content, col);
+    Missilemada2.drawTextHUD(Missilemada2.getFont60fornowwww(0), textscale, (float) xplace, (float) yplace-2.0f, content, col);
   }
   public void draw_parts() {
     float zcoord = 0.0f;

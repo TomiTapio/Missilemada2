@@ -223,7 +223,7 @@ public class Faction {
   public void drawFrontLineIndicator(double size, double chance) {
     if (Missilemada2.gimmeRandDouble() < chance
         && isPlayerFaction())
-      Missilemada2.addVfx2(frontlineLocation, "FRONTLINEFLAG", 2000, size, 0.13/*transp*/, "frontline3.png", 1.0, "");
+      Missilemada2.addVfx2(frontlineLocation, "FRONTLINEFLAG", 2000, 1.4*size, 0.18/*transp*/, "frontline3.png", 1.0, "");
   }
   private double getFactionTotalBStr() {
     Vector li = Missilemada2.getShipsOfFaction(this);

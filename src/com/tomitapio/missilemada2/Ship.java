@@ -244,11 +244,11 @@ public class Ship extends MobileThing implements Comparable<Ship> {
       cargo_capacity = 200.0 * (1.0 + 0.4*hull_factor); //tons
       sensor_range = senrange_core * 1.44 * (r5.nextDouble() + 0.36);
       stealth = 0.17 * r9.nextDouble(); //minimal stealth capability, low shields low engines.
-      curr_hull_hp = (60.0/25.0) * getAvgScoutHullHP() * (0.14+hull_factor); //in MJ. NN teraJ avg...
+      curr_hull_hp = (55.0/25.0) * getAvgScoutHullHP() * (0.14+hull_factor); //in MJ. NN teraJ avg...
       defense_beam_accuracy = 0.0; //defense beam to nullify missiles. miner has only attack beam.
       personality_aggro = 0.0;
 
-      max_shields = 7500500 * (maxshield_factor + 0.05); //in MJ. Even very puny shield helps versus mining debris.
+      max_shields = 6500500 * (maxshield_factor + 0.05); //in MJ. Even very puny shield helps versus mining debris.
       curr_shields = max_shields / 4.5;
       shield_regen_per_min = 7500 * shieldregenpermin_factor; //in MJ / sec. also powers the beam weapons.
 
@@ -1228,18 +1228,10 @@ public class Ship extends MobileThing implements Comparable<Ship> {
     } catch (Exception e) {
       e.printStackTrace();
     }
-
   }
   private Vector predictTargetsPosition(MobileThing t, int howManyTicks) {
     Vector ret = new Vector(3,3);
-
-
-
-    double tb = t.getBearingXYfromSpeed(); //xx t.getBearing();
-
-
-
-
+    double tb = t.getBearingXYfromSpeed();
     double tgt_movement_in_timetick = (0.000001 + ( (double) Missilemada2.getWorldTimeIncrement() / 1000 ) * t.getSpeedCurrent());
     //bearingXY rollover check?
 
@@ -1251,7 +1243,6 @@ public class Ship extends MobileThing implements Comparable<Ship> {
     ret.add(2, pred_z);
     return ret;
   }
-
   private boolean executeMining(double seconds) {
     //if at base AND at minable aste, don't mine. Too hazardous and buggy.
     if (this.isAtFactionBase())
@@ -4308,7 +4299,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
   private void playDeployedCarriedDrones() {
     Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("drones deploy", 7, "") /*Vector of pitches*/, 65 /*core note*/, 30 /*dist guit*/, 95, 1.45f /*note duration*/);
   }
-  public void drawShip(float scale1) {
+  public void drawShip(float scale1, boolean drawhealthbar) {
     float beamthickness = 2400.0f; /*beam thickness*/
     GL11.glPushMatrix();
 
@@ -4463,6 +4454,28 @@ public class Ship extends MobileThing implements Comparable<Ship> {
         drawSensorRange2D();
     }
 
+    //draw healthbar, if are zoomed far out. hp+shie.
+    double totalbar = 0.0026*(2.1*curr_shields + curr_hull_hp);
+    if (drawhealthbar && curr_hull_hp > 100.0 && !isStarbase()) { //if zoomed out far and alive
+      Missilemada2.setOpenGLMaterial("LINE");
+      Missilemada2.setOpenGLTextureGUILine();
+      Vector bar_start = MobileThing.changeXYZ(getXYZ(), 0, 195.0*radius, -100);
+      Vector bar_end   = MobileThing.changeXYZ(getXYZ(), 0, 195.0*radius + totalbar, 0);
+
+      // if blaa, other color.
+      if (am_under_fire || getShieldPerc() < 0.7)
+        GL11.glColor4f(0.89f, 0.09f, 0.09f, 0.65f); //light red
+      else
+        GL11.glColor4f(0.79f, 0.79f, 0.84f, 0.60f); //light gray
+      FlatSprite.drawFlatLineVecVec(bar_start, bar_end, 11500.0);
+      //Missilemada2.setOpenGLMaterial("SHIP"); //restore mat
+    }
+
+
+
+
+
+
     //draw shields if have them.
     if (max_shields > 1000.0 && getShieldPerc() > 0.06) {
       double pwr = 10.0 * (curr_shields / max_shields); //xx curr div (parentFaction.getMaxShieldNumber() / 2.0), might confuse player, shields visibly weaken when build an AC.
@@ -4513,34 +4526,34 @@ public class Ship extends MobileThing implements Comparable<Ship> {
 
       //if derelict, dull color.
       try {
-      if (isDestroyed()) {
-        java.awt.Color co = new java.awt.Color(115,115,115);
-        //GL11.glTexEnvf(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_MODULATE);
-        //set emission
-        GL11.glColorMaterial(GL_FRONT_AND_BACK, GL_EMISSION);
-        GL11.glColor4f(0.4f*co.getRed() / 255.0f, 0.4f*co.getGreen() / 255.0f, 0.4f*co.getBlue() / 255.0f, 1.0f);
-        //set bounced light
-        GL11.glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
-        GL11.glColor4f(co.getRed() / 255.0f, co.getGreen() / 255.0f, co.getBlue() / 255.0f, 1.0f);
-      } else {
-        //faction color
-        java.awt.Color co;
-        if (parentFaction != null)
-          co = parentFaction.getShipColor();
-        else //old derelict
-          co = Missilemada2.getPlayerFaction().getShipColor();
-        if (isMiner()) {
-          co = new java.awt.Color(co.getRed()-19, co.getGreen()+9, co.getBlue());
+        if (isDestroyed()) {
+          java.awt.Color co = new java.awt.Color(115,115,115);
+          //GL11.glTexEnvf(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_MODULATE);
+          //set emission
+          GL11.glColorMaterial(GL_FRONT_AND_BACK, GL_EMISSION);
+          GL11.glColor4f(0.4f*co.getRed() / 255.0f, 0.4f*co.getGreen() / 255.0f, 0.4f*co.getBlue() / 255.0f, 1.0f);
+          //set bounced light
+          GL11.glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+          GL11.glColor4f(co.getRed() / 255.0f, co.getGreen() / 255.0f, co.getBlue() / 255.0f, 1.0f);
+        } else {
+          //faction color
+          java.awt.Color co;
+          if (parentFaction != null)
+            co = parentFaction.getShipColor();
+          else //old derelict
+            co = Missilemada2.getPlayerFaction().getShipColor();
+          if (isMiner()) {
+            co = new java.awt.Color(co.getRed()-19, co.getGreen()+9, co.getBlue());
+          }
+          GL11.glTexEnvf(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_MODULATE);
+          //set emission to faction color.
+          GL11.glColorMaterial(GL_FRONT_AND_BACK, GL_EMISSION);
+          GL11.glColor4f(0.4f*co.getRed() / 255.0f, 0.4f*co.getGreen() / 255.0f, 0.4f*co.getBlue() / 255.0f, 1.0f);
+          //set bounced light to faction color.
+          GL11.glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+          //GL11.glColor4f(co.getRed() / 255.0f, co.getGreen() / 255.0f, co.getBlue() / 255.0f, 1.0f);
+          GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
         }
-        GL11.glTexEnvf(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_MODULATE);
-        //set emission to faction color.
-        GL11.glColorMaterial(GL_FRONT_AND_BACK, GL_EMISSION);
-        GL11.glColor4f(0.4f*co.getRed() / 255.0f, 0.4f*co.getGreen() / 255.0f, 0.4f*co.getBlue() / 255.0f, 1.0f);
-        //set bounced light to faction color.
-        GL11.glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
-    //GL11.glColor4f(co.getRed() / 255.0f, co.getGreen() / 255.0f, co.getBlue() / 255.0f, 1.0f);
-        GL11.glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-      }
       } catch (Exception e) {
         e.printStackTrace();
       }

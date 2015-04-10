@@ -39,7 +39,7 @@ DONE: COUNTER: CREW AVAILABLE AT BASE. ("Commander, the stealth shuttle has brou
 -if to-scout spot WAY FAR from curr location, don't accept, req new one until reasonable dist from self_spot.
 -HUD msg: first time we spotted an enemy.
 -once misldrone has volley off, forcedesti away
--- before firing missile, compare self misl spd to foe spd, and dist to foe...
+-- maybe: before firing missile, compare self misl spd to foe spd, and dist to foe...
 --missile.setowner(ship) IF game has a missile hacking feature. El cheapo missiles suck! but they would be low fuel and probably not reach foe after hacking. 
 -----if fac has wanted amounts of ships already, THEN WHAT PRODUCE? Incr want count of WHICH? Defender.
 
@@ -50,11 +50,16 @@ DONE: COUNTER: CREW AVAILABLE AT BASE. ("Commander, the stealth shuttle has brou
 
 -- "reset camera" button.
 -- speed up time button.
-
+__ a high-speed passerby asteroid. plotted to visit near our base and somewhat near foe base. 1-5 in cluster.
+__ radioactive gas released from aste on mining. "create hazardzone".
+__ asteroid splits into 3 when mined a major amount. 1 of the fragments is nominerals.
+__ third faction appears! they have no base.
+__ solar flare event, all shields hurting.
+__ msg: a liquid was released from a mining spot. (extra debris?)
 
 __maybe: draw faction commands: go mine this reso,
 __maybe: pick which aste to mine, from list of mineral-having scanned aste.
-__mute all sounds button, toggle.
+__mute all sounds button, toggle. (for my testing, and music listening)
 __seen derelicts as to-scout spots
 __indicate that you-commander dont have license to build AC yet! in the GUI.
 done: pause button, for mouse-only time. Pause is also wheelclick.
@@ -98,6 +103,10 @@ __maybe no foe after scen2 starts after win scen1..
 __ on ship creation, a "Notes" stringbuffer that has builder dudes' notes like "slow model, so extra shields". But where to show it?
 --starbase instaheals itself coz near itself??
 
+_halfdone_ on zoom out far, draw HP+SHIE bar over ship. Grows upwards.
+__ aste drift speed to be per-scenario config.
+__ improve //----ambient sounds: low chance, bass note.
+__ tractor: if dere is on trajectory to base, don't tractor.
 
 __________________________________________________________________________________________________
 Commander xp system:

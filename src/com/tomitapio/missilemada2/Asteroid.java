@@ -48,6 +48,9 @@ public class Asteroid extends MobileThing implements Comparable<Asteroid> { /* c
     zcoord = ((Double)xyz.get(2)).doubleValue();
     my_mining_site = this.getXYZ(); //initial.
     aste_type = "NORMAL"; //xxx
+
+
+    //xxxmigrate to setspeed call.
     xspeed = com.tomitapio.missilemada2.Missilemada2.getAsteDriftSpeed() * (com.tomitapio.missilemada2.Missilemada2.gimmeRandDouble() -0.5);
     yspeed = com.tomitapio.missilemada2.Missilemada2.getAsteDriftSpeed() * (com.tomitapio.missilemada2.Missilemada2.gimmeRandDouble() -0.5);
     zspeed = com.tomitapio.missilemada2.Missilemada2.getAsteDriftSpeed() * (com.tomitapio.missilemada2.Missilemada2.gimmeRandDouble() -0.5);
