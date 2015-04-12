@@ -17,6 +17,8 @@ public class GUIButton {
   private float wid, hei, textscale;
   private boolean mode_is_active_visualstate = false;
   private boolean can_afford_build = false;
+  private boolean drawclick = false;
+  private long expiry_timestamp = 0;
 
   public GUIButton(int id_in, String c, double xplacei, double yplacei,
 
@@ -55,19 +57,40 @@ public class GUIButton {
       }
     }
 
-    //draw quad
-    GL11.glBegin(GL11.GL_QUADS);
-    GL11.glTexCoord2f(0, 0);
-    GL11.glVertex3f((float)xplace, (float)yplace, (float)zcoord);          GL11.glNormal3f(0.0f, 0.0f, 1.0f);
-    GL11.glTexCoord2f(0, 22);
-    GL11.glVertex3f((float)xplace+wid, (float)yplace, (float)zcoord);          GL11.glNormal3f(0.0f, 0.0f, 1.0f);
-    GL11.glTexCoord2f(22,22);
-    GL11.glVertex3f((float)xplace+wid, (float)yplace+hei, (float)zcoord);      GL11.glNormal3f(0.0f, 0.0f, 1.0f);
-    GL11.glTexCoord2f(0,22);
-    GL11.glVertex3f((float)xplace, (float)yplace+hei, (float)zcoord);          GL11.glNormal3f(0.0f, 0.0f, 1.0f);
-    GL11.glEnd();
 
     //draw pretty border? nah.
+
+    if (drawclick) {
+      GL11.glColor4f(0.93f, 0.93f, 0.93f, 0.99f); //white
+      GL11.glBegin(GL11.GL_QUADS);
+      GL11.glTexCoord2f(0, 0);
+      GL11.glVertex3f((float)xplace-1, (float)yplace-1, (float)zcoord);          GL11.glNormal3f(0.0f, 0.0f, 1.0f);
+      GL11.glTexCoord2f(0, 22);
+      GL11.glVertex3f((float)xplace+wid+1, (float)yplace-1, (float)zcoord);          GL11.glNormal3f(0.0f, 0.0f, 1.0f);
+      GL11.glTexCoord2f(22,22);
+      GL11.glVertex3f((float)xplace+wid+1, (float)yplace+hei+1, (float)zcoord);      GL11.glNormal3f(0.0f, 0.0f, 1.0f);
+      GL11.glTexCoord2f(0,22);
+      GL11.glVertex3f((float)xplace-1, (float)yplace+hei+1, (float)zcoord);          GL11.glNormal3f(0.0f, 0.0f, 1.0f);
+      GL11.glEnd();
+
+      if (Missilemada2.getWorldTime() > expiry_timestamp) {
+        drawclick = false;
+        expiry_timestamp = 0;
+      }
+    } else {
+      //draw quad of button
+      GL11.glBegin(GL11.GL_QUADS);
+      GL11.glTexCoord2f(0, 0);
+      GL11.glVertex3f((float)xplace, (float)yplace, (float)zcoord);          GL11.glNormal3f(0.0f, 0.0f, 1.0f);
+      GL11.glTexCoord2f(0, 22);
+      GL11.glVertex3f((float)xplace+wid, (float)yplace, (float)zcoord);          GL11.glNormal3f(0.0f, 0.0f, 1.0f);
+      GL11.glTexCoord2f(22,22);
+      GL11.glVertex3f((float)xplace+wid, (float)yplace+hei, (float)zcoord);      GL11.glNormal3f(0.0f, 0.0f, 1.0f);
+      GL11.glTexCoord2f(0,22);
+      GL11.glVertex3f((float)xplace, (float)yplace+hei, (float)zcoord);          GL11.glNormal3f(0.0f, 0.0f, 1.0f);
+      GL11.glEnd();
+    }
+
   }
 
   public int getButtonId() {
@@ -92,5 +115,10 @@ public class GUIButton {
   }
   public void setCanAfford(boolean in_can_afford_build) {
     can_afford_build = in_can_afford_build;
+  }
+
+  public void setClickFxOn(long expirytimestamp) {
+    drawclick = true;
+    expiry_timestamp = expirytimestamp;
   }
 }

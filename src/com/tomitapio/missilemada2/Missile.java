@@ -460,7 +460,7 @@ public class Missile extends MobileThing {
     }
 
     if (curr_fuel < 0.01) {
-      System.out.println("Misl "+mislDNA+" (cost "+getCost()+") expired, distance flown: "+ distance_flown); //flown 422k - 635k
+      //System.out.println("Misl "+mislDNA+" (cost "+getCost()+") expired, distance flown: "+ distance_flown); //flown 422k - 635k
       //Missilemada2.addToVFXList(xcoord, ycoord, "MISSILE_EXPIRED", 2800, null);
       if (isSeenByPlayer())
         Missilemada2.createDebrisFlatSprite("missile_expired.png", getSpeedCurrent()*0.3, 950.0*(1.0+Missilemada2.gimmeRandDouble()), 950.0*(1.0+Missilemada2.gimmeRandDouble()), this, true, false);

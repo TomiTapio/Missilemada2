@@ -73,7 +73,7 @@ public class Faction {
   private double total_ene_battlerstr_in_SRs = 0.0;
   private double total_battlestr = 0.0;
   private double total_active_ships_buildcost = 0.0;
-  private double total_mining_cargocapa = 0.0;
+  private double total_mining_cargocapa = 0.0; //tons
 
   private double spent_on_ships = 0.0;
   private double spent_on_missiles = 0.0;
@@ -810,7 +810,7 @@ public class Faction {
     // error if not enough
     if (hasEnoughIdleCrew(a)) {
       if (isPlayerFaction())
-        Missilemada2.addToHUDMsgList(Missilemada2.strCurrDaysHours() + "Assigned "+a+" crew to freshly built "+s.toStrTypeNName()+".",2);
+        Missilemada2.addToHUDMsgList(Missilemada2.strCurrDaysHours() + "Assigned "+a+" crew to freshly built "+s.toStrTypeNName()+".",0);
       crew_idle = crew_idle - a;
     } else {
       System.out.println("error, not enough idle crew at base.");
@@ -937,25 +937,25 @@ public class Faction {
         fac_ship_prod_timer_secs = s.getBuildTimeDelay(); //NOTE: delay only on BUILD.
 
         int aa_hrs = (int)((s.gettimestamp_next_allowed_accel() - Missilemada2.getWorldTime()) / 3600.0);
-        Missilemada2.addToHUDMsgList(Missilemada2.strCurrDaysHours() + "Building a "+s.getType()+" "+s.getId()+", cost "+(int)s.getCost()
-            +", str "+s.getBattleStrIntDisp()+", str/cost "+(int)(0.01*s.getBattleStr()/s.getCost())+". -- "+aa_hrs+"h until ready.",2);
+        Missilemada2.addToHUDMsgList(Missilemada2.strCurrDaysHours() + "Building a "+s.getType()+", cost "+(int)s.getCost()
+            +", str "+s.getBattleStrIntDisp()+", str/c "+(int)(0.01*s.getBattleStr()/s.getCost())+", cargo "+(int)s.getCargoCapa()+" tons. Operational in "+aa_hrs+"h.",2);
       }
       if (reason.equals("hacked")) {
         s.setTimeDelay(2*3600); //two hours delay from "enemy lost control of ship" to "we remote-control ship".
-        Missilemada2.addToHUDMsgList(Missilemada2.strCurrDaysHours() + "Captured an enemy "+s.getType()+"(str "+s.getBattleStrIntDisp()+") by hacking!",2);
+        Missilemada2.addToHUDMsgList(Missilemada2.strCurrDaysHours() + "----Captured an enemy "+s.getType()+"(str "+s.getBattleStrIntDisp()+") by hacking! Sending it to base.----",2);
       }
       if (reason.equals("surrendered")) {
         s.setTimeDelay(800); //short delay coz defecting ones cooperate.
-        Missilemada2.addToHUDMsgList(Missilemada2.strCurrDaysHours() + "An enemy "+s.getType()+"(str "+s.getBattleStrIntDisp()+") surrendered! We will refit it.",2);
+        Missilemada2.addToHUDMsgList(Missilemada2.strCurrDaysHours() + "----An enemy "+s.getType()+"(str "+s.getBattleStrIntDisp()+") surrendered! We will refit it and put new crew.----",2);
       }
-    } else { //enemy debug print
+    } else { //enemy debug print, and capture time delays.
           if (reason.equals("built")) {
             fac_ship_prod_timer_secs = s.getBuildTimeDelay(); //NOTE: delay only on BUILD.
 
             System.out.println("Enemy fac"+factionId+" built a "+s.getType()+" "+s.getId()+", cost "+(int)s.getCost()+", (str "+s.getBattleStrIntDisp()+")");
 
-            //rand upon mil-ship built: go on the offensive
-            if (s.isMil() && def_count >= 3 && Missilemada2.gimmeRandDouble() < 0.13) {
+            //xxgameplay: rand upon mil-ship built: go on the offensive
+            if (s.isMil() && def_count >= 2 && Missilemada2.gimmeRandDouble() < 0.13) {
               setMode("SCOUT", "FLAG");
               setMode("MIL", "FLAG");
             }
@@ -967,7 +967,7 @@ public class Faction {
       }
       if (reason.equals("surrendered")) {
         s.setTimeDelay(800); //short delay coz defecting ones cooperate.
-        System.out.println("Enemy fac"+factionId+" An enemy "+s.getType()+"(str "+s.getBattleStrIntDisp()+") surrendered! We will refit it.");
+        System.out.println("Enemy fac"+factionId+" gained a ship from enemy "+s.getType()+"(str "+s.getBattleStrIntDisp()+") surrendering!");
       }
 
 

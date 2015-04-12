@@ -87,6 +87,7 @@ done: avg system status in leaderboard.
 __leaderb: Mode:  how??  mining, fleeing, fight, idle
 rejected: leaderb: Color code foe factions' shiptype? 
 
+done: enemy AI: rand upon mil-ship built: go on the offensive (all to frontline).
 done: random rumor/event textlines in log!    space whale spotted
 __rand rumor: a rand ships gets N merits, someone made a donation!
 done: indicate by TEXT that these aste have the reso we are lacking!
@@ -103,10 +104,10 @@ __maybe no foe after scen2 starts after win scen1..
 __ on ship creation, a "Notes" stringbuffer that has builder dudes' notes like "slow model, so extra shields". But where to show it?
 --starbase instaheals itself coz near itself??
 
-_halfdone_ on zoom out far, draw HP+SHIE bar over ship. Grows upwards.
+done: on zoom out far, draw HP+SHIE bar over ship. Grows upwards.
 __ aste drift speed to be per-scenario config.
 __ improve //----ambient sounds: low chance, bass note.
-__ tractor: if dere is on trajectory to base, don't tractor.
+__ tractor: if tractor-candidate is on trajectory to base, don't tractor. saves much time. 
 
 __________________________________________________________________________________________________
 Commander xp system:

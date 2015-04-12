@@ -241,7 +241,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
     if (type.equals("MINER")) { // spd "8", sets the speed standard for other types.
       curr_crew_count = 4;
       max_speed = miner_speed; //km per sec
-      cargo_capacity = 200.0 * (1.0 + 0.4*hull_factor); //tons
+      cargo_capacity = 250.0 * (1.0 + 0.4*hull_factor); //tons
       sensor_range = senrange_core * 1.44 * (r5.nextDouble() + 0.36);
       stealth = 0.17 * r9.nextDouble(); //minimal stealth capability, low shields low engines.
       curr_hull_hp = (55.0/25.0) * getAvgScoutHullHP() * (0.14+hull_factor); //in MJ. NN teraJ avg...
@@ -1112,12 +1112,14 @@ public class Ship extends MobileThing implements Comparable<Ship> {
     return sensor_range;
   }
   public int getBuildTimeDelay() {
-    return (int) (2.7 * buildcost); //0.5 and 1.7 too little, 4.5 too much.
+    return (int) (3.1 * buildcost); //1.7 too little, 4.5 too much.
   }
   public void getDestroyed(Ship scoring_ship, String damagetype) {
     try {
       //reset things coz dead.
       current_destinationXYZ = null;
+      forceddestination = false;
+      have_destination = false;
       am_under_fire = false;
       buddy_civilian = null;
       buddy_derelict = null;
@@ -1126,11 +1128,11 @@ public class Ship extends MobileThing implements Comparable<Ship> {
       /* max_speed = 0.0;*/
       curr_hull_hp = 0.0; curr_shields = 0.0; engine_status = 0.0;
 
-      //faction focuses efforts this location, coz lost a ship.
+      //faction focuses efforts towards this location, coz lost a ship.
       if (parentFaction != null) {
-        parentFaction.shiftFrontLine(this.getXYZ(), 5.0, this);
+        parentFaction.shiftFrontLine(this.getXYZ(), 9.0, this);
         //withdraw frontline a little, towards base, coz mucho battle.
-        parentFaction.shiftFrontLine(parentFaction.getXYZ(), 7.5, this);
+        parentFaction.shiftFrontLine(parentFaction.getXYZ(), 7.0, this);
       }
 
       if (scoring_ship != null) {
@@ -1281,10 +1283,12 @@ public class Ship extends MobileThing implements Comparable<Ship> {
         if (isScout() && isInPlayerFaction()   &&   cargo_carried > startcargo && startcargo < 0.1)
           Missilemada2.addToHUDMsgList(Missilemada2.strCurrDaysHours() + toStrTypeNName() + " did some much-needed mining.", 2);
         if (isInPlayerFaction()) {
-          if (Missilemada2.gimmeRandDouble() < 0.0008 * seconds) {
+          if (Missilemada2.gimmeRandDouble() < 0.0007 * seconds) {
             Missilemada2.createDebrisFlatSprite("mining_debris.png", 1.1*(0.10+Missilemada2.gimmeRandDouble()) /*spd*/,
                     750.0*(1.0+Missilemada2.gimmeRandDouble()), 750.0*(1.0+Missilemada2.gimmeRandDouble()), this, false, false);
-            Missilemada2.sendDebrisTowardsCamera("MINING", this);
+            if (Missilemada2.gimmeRandDouble() < 0.33) { //one third of towards-camera debris, not too much.
+              Missilemada2.sendDebrisTowardsCamera("MINING", this);
+            }
           }
         }
 
@@ -2034,7 +2038,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
     //if near base
     if (isAtFactionBase() && parentFaction.getStarbase().getHullPerc() > 0.3) {
       if (isInPlayerFaction()) {
-        Missilemada2.addToHUDMsgList(Missilemada2.strCurrDaysHours() + this.toStrTypeNName() + " hull repairs, at base.", 3);
+        //Missilemada2.addToHUDMsgList(Missilemada2.strCurrDaysHours() + this.toStrTypeNName() + " hull repairs, at base.", 3);
         Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("yeehaw repairs", 3, "") /*Vec pitches*/,34 /*core note*/,15/*tubularbells*/,65,1.9F/*note duration*/);
       }
 
@@ -2055,13 +2059,13 @@ public class Ship extends MobileThing implements Comparable<Ship> {
       curr_shields = 0.0; //purged capacitors, vulnerable during repairs!
       mass_kg = max_mass_kg; //can lose plating in battle. Now restored.
       if (getHullPerc() > 0.98) {
-        mass_kg = 1.05 * max_mass_kg;
+        mass_kg = 1.06 * max_mass_kg;
       }
 
-      if (getBattleStrPerc() < 0.30) { //if shipwide fire... and hullrepair...
-        lifesupport_status = lifesupport_status + 0.05;
-        engine_status = engine_status + 0.05;
-        shieldsystem_status = shieldsystem_status + 0.05;
+      if (getBattleStrPerc() < 0.30) { //if shipwide fire... and hullrepairing...
+        lifesupport_status = lifesupport_status + 0.08;
+        engine_status = engine_status + 0.08;
+        shieldsystem_status = shieldsystem_status + 0.08;
       }
 
       //do systems repairs? yes, in its own func.
@@ -2074,8 +2078,8 @@ public class Ship extends MobileThing implements Comparable<Ship> {
 
       //MISSILE STOCK RESUPPLIED FROM BASE'S ARSENAL
       double change = max_buildcredits - curr_buildcredits;
-      curr_buildcredits = curr_buildcredits + change;
-      parentFaction.getStarbase().changeBuildCreditsPlusMinus(-change);
+      curr_buildcredits = curr_buildcredits + change; //ship gained some BC.
+      parentFaction.getStarbase().changeBuildCreditsPlusMinus(-change); //base lost some BC.
 
       timestamp_next_allowed_accel = Missilemada2.getWorldTime() + 3600; //seconds
       if (isInPlayerFaction()) {
@@ -3148,6 +3152,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
           } else {
             //err
             setDes(parentFaction.getXYZ_starbase_safer_side(), "to base coz no miner to escort");
+            return;
           }
           return; //end scoutmode==miner.
         }
@@ -3182,11 +3187,11 @@ public class Ship extends MobileThing implements Comparable<Ship> {
                 for (int i = 0; i < seenAsteroids_thistimetick.size(); i++) {
                   Asteroid as = (Asteroid) seenAsteroids_thistimetick.get(i);
                   if (Missilemada2.isAsteroidKnownToFaction(closestAsteroid, parentFaction)) {
-                    //don't go there
+                    //don't go there, it has been scanned.
                   } else {
                     //go to the unkn one that is in my sensors.
                     forceDestination(changeXYZ(as.getXYZ(), 0.20 * Missilemada2.getAsteroidScanningRange(), 0, 0), "sc to seen unscanned"); //X plus scanning range.
-                    break;
+                    return;
                   }
                 }
                 if ((!have_destination) && (!forceddestination)) {
@@ -4455,7 +4460,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
     }
 
     //draw healthbar, if are zoomed far out. hp+shie.
-    double totalbar = 0.0026*(2.1*curr_shields + curr_hull_hp);
+    double totalbar = 0.0016*(2.1*curr_shields + curr_hull_hp);
     if (drawhealthbar && curr_hull_hp > 100.0 && !isStarbase()) { //if zoomed out far and alive
       Missilemada2.setOpenGLMaterial("LINE");
       Missilemada2.setOpenGLTextureGUILine();
@@ -4957,7 +4962,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
     return "error, are you a base?";
   }
   private boolean amIinNEARFARandPEACE() { //then you can goto seen derelict.
-    if ( (getMyTypesMode().equals("NEAR") || getMyTypesMode().equals("FAR"))
+    if ( (getMyTypesMode().equals("NEAR") || getMyTypesMode().equals("FAR") || getMyTypesMode().equals("MINERS"))
             && !am_under_fire
             && !areMyBuddiesInCombat() ) {
       return true;
