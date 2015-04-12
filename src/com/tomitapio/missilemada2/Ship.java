@@ -964,7 +964,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
           //smaller and slower debris
           Missilemada2.createDebrisFlatSprite("hull_bits.png", 0.20 * (0.10 + Missilemada2.gimmeRandDouble()), 450.0 * (1.0 + Missilemada2.gimmeRandDouble()), 450.0 * (1.0 + Missilemada2.gimmeRandDouble()), this, false, false);
           Missilemada2.sendDebrisTowardsCamera("BATTLE", this);
-          Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("aaargh we on fire", 3, "") /*Vec pitches*/, 48 /*core note*/,125/*telephone*/, 55, 1.2F /*note duration*/);
+          Missilemada2.putNotes(Missilemada2.strIntoMelody("aaargh we on fire", 3, "") /*Vec pitches*/, 48 /*core note*/, 125/*telephone*/, 55, 1.2F /*note duration*/);
         }
       } else { //regular damage.
         if (this.isSeenByPlayer()) {
@@ -1163,11 +1163,11 @@ public class Ship extends MobileThing implements Comparable<Ship> {
         if (scoring_fac == Missilemada2.getPlayerFaction()) {
           if (type.equals("AC")) {
             Missilemada2.addToHUDMsgList(Missilemada2.strCurrDaysHours() + "We destroyed an enemy cruiser! Well done, "+scoring_ship.toStrTypeNName()+"!", 2);
-            Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("yay AC down", 5, "") /*Vector of pitches*/, 62 /*core note*/, 17 /*perc organ*/, 100, 2.9F /*note duration*/);
+            Missilemada2.putNotes(Missilemada2.strIntoMelody("yay AC down", 5, "") /*Vector of pitches*/, 62 /*core note*/, 17 /*perc organ*/, 100, 2.9F /*note duration*/);
           }
           if (type.equals("MINER")) {
             Missilemada2.addToHUDMsgList(Missilemada2.strCurrDaysHours() + "We destroyed an enemy mining ship! Well done, "+scoring_ship.toStrTypeNName()+"!", 2);
-            Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("yay MINER down", 5, "") /*Vector of pitches*/, 62 /*core note*/, 17 /*perc organ*/, 100, 2.9F /*note duration*/);
+            Missilemada2.putNotes(Missilemada2.strIntoMelody("yay MINER down", 5, "") /*Vector of pitches*/, 62 /*core note*/, 17 /*perc organ*/, 100, 2.9F /*note duration*/);
           }
           //xxtodo something
         }
@@ -1182,7 +1182,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
 
       //explosion visible TO PLAYER at ANY RANGE. So big.
       Missilemada2.addVfx2(getXYZ(), "SHIP_EXPLODED", (int) (5.7 * 60 * 60), 31.0 * radius, 0.85/*transp*/, "boom4.png", 1.0, "");
-      Missilemada2.setDynamicLight("SHIP_EXP", 0.5f, Missilemada2.getWorldTime()+5000, this.getXYZ());
+      Missilemada2.setDynamicLight("SHIP_EXP", 0.5f, Missilemada2.getWorldTime()+6000, this.getXYZ());
       Missilemada2.setCurrentExplosion(this.getXYZ(), 3.5 * Missilemada2.getMissileCollisionRangeMin()); //missiles passing through explosion, may get damaged or destroyed!
 
       //if player saw the explosion, place N debris bits, depending on buildcost.
@@ -1199,10 +1199,10 @@ public class Ship extends MobileThing implements Comparable<Ship> {
         //no sound
       } else {
         if (isInPlayerFaction()) { //plr lost a ship
-          Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("4kawwboom", 2, "") /*Vector of pitches*/, 45 /*core note*/, 55 /*orch-hit*/, 120, 12.9F /*note duration*/);
+          Missilemada2.putNotes(Missilemada2.strIntoMelody("4kawwboom", 1, "") /*Vector of pitches*/, 43 /*core note*/, 55 /*orch-hit*/, 120, 12.9F /*note duration*/);
         } else if (scoring_ship != null) {
           if (scoring_ship.isInPlayerFaction()) //plr scored a ship kill
-            Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("4kawwboom", 2, "") /*Vector of pitches*/, 56 /*core note*/, 55 /*orch-hit*/, 110, 10.0F /*note duration*/);
+            Missilemada2.putNotes(Missilemada2.strIntoMelody("4kawwboom", 1, "") /*Vector of pitches*/, 56 /*core note*/, 55 /*orch-hit*/, 100, 10.0F /*note duration*/);
         }
       }
 
@@ -1218,10 +1218,10 @@ public class Ship extends MobileThing implements Comparable<Ship> {
       if (type.equals("STARBASE")) { //if base, remove from shiplist and baselist.
         if (isInPlayerFaction()) {
           //plr lost.
-          Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("4kawwboom", 14, "") /*Vector of pitches*/, 52 /*core note*/, 55 /*orch-hit*/, 120, 10.9F /*note duration*/);
+          Missilemada2.putNotes(Missilemada2.strIntoMelody("4kawwboom", 14, "") /*Vector of pitches*/, 52 /*core note*/, 55 /*orch-hit*/, 120, 10.9F /*note duration*/);
         } else {
           //plr got a major victory.
-          Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("krakaboom", 9, "") /*Vector of pitches*/, 52 /*core note*/, 55 /*orch-hit*/, 110, 9.0F /*note duration*/);
+          Missilemada2.putNotes(Missilemada2.strIntoMelody("krakaboom", 9, "") /*Vector of pitches*/, 52 /*core note*/, 55 /*orch-hit*/, 110, 9.0F /*note duration*/);
         }
         Missilemada2.removeStarBaseFromPlay((StarBase) this);
       }
@@ -2039,7 +2039,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
     if (isAtFactionBase() && parentFaction.getStarbase().getHullPerc() > 0.3) {
       if (isInPlayerFaction()) {
         //Missilemada2.addToHUDMsgList(Missilemada2.strCurrDaysHours() + this.toStrTypeNName() + " hull repairs, at base.", 3);
-        Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("yeehaw repairs", 3, "") /*Vec pitches*/,34 /*core note*/,15/*tubularbells*/,65,1.9F/*note duration*/);
+        Missilemada2.putNotes(Missilemada2.strIntoMelody("yeehaw repairs", 3, "") /*Vec pitches*/, 34 /*core note*/, 15/*tubularbells*/, 65, 1.9F/*note duration*/);
       }
 
       setIsNearBattle(false);
@@ -2166,7 +2166,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
         //NOT setTimeDelay(1200); //regular operations delayed due to successful repair.
 
         if (isInPlayerFaction()) {
-          //nope, too spammy: Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("crewrepair yay", 6, "") /*Vector of pitches*/, 52 /*core note*/, 46 /*harp*/, 35, 1.9F /*note duration*/);
+          //nope, too spammy: Missilemada2.putNotes(Missilemada2.strIntoMelody("crewrepair yay", 6, "") /*Vector of pitches*/, 52 /*core note*/, 46 /*harp*/, 35, 1.9F /*note duration*/);
           Missilemada2.addVfxOnMT(0, 150, 50, "CREWREPAIR", 17000, 1100.0, 0.7/*transp*/, this, "crewrepairs2.png", 1.0, "");
         }
         curr_buildcredits = 0.94 * curr_buildcredits; //use some of the missile nanotech on the repairs.
@@ -2263,10 +2263,10 @@ public class Ship extends MobileThing implements Comparable<Ship> {
               Missilemada2.addVfx2(as.getMiningXYZ(), "SCOUTEDASTEROID", 17000, 2250.0, 0.75/*transp*/, "scan_cyan2.png", 1.0, "" );
               if (!as.isResourceless()) {
                 Missilemada2.addToHUDMsgList(Missilemada2.strCurrDaysHours() + this.toStrTypeNName() + " scanned good asteroid. Merit get!");
-                Missilemada2.playRadioChatter(3/*which chatter*/, 88/*leba*/, 70/*vol*/, 2/*pitch offset*/);
+                Missilemada2.playRadioChatter(3/*which chatter*/, 88/*leba*/, 80/*vol*/, 2/*pitch offset*/);
               } else {
                 Missilemada2.addToHUDMsgList(Missilemada2.strCurrDaysHours() + this.toStrTypeNName() + " scanned an useless asteroid.");
-                Missilemada2.playRadioChatter(3/*which chatter*/, 88/*leba*/, 66/*vol*/, 3/*pitch offset*/);
+                Missilemada2.putNotes(Missilemada2.strIntoMelody("ko6ss", 2, "") /*Vector of pitches*/, 59 /*core note*/, 15 /*tubular*/, 45, 3.3F /*note duration*/);
               }
             }
             //System.out.println(type+" ship "+unique_id+" _scouted_ asteroid " +s.toString() + " when senrange="+sensor_range + " scanrange="+Missilemada2.getAsteroidScanningRange());
@@ -2596,6 +2596,13 @@ public class Ship extends MobileThing implements Comparable<Ship> {
 
             if (calcDistanceMTMT(this, mi) < 0.25*sensor_range && mi.curr_hull_hp > 0.01) {
               see_enemy_mislcount_close++;
+              if (Missilemada2.gimmeRandDouble() < 0.0008 && isInPlayerFaction()) { //close missile: squeal in fright, drone or not.
+                if (isDrone())
+                  Missilemada2.putNotes(Missilemada2.strIntoMelody("akaaa!", 2, "") /*Vector of pitches*/, 63 /*core note*/, 68 /*bari sax*/, 50, 1.2F /*note duration*/);
+                else
+                  Missilemada2.putNotes(Missilemada2.strIntoMelody("akaaa!", 2, "") /*Vector of pitches*/, 58 /*core note*/, 77 /*bottle*/, 60, 1.2F /*note duration*/);
+
+              }
               am_under_fire = true;
             }
             if (calcDistanceMTMT(this, mi) < getDefenseBeamRange() && mi.curr_hull_hp > 0.01) //if within my defense beam range.
@@ -2712,7 +2719,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
             current_target.surrender_or_got_captured(this /*surrender-to*/, true/*hack*/);
 
             if (isInPlayerFaction()) {
-              Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("hackazat", 10, "") /*Vector of pitches*/, 62 /*core note*/, 30 /*dist guit*/, 100, 3.3F /*note duration*/);
+              Missilemada2.putNotes(Missilemada2.strIntoMelody("hackazat", 10, "") /*Vector of pitches*/, 62 /*core note*/, 30 /*dist guit*/, 100, 3.3F /*note duration*/);
             }
           }
         }
@@ -3048,8 +3055,10 @@ public class Ship extends MobileThing implements Comparable<Ship> {
     if (buddy_derelict != null && !tractormode) {
       if (canTractorThisDerelict(buddy_derelict)) {
         tractormode = true;
-        if (isInPlayerFaction())
-          Missilemada2.addToHUDMsgList(Missilemada2.strCurrDaysHours() + this.toStringShort()+" begins tractoring a derelict "+buddy_derelict.getType() + ". Dere spd="+buddy_derelict.getSpeedCurrent());
+        if (isInPlayerFaction()) {
+          Missilemada2.addToHUDMsgList(Missilemada2.strCurrDaysHours() + this.toStringShort() + " begins tractoring a derelict " + buddy_derelict.getType() + ". Dere spd=" + buddy_derelict.getSpeedCurrent());
+          Missilemada2.putNotes(Missilemada2.strIntoMelody("alas dragg", 2, "") /*Vector of pitches*/, 20 /*core note*/, 109 /*kalimba*/, 90, 1.2F /*note duration*/);
+        }
       } else {
         //too heavy for us.
         if (isInPlayerFaction())
@@ -4246,63 +4255,63 @@ public class Ship extends MobileThing implements Comparable<Ship> {
   }
   private void playCrewmanDied() {
     if (isInPlayerFaction())
-      Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("alas bongo", 10, "") /*Vector of pitches*/, 58 /*core note*/, 113 /*xxx*/, 90, 1.2F /*note duration*/);
+      Missilemada2.putNotes(Missilemada2.strIntoMelody("alas bongo", 7, "") /*Vector of pitches*/, 58 /*core note*/, 113 /*tinkle bell*/, 90, 1.2F /*note duration*/);
   }
   private void playUpgradeinstalled() {
     if (isInPlayerFaction())
-      Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("woot upgraydd", 4, "") /*Vector of pitches*/, 64 /*core note*/, 113 /*agogo*/, 100, 2.9F /*note duration*/);
+      Missilemada2.putNotes(Missilemada2.strIntoMelody("woot upgraydd", 4, "") /*Vector of pitches*/, 64 /*core note*/, 113 /*agogo*/, 100, 2.9F /*note duration*/);
     //click-clock, good.
   }
   private void playMiningStartSmall() {
     if (isInPlayerFaction() && !parentFaction.isAnyOfOurShipsInBattle())
-      Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("scoutmin", 4, "") /*Vector of pitches*/, 31 /*core note*/, 67 /*instrument*/, 40, 0.5F /*note duration*/);
+      Missilemada2.putNotes(Missilemada2.strIntoMelody("scoutmin", 4, "") /*Vector of pitches*/, 31 /*core note*/, 67 /*instrument*/, 40, 0.5F /*note duration*/);
   }
   private void playMiningStartBig() {
     if (isInPlayerFaction() && !parentFaction.isAnyOfOurShipsInBattle())
-      Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("scoutmin", 4, "") /*Vector of pitches*/, 22 /*core note*/, 100 /*instrument*/, 88, 1.8F /*note duration*/);
+      Missilemada2.putNotes(Missilemada2.strIntoMelody("scoutmin", 4, "") /*Vector of pitches*/, 22 /*core note*/, 100 /*instrument*/, 88, 1.8F /*note duration*/);
   }
   private void playCargoOffloadSmall() {
     //if (isInPlayerFaction() && !parentFaction.isAnyOfOurShipsInBattle())
-    //Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("scoutaofflo", 6, "") /*Vector of pitches*/, 34 /*core note*/, 67 /*instrument*/, 40, 0.5F /*note duration*/);
+    //Missilemada2.putNotes(Missilemada2.strIntoMelody("scoutaofflo", 6, "") /*Vector of pitches*/, 34 /*core note*/, 67 /*instrument*/, 40, 0.5F /*note duration*/);
   }
   private void playCargoOffloadBig() {
     if (isInPlayerFaction()
             /*&& !parentFaction.isAnyOfOurShipsInBattle()*/ ) {
-      //Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("big miner off", 7, "") /*Vector of pitches*/, 22 /*core note*/, 100 /*instrument*/, 90, 1.2F /*note duration*/);
-      Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("scrap get", 3, "") /*Vector of pitches*/, 34 /*core note*/, 113 /*agogo*/, 120, 1.9F /*note duration*/);
+      //Missilemada2.putNotes(Missilemada2.strIntoMelody("big miner off", 7, "") /*Vector of pitches*/, 22 /*core note*/, 100 /*instrument*/, 90, 1.2F /*note duration*/);
+      Missilemada2.putNotes(Missilemada2.strIntoMelody("scrap get", 3, "") /*Vector of pitches*/, 34 /*core note*/, 113 /*agogo*/, 120, 1.9F /*note duration*/);
     }
   }
   private void playMiningAccident() {
     if (isInPlayerFaction()
             && !parentFaction.isAnyOfOurShipsInBattle()) {
-      //Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("accide-boom", 3, "") /*Vector of pitches*/, 92 /*core note*/, 125 /*helicopter*/, 70, 1.2F /*note duration*/);
-      //old  Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("acci", 2, "") /*Vector of pitches*/, 45 /*core note*/, 72 /*piccolo*/, 60, 1.0F /*note duration*/);
+      //Missilemada2.putNotes(Missilemada2.strIntoMelody("accide-boom", 3, "") /*Vector of pitches*/, 92 /*core note*/, 125 /*helicopter*/, 70, 1.2F /*note duration*/);
+      //old  Missilemada2.putNotes(Missilemada2.strIntoMelody("acci", 2, "") /*Vector of pitches*/, 45 /*core note*/, 72 /*piccolo*/, 60, 1.0F /*note duration*/);
     }
   }
   private void playMissileFiringNote(double missile_cost) {
     int missile_cost_int = (int) missile_cost; //was xx..xx seen
     int thenote = 42 - (int)(10*missile_cost/16.0); //want -10 at most.
-    Missilemada2.putMelodyNotes(Missilemada2.stringNumberlistToMelodyVector(""+thenote) /*Vector of pitches*/, 0 /*core note*/, 32 /*slapbass*/, 110, 6.3F /*note duration*/);
+    Missilemada2.putNotes(Missilemada2.stringNumberlistToMelodyVector("" + thenote) /*Vector of pitches*/, 0 /*core note*/, 32 /*slapbass*/, 110, 6.3F /*note duration*/);
   }
   private void playAtkBeamFiringNote() {
-    //Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("hackazat", 1, "") /*Vector of pitches*/, 52 /*core note*/, 31 /*guitar harmonics*/, 40, 4.3F /*note duration*/);
-    Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("hackazat", 1, "") /*Vector of pitches*/, 77 /*core note*/, 110 /*fiddle*/, 80, 1.3F /*note duration*/);
+    //Missilemada2.putNotes(Missilemada2.strIntoMelody("hackazat", 1, "") /*Vector of pitches*/, 52 /*core note*/, 31 /*guitar harmonics*/, 40, 4.3F /*note duration*/);
+    Missilemada2.putNotes(Missilemada2.strIntoMelody("hackazat", 1, "") /*Vector of pitches*/, 77 /*core note*/, 110 /*fiddle*/, 80, 1.3F /*note duration*/);
   }
   private void playDefBeamFiringNote() {
-    //Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("hackazat", 1, "") /*Vector of pitches*/, 82 /*core note*/, 110 /*fiddle*/, 60, 1.3F /*note duration*/);
+    //Missilemada2.putNotes(Missilemada2.strIntoMelody("hackazat", 1, "") /*Vector of pitches*/, 82 /*core note*/, 110 /*fiddle*/, 60, 1.3F /*note duration*/);
     //note31 instr 15 dulcimer.
-    Missilemada2.putMelodyNotes(Missilemada2.stringNumberlistToMelodyVector("31") /*Vector of pitches*/, 0 /*core note*/, 15 /*dulcimer */, 60, 2.3F /*note duration*/);
+    Missilemada2.putNotes(Missilemada2.stringNumberlistToMelodyVector("31") /*Vector of pitches*/, 0 /*core note*/, 15 /*dulcimer */, 60, 2.3F /*note duration*/);
 
   }
   private void playGotHullDamage() {
-    Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("hullplating2", 2, "") /*Vector of pitches*/, 42 /*core note*/, 126 /*applause*/, 120, 9.9f /*note duration*/);
+    Missilemada2.putNotes(Missilemada2.strIntoMelody("hullplating2", 2, "") /*Vector of pitches*/, 42 /*core note*/, 126 /*applause*/, 120, 9.9f /*note duration*/);
   }
   private void playDeployedSENSAT() {
-    //Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("virpla", 3, "") /*Vector of pitches*/, 68 /*core note*/, 126 /*applause*/, 50, 0.9F /*note duration*/);
-    Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("sensat deploy", 3, "") /*Vector of pitches*/, 72 /*core note*/, 30 /*dist guit*/, 75, 1.4f /*note duration*/);
+    //Missilemada2.putNotes(Missilemada2.strIntoMelody("virpla", 3, "") /*Vector of pitches*/, 68 /*core note*/, 126 /*applause*/, 50, 0.9F /*note duration*/);
+    Missilemada2.putNotes(Missilemada2.strIntoMelody("sensat deploy", 3, "") /*Vector of pitches*/, 72 /*core note*/, 30 /*dist guit*/, 75, 1.4f /*note duration*/);
   }
   private void playDeployedCarriedDrones() {
-    Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("drones deploy", 7, "") /*Vector of pitches*/, 65 /*core note*/, 30 /*dist guit*/, 95, 1.45f /*note duration*/);
+    Missilemada2.putNotes(Missilemada2.strIntoMelody("drones deploy", 7, "") /*Vector of pitches*/, 65 /*core note*/, 30 /*dist guit*/, 95, 1.45f /*note duration*/);
   }
   public void drawShip(float scale1, boolean drawhealthbar) {
     float beamthickness = 2400.0f; /*beam thickness*/
@@ -4392,12 +4401,12 @@ public class Ship extends MobileThing implements Comparable<Ship> {
 
 
     //draw line to milbuddy
-    if (buddy_mil != null && isInPlayerFaction()) {
-      Missilemada2.setOpenGLMaterial("LINE");
-      Missilemada2.setOpenGLTextureGUILine();
-      GL11.glColor4f(0.99f, 0.0f, 0.0f, 0.9f);
-      FlatSprite.drawFlatLineVecVec(this.getXYZ(), buddy_mil.getXYZ(), 10.5*this.getRadius());
-    }
+//    if (buddy_mil != null && isInPlayerFaction()) {
+//      Missilemada2.setOpenGLMaterial("LINE");
+//      Missilemada2.setOpenGLTextureGUILine();
+//      GL11.glColor4f(0.99f, 0.0f, 0.0f, 0.9f);
+//      FlatSprite.drawFlatLineVecVec(this.getXYZ(), buddy_mil.getXYZ(), 10.5*this.getRadius());
+//    }
 
     //draw line to civbuddy
 //    if (buddy_civilian != null && isInPlayerFaction()) {
@@ -4467,19 +4476,18 @@ public class Ship extends MobileThing implements Comparable<Ship> {
       Vector bar_start = MobileThing.changeXYZ(getXYZ(), 0, 195.0*radius, -100);
       Vector bar_end   = MobileThing.changeXYZ(getXYZ(), 0, 195.0*radius + totalbar, 0);
 
-      // if blaa, other color.
-      if (am_under_fire || getShieldPerc() < 0.7)
-        GL11.glColor4f(0.89f, 0.09f, 0.09f, 0.65f); //light red
-      else
-        GL11.glColor4f(0.79f, 0.79f, 0.84f, 0.60f); //light gray
+      if (isInPlayerFaction()) {
+        // if blaa, other color.
+        if (am_under_fire || getShieldPerc() < 0.7)
+          GL11.glColor4f(0.89f, 0.09f, 0.09f, 0.65f); //light red
+        else
+          GL11.glColor4f(0.79f, 0.79f, 0.84f, 0.60f); //light gray
+      } else { //enemies, dark gray
+        GL11.glColor4f(0.09f, 0.09f, 0.12f, 0.60f); // dark
+      }
       FlatSprite.drawFlatLineVecVec(bar_start, bar_end, 11500.0);
-      //Missilemada2.setOpenGLMaterial("SHIP"); //restore mat
+      Missilemada2.setOpenGLMaterial("SHIP"); //restore mat
     }
-
-
-
-
-
 
     //draw shields if have them.
     if (max_shields > 1000.0 && getShieldPerc() > 0.06) {
@@ -4517,15 +4525,11 @@ public class Ship extends MobileThing implements Comparable<Ship> {
     if (type.equals("STARBASE")) {
       //reset emission and bounced
       Missilemada2.setOpenGLMaterial("SHIP");
-      //move coords to this
-      //GL11.glTranslatef((float) xcoord, (float) ycoord, (float) zcoord);
       drawStarBase(5.9f*scale1);
     } else { //normal ship
-
-//      Sphere s = new Sphere();
+//      Sphere s = new Sphere(); //old code before ship-sprites.
 //      s.setTextureFlag(true); // "specifies if texture coordinates should be generated for quadrics rendered with qobj."
 //      s.setNormals(GLU.GLU_NONE);
-//
 //      s.setNormals(GLU.GLU_FLAT);
 //      s.setTextureFlag(true); // "specifies if texture coordinates should be generated for quadrics rendered with qobj."
 

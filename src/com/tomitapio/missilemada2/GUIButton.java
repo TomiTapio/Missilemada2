@@ -50,7 +50,7 @@ public class GUIButton {
       GL11.glColor4f(0.96f, 0.96f, 0.3f, 0.8f); //yellow
     } else {
       if (can_afford_build) {
-        GL11.glColor4f(0.2f, 0.76f, 0.2f, 0.8f); //light green
+        GL11.glColor4f(0.2f, 0.76f, 0.2f, 0.8f); //light green, can afford
       } else {
         //not active mode, and/or can't afford.
         GL11.glColor4f(0.26f, 0.26f, 0.7f, 0.8f); //blue

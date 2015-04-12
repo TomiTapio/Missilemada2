@@ -297,7 +297,7 @@ public class Faction {
 
         //vfx, sfx        
         plr_try_ship.addVfxOfStr();
-        playFactionBuiltShip(plr_req_type, plr_try_ship.getCost());
+        playFactionBuiltShip(plr_try_ship, plr_req_type, plr_try_ship.getCost());
         return;
       } else {
         //player could not afford.
@@ -485,7 +485,7 @@ public class Faction {
       if (isPlayerFaction()) {
         tryship.setIsSeenByPlayer(true);
 
-        //Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("Ship built,yay", 13, "") /*Vector of pitches*/, 75 /*core note*/, 72 /*piccolo*/, 65, 1.0F /*note duration*/);
+        //Missilemada2.putNotes(Missilemada2.strIntoMelody("Ship built,yay", 13, "") /*Vector of pitches*/, 75 /*core note*/, 72 /*piccolo*/, 65, 1.0F /*note duration*/);
         //System.out.println("Faction "+getFactionId()+" built a new "+tryship.getType() +" of cost "+(int)tryship.getCost()+"  " + tryship.toString());
         Missilemada2.addVfxOnMT(6.0 * tryship.getRadius(), 0, 0, "SHIPBUILT", 70000, 3500.0, 0.9/*transp*/, tryship, "yellowcross.png", 1.0, "");
       }
@@ -778,6 +778,9 @@ public class Faction {
     scouting_distance_avg = scouting_distance_avg * factor;
     if (scouting_distance_avg > Missilemada2.getScoutingDistanceMax())
       scouting_distance_avg = Missilemada2.getScoutingDistanceMax();
+    if (scouting_distance_avg < 0.07 * Missilemada2.getScoutingDistanceMax())
+      scouting_distance_avg = 0.07 * Missilemada2.getScoutingDistanceMax();
+
   }
   public void addScoutingDist(double a) {
     scouting_distance_avg = scouting_distance_avg + a;
@@ -809,8 +812,8 @@ public class Faction {
     }
     // error if not enough
     if (hasEnoughIdleCrew(a)) {
-      if (isPlayerFaction())
-        Missilemada2.addToHUDMsgList(Missilemada2.strCurrDaysHours() + "Assigned "+a+" crew to freshly built "+s.toStrTypeNName()+".",0);
+      //if (isPlayerFaction())
+      //  Missilemada2.addToHUDMsgList(Missilemada2.strCurrDaysHours() + "Assigned "+a+" crew to freshly built "+s.toStrTypeNName()+".",0); //unneeded infospam
       crew_idle = crew_idle - a;
     } else {
       System.out.println("error, not enough idle crew at base.");
@@ -898,7 +901,7 @@ public class Faction {
 
     }
     //check if we are vanquished (no more resource getting via miners)
-    if (getMiningCapaTons() < 90.0) {
+    if (getMiningCapaTons() < 70.0) {
       //try to make tinyminer, if fails, gameover for this faction.
       Ship foo = tryProduceShipOfType("TINYMINER", 5, true); //was price bracket 1, but want gameover sooner.
       if (foo == null) {
@@ -1252,35 +1255,38 @@ public class Faction {
       return null;
   }
   public void playFactionEntersCombat() {
-    Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("battle", 5, "") /*Vector of pitches*/, 25 /*core note*/, 2 /**/, 70, 2.1F /*note duration*/);
+    Missilemada2.putNotes(Missilemada2.strIntoMelody("battle", 3, "") /*Vector of pitches*/, 27 /*core note*/, 109 /*kalimba*/, 60, 2.1F /*note duration*/);
   }
   public void playFactionNoLongerInCombat() {
-    Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("zilipatipippan", 5, "") /*Vector of pitches*/, 42 /*core note*/, 2 /**/, 40, 2.9F /*note duration*/);
+    Missilemada2.putNotes(Missilemada2.strIntoMelody("zilipatipippan", 5, "") /*Vector of pitches*/, 42 /*core note*/, 2 /**/, 40, 2.9F /*note duration*/);
   }
-  public void playFactionOrderSound() {
-    Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("zot yay", 2, "") /*Vector of pitches*/, 28 /*core note*/, 47 /*timpani*/, 103, 4.9F /*note duration*/);
-  }
-  private void playFactionBuiltShip(String type, double cost) {
+  private void playFactionBuiltShip(Ship s, String type, double cost) {
     if (cost > 9200) {
       //bonus celebratory notes for HEAVY SHIP.
-      Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("a"+type, 6, "") /*Vector of pitches*/, 34 /*core note*/, 114 /*steeldrum*/, 104, 5.4F /*note duration*/);
+      Missilemada2.putNotes(Missilemada2.strIntoMelody("a" + type, 6, "") /*Vector of pitches*/, 34 /*core note*/, 108 /*koto*/, 114, 5.4F /*note duration*/);
     } else {
       //regular puny ship (elite scout or cheaper)
-      Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("q"+type, 2, "") /*Vector of pitches*/, 36 /*core note*/, 114 /*steeldrum*/, 90, 4.3F /*note duration*/);
+      if (s.isDrone()) { //drones have different MIDI instrument!
+        Missilemada2.putNotes(Missilemada2.strIntoMelody("m" + type, 4, "") /*Vector of pitches*/, 58 /*core note*/, 31 /*distor guit*/, 85, 3.3F /*note duration*/);
+      } else {
+        Missilemada2.putNotes(Missilemada2.strIntoMelody("q" + type, 2, "") /*Vector of pitches*/, 37 /*core note*/, 108 /*koto*/, 98, 4.3F /*note duration*/);
+      }
+
     }
   }
   private void playFactionBuildNoAfford(String type) {
-    Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("a"+type, 2, "") /*Vector of pitches*/, 49 /*core note*/, 114 /*steeldrum*/, 55, 4.0F /*note duration*/);
+    Missilemada2.putNotes(Missilemada2.strIntoMelody("noaff", 5, "") /*Vector of pitches*/, 69 /*core note*/, 87 /*fifths*/, 55, 1.0F /*note duration*/);
   }
   private void playCantBuildCozDelay() {
-    Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("zabusy", 2, "") /*Vector of pitches*/, 46 /*core note*/, 114 /*steeldrum*/, 55, 1.9F /*note duration*/);
+    Missilemada2.putNotes(Missilemada2.strIntoMelody("zabusy", 2, "") /*Vector of pitches*/, 34 /*core note*/, 87 /*fifths*/, 55, 1.86F /*note duration*/);
   }
   private void playCanBuildNow() {
-    //Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("canbuildnow", 2, "") /*Vector of pitches*/, 50 /*core note*/, 12 /*marimba*/, 72, 2.8F /*note duration*/);
-    Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody(Missilemada2.getRandomDNA(), 3, "") /*Vector of pitches*/, 50 /*core note*/, 12 /*marimba*/, 92, 2.8F /*note duration*/);
+    //Missilemada2.putNotes(Missilemada2.strIntoMelody("canbuildnow", 2, "") /*Vector of pitches*/, 50 /*core note*/, 12 /*marimba*/, 72, 2.8F /*note duration*/);
+    //Missilemada2.putNotes(Missilemada2.strIntoMelody(Missilemada2.getRandomDNA(), 3, "") /*Vector of pitches*/, 50 /*core note*/, 12 /*marimba*/, 22, 2.8F /*note duration*/);
+    Missilemada2.putNotes(Missilemada2.strIntoMelody("redi", 2, "") /*Vector of pitches*/, 60 /*core note*/, 12 /*marimba*/, 112, 2.8F /*note duration*/);
   }
   private void playFactionScrappedYay() {
-    Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("scrap get", 7, "") /*Vector of pitches*/, 34 /*core note*/, 113 /*agogo*/, 120, 2.9F /*note duration*/);
+    Missilemada2.putNotes(Missilemada2.strIntoMelody("scrap get", 7, "") /*Vector of pitches*/, 34 /*core note*/, 113 /*agogo*/, 120, 2.9F /*note duration*/);
   }
   public Vector getFrontlineXYZ_vary(String a) {
     return getFrontlineXYZ_vary(a, 0.013);
@@ -1813,7 +1819,7 @@ public class Faction {
 
     //what, no wanted-reso aste nearby? Scout harder.
     if (siz > 12 && ret_as == null)
-      changeScoutingDist(1.009);
+      changeScoutingDist(1.001);
 
     //xxhack: don't go to super far one.
 //    if (ret_as != null) {
@@ -1864,7 +1870,7 @@ public class Faction {
       } else { //regular ship
         //melody of enemy sighted. CONSTANTLY? maybe add a timer.
 //      if (this.isPlayerFaction())
-//        Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("enemy spotted", 2, "") /*Vector of pitches*/, 49 /*core note*/, 30 /*dist guit*/, 70, 2.3F /*note duration*/);
+//        Missilemada2.putNotes(Missilemada2.strIntoMelody("enemy spotted", 2, "") /*Vector of pitches*/, 49 /*core note*/, 30 /*dist guit*/, 70, 2.3F /*note duration*/);
 
       }
 
@@ -1897,7 +1903,7 @@ public class Faction {
   public void addScoutReportAste(Ship reportingscout, ScoutReport sr, Asteroid as) {
     drawFrontLineIndicator(2910.0 /*size*/, 1.001/*chance*/);
     //if (this.isPlayerFaction() && !((Asteroid)sr.item).isResourceless()) {
-    //  Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("scanner"/*sr.item.toString()*/, 4, "") /*Vector of pitches*/, 57 /*core note*/, 30 /*dist guit*/, 40, 1.71F /*note duration*/);
+    //  Missilemada2.putNotes(Missilemada2.strIntoMelody("scanner"/*sr.item.toString()*/, 4, "") /*Vector of pitches*/, 57 /*core note*/, 30 /*dist guit*/, 40, 1.71F /*note duration*/);
     //}
 
     //scouting_distance_avg = 1.00004 * scouting_distance_avg; //increasing on each scout_wantdestination
@@ -1911,6 +1917,9 @@ public class Faction {
 
     if (scoutreports_asteroids.size() < 200)
       scoutreports_asteroids.add(sr);
+
+    if (this.isPlayerFaction())
+      Missilemada2.updateBuildButtonColours();
   }
   public void addScoutReportBase(Ship reportingscout, ScoutReport sr) {
     scoutreports_bases.add(sr);
@@ -1918,7 +1927,7 @@ public class Faction {
     //melody of enemy BASE sighted.
     //xxxx big-ass vfx.
     if (this.isPlayerFaction())
-      Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("enemy base spotted", 16, "") /*Vector of pitches*/, 50 /*core note*/, 56 /*instrument*/, 90, 0.9F /*note duration*/);
+      Missilemada2.putNotes(Missilemada2.strIntoMelody("enemy base spotted", 16, "") /*Vector of pitches*/, 50 /*core note*/, 56 /*instrument*/, 90, 0.9F /*note duration*/);
   }
   public boolean isAsteroidScouted(Asteroid a) {
     int siz = scoutreports_asteroids.size();
@@ -1995,7 +2004,7 @@ public class Faction {
     this.addCrew(4 + 5 + 2 + 2);
 
     if (isPlayerFaction()) {
-      Missilemada2.addToHUDMsgList("addStarterShips: before ship adding, "+crew_idle+" crew idle, "+crew_alive+" crew alive. ",0);
+      Missilemada2.addToHUDMsgList("Operations start: before ships, "+crew_idle+" crew idle, "+crew_alive+" crew alive. ",0);
     }
 
       //MUST HAVE MINING SHIPS or enough resources, otherwise you start with gameover!
@@ -2023,7 +2032,7 @@ public class Faction {
 
     curr_shipcount = Missilemada2.getShipsOfFaction(this).size();
     if (isPlayerFaction()) {
-      Missilemada2.addToHUDMsgList("addStarterShips: after ship adding, "+crew_idle+" crew idle, "+crew_alive+" crew alive. ",0);
+      Missilemada2.addToHUDMsgList("Operations start: "+crew_idle+" crew idle, "+crew_alive+" crew alive. ",0);
       Missilemada2.updateBuildButtonColours();
     }
 
@@ -2300,7 +2309,15 @@ public class Faction {
     //xxx check for valid mode command combinations! BASE MINERS NEAR FAR FLAG. miners: BASE, GO.
 
     if (isPlayerFaction()) {
-      playFactionOrderSound();
+    int randint = Missilemada2.gimmeRandInt(3); //bonus note chain for scout orders
+
+      if (who.equals("MIL")) //if mil, timpani low.
+        Missilemada2.putNotes(Missilemada2.strIntoMelody("ay", 1, ""), 32 /*core note*/, 47 /*timpani*/, 109, 4.9F /*note dur*/);
+      if (who.equals("SCOUT"))
+        Missilemada2.putNotes(Missilemada2.strIntoMelody("nizoks", 4+randint, ""), 58 /*core note*/, 79 /*whistle*/, 83, 3.2F /*note dur*/);
+      if (who.equals("MINER"))
+        Missilemada2.putNotes(Missilemada2.strIntoMelody("ay", 1, ""), 34 /*core note*/, 47 /*timpani*/, 93, 4.9F /*note dur*/);
+
       Missilemada2.addToHUDMsgList(Missilemada2.strCurrDaysHours() + "Order set: "+ who +","+where,0);
       drawFrontLineIndicator(4510.0 /*size*/, 1.01/*chance*/);
     }

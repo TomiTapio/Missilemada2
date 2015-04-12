@@ -215,7 +215,7 @@ public class Missilemada2 {
       worldTimeIncrement = worldTimeIncrement_min;
   }
   public static void gameScenarioLost() {
-    putMelodyNotes(strIntoMelody("ga-over", 15, "") /*Vector of pitches*/, 57 /*core note*/, 1 /*instrument*/, 90, 2.4F /*note duration*/);
+    putNotes(strIntoMelody("ga-over", 15, "") /*Vector of pitches*/, 57 /*core note*/, 1 /*instrument*/, 90, 2.4F /*note duration*/);
     //xxx doesn't play, coz we pause the game...
     getPlayerFaction().commanderScenarioLost();
     //xxx store msg to player in some new var
@@ -234,7 +234,7 @@ public class Missilemada2 {
     createGUIButtons();
   }
   public static void gameScenarioWon() {
-    putMelodyNotes(strIntoMelody("we-WON", 15, "") /*Vector of pitches*/, 57 /*core note*/, 1 /*instrument*/, 90, 2.4F /*note duration*/);
+    putNotes(strIntoMelody("we-WON", 15, "") /*Vector of pitches*/, 57 /*core note*/, 1 /*instrument*/, 90, 2.4F /*note duration*/);
     getPlayerFaction().commanderScenarioWon();
     //xxx store msg to player in some new var
 
@@ -307,7 +307,7 @@ public class Missilemada2 {
     return new Vector(20,20);
   }
 
-  public static void melodyNotesPileAdd(StampedNote s) {
+  public static void soundNotesPileAdd(StampedNote s) {
     soundNotesPile.add(s);
   }
   private boolean checkAndPlayNoteFromQue() { //checks, plays, puts noteoff into que
@@ -394,7 +394,7 @@ public class Missilemada2 {
     }
 
   }
-  public static void putMelodyNotes(Vector v /*Vector of pitches and pauses*/, int corenote, int instrument /*instrument*/, int vol, double dur_ticks /*note duration*/) {
+  public static void putNotes(Vector v /*Vector of pitches and pauses*/, int corenote, int instrument /*instrument*/, int vol, double dur_ticks /*note duration*/) {
     //double worldseconds_per_quarternote = worldTimeIncrement * (millis_per_quarternote/* is 500*/ / 1000.0);
     double worldseconds_per_quarternote = worldTimeIncrement * ( (19*500) / 1000.0);
     double playerseconds_per_quarternote = worldseconds_per_quarternote / (FPS * worldTimeIncrement);   // plr sec has (FPS * worldTimeIncrement) world sec
@@ -1320,7 +1320,7 @@ public class Missilemada2 {
     factionList.add(f1);
         StarBase sb = new StarBase(xyz_fac1, f1);
         //melody on init? let player's starbase sing.
-        putMelodyNotes(strIntoMelody(sb.toStringShort()+"aa", 15, "") /*Vector of pitches*/, 57 /*core note*/, 1 /*instrument*/, 90, 2.4F /*note duration*/);
+        putNotes(strIntoMelody("kla4", 12, "") /*Vector of pitches*/, 30 /*core note*/, 67 /*tenor sax*/, 80, 3.9F /*note duration*/);
         sb.setIsSeenByPlayer(true);
         sb.setFaction(f1);
         addToBaseList(sb);
@@ -1451,7 +1451,6 @@ public class Missilemada2 {
       dead_old_dere.setSpeed(0.0, 0.0, 0.0); //asteroids have gravitied/bumped them into stillness during the years.
       deadShipList.add(dead_old_dere);
     }
-
   }
   private static boolean areAllResourcesAvailableNearPlayerBase(double nearbydist /*should be under 0.70 basedist?? */) {
     StarBase plrbase = getPlayerFaction().getStarbase();
@@ -2296,15 +2295,10 @@ public class Missilemada2 {
       toomuchnotescounter = toomuchnotescounter - (1.0/8.0);
     }
 
-    //----ambient vfx:
+    //xxxxxxx----ambient vfx:
 
-    //----ambient sounds: low chance, bass note.
-    //note: putmidinote does NOT have a duration -- use stampednote to time a noteoff. or putMelodyNotes().
-    if (gimmeRandDouble() < 0.05) { //because 0.001 is hard to reach.
-      if (gimmeRandDouble() < 0.05) {
-        //putMIDINote_crapnoteoff(12 /*marimba*/, 42, false, 10, /*sn.dur_ticks, 0.0,*/ true, true);
-      }
-    }
+
+    checkPlayAmbientSounds();
 
     //clear "remember single explosion, for X seconds(aka timetick), for misl hitting the explosion"
     Missilemada2.setCurrentExplosion(null, 0.0);
@@ -2490,6 +2484,37 @@ public class Missilemada2 {
     }
 
     logicTimeMeasuredms = (System.nanoTime() / 1000000.0) - time_a_ms;
+  }
+
+  private void checkPlayAmbientSounds() { //called on every time-tick.
+    //----ambient sounds: low chance, bass note.
+    if (gimmeRandDouble() < 0.0004) {
+
+      double rand = gimmeRandDouble();
+      if (rand > 0.0 && rand < 0.2) {
+        putNotes(strIntoMelody("01abc", 3, ""), 39 /*core note*/, 94 /**/, 55/*vol*/, 15.3F /*note duration*/);
+      }
+      if (rand > 0.2 && rand < 0.4) {
+        putNotes(strIntoMelody("Dbc", 3, ""), 19 /*core note*/, 98 /*soundtrack*/, 95/*vol*/, 15.3F /*note duration*/);
+      }
+      if (rand > 0.4 && rand < 0.6) {
+        putNotes(strIntoMelody("zerportr", 2, ""), 39 /*core note*/, 97 /*rain*/, 85/*vol*/, 11.9F /*note duration*/);
+      }
+      if (rand > 0.6 && rand < 0.8) {
+        putNotes(strIntoMelody("1kritoks", 4, ""), 41 /*core note*/, 101 /*brightness*/, 115/*vol*/, 18.3F /*note duration*/);
+      }
+      if (rand > 0.8 && rand < 0.90) {
+        putNotes(strIntoMelody("maxtyox", 6, ""), 15 /*core note*/, 85 /*charang*/, 77/*vol*/, 16.3F /*note duration*/);
+      }
+      if (rand > 0.9 && rand < 0.999) {
+        putNotes(strIntoMelody("kurax", 16, ""), 16 /*core note*/, 85 /*charang*/, 67/*vol*/, 19.3F /*note duration*/);
+      }
+
+      //addToHUDMsgList("rand ambient now");
+
+
+    }
+
   }
 
   public static Vector getShipList() {
@@ -2856,7 +2881,7 @@ public class Missilemada2 {
     return 0.25 * BASEDIST;
   }
   public static double getScoutingDistanceMax() {
-    return 2.2 * BASEDIST;
+    return 1.4 * BASEDIST;
   }
   public static double getBaseDistance() {
     return BASEDIST;

@@ -106,8 +106,12 @@ __ on ship creation, a "Notes" stringbuffer that has builder dudes' notes like "
 
 done: on zoom out far, draw HP+SHIE bar over ship. Grows upwards.
 __ aste drift speed to be per-scenario config.
-__ improve //----ambient sounds: low chance, bass note.
+__ improve //----ambient sounds: low chance, bass note. (82sawtooth,98soundtrack,97rain,101brightness)
+__ mining sounds.
 __ tractor: if tractor-candidate is on trajectory to base, don't tractor. saves much time. 
+__ mildrones near far: stay at base. 
+cantrepro: buggy in drone built notes, and scout order notes.
+
 
 __________________________________________________________________________________________________
 Commander xp system:

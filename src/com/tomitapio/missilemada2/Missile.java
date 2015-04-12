@@ -482,7 +482,7 @@ public class Missile extends MobileThing {
     return foo;
   }
   private void playMissileExploded(double missile_cost) {
-    Missilemada2.putMelodyNotes(Missilemada2.strIntoMelody("ko-hackazat", 1, "") /*Vector of pitches*/, 25 /*core note*/, 32 /*slapbass*/, 94, 4.3F /*note duration*/);
+    Missilemada2.putNotes(Missilemada2.strIntoMelody("ko-hackazat", 1, "") /*Vector of pitches*/, 25 /*core note*/, 32 /*slapbass*/, 94, 4.3F /*note duration*/);
   }
   public double getHullPerc() { //for logic
     return curr_hull_hp / max_hull_hp;

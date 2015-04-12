@@ -104,13 +104,9 @@ public class FlatSprite extends MobileThing {
 
     //GL11.glPopMatrix();
   }
-
   public static void drawFlatLine(double x1, double y1, double z1, double x2, double y2, double z2, double width) { //xxx knows which way to face camera?
     GL11.glEnable(GL_DEPTH_TEST);
-
-    //GL11.glColor4f(0.9f, 0.9f, 0.1f, 0.4f);
     //GL11.glDisable(GL11.GL_TEXTURE_2D);
-
     GL11.glBegin(GL11.GL_QUADS);
     GL11.glVertex3f((float) x1, (float) y1, (float) z1);          GL11.glNormal3f(0.0f, 0.0f, 1.0f);
     GL11.glVertex3f((float) (x1 + width), (float) (y1 + width), (float) (z1+width)       );      GL11.glNormal3f(0.0f, 0.0f, 1.0f);
@@ -126,7 +122,6 @@ public class FlatSprite extends MobileThing {
       return;
     drawFlatLine(((Double) xyz1.get(0)), ((Double) xyz1.get(1)), ((Double) xyz1.get(2)),
                  ((Double) xyz2.get(0)), ((Double) xyz2.get(1)), ((Double) xyz2.get(2)), width);
-
   }
   public void drawBox() {
     // this func draws a box with some texture coordinates
@@ -163,6 +158,4 @@ public class FlatSprite extends MobileThing {
     glTexCoord2f(0.0f, 1.0f); glVertex3f(-1.0f,  1.0f, -1.0f);	// Top Left Of The Texture and Quad
     glEnd();
   }
-
-
 }

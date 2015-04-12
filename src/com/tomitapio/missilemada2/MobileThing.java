@@ -245,11 +245,11 @@ public class MobileThing
     return MIDI_instrument;
   }
   public void playNote(int offset, int volume, double dur_ticks) {
-    Missilemada2.melodyNotesPileAdd(new StampedNote(Missilemada2.getWorldTime() /*now*/, MIDI_instrument, corenote + offset, volume, dur_ticks, false));
+    Missilemada2.soundNotesPileAdd(new StampedNote(Missilemada2.getWorldTime() /*now*/, MIDI_instrument, corenote + offset, volume, dur_ticks, false));
   }
   public void playNoteDelayed(int offset, int volume, double dur_ticks, int waitWorldSeconds) { //please, offset -10 to 10, volume 10..127
-    Missilemada2.melodyNotesPileAdd(new StampedNote((Missilemada2.getWorldTime() + waitWorldSeconds) /*now plus delay*/,
-            MIDI_instrument, corenote + offset, volume, dur_ticks, false));
+    Missilemada2.soundNotesPileAdd(new StampedNote((Missilemada2.getWorldTime() + waitWorldSeconds) /*now plus delay*/,
+          MIDI_instrument, corenote + offset, volume, dur_ticks, false));
   }
   public void setSpeed(double x, double y, double z) {
     xspeed = x;
