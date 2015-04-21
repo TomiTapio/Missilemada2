@@ -1251,6 +1251,8 @@ public class Missilemada2 {
     double start_reso_AI = 140.0; //sets fuel, the rest are relative to this.
     double start_reso_plr = 140.0; //sets fuel, the rest are relative to this.
     double aiboost = 0.0;
+    double ai_senrangemul = 1.0;
+    double player_senrangemul = 1.0;
     //double BASEMOVESPEED = ;
 
     //load scenario params from file
@@ -1270,6 +1272,12 @@ public class Missilemada2 {
       start_reso_plr = StrToInt(scenarioProps.getProperty("PLAYER_INITIAL_RESOURCES", "70"));
       aiboost = 0.000001 * StrToInt(scenarioProps.getProperty("AI_RESOURCE_CHEATING_AMOUNT_MICRONS", "0"));
 
+      //AI_SENSOR_RANGE_MUL_MILLIS=1300      PLAYER_SENSOR_RANGE_MUL_MILLIS=1400
+      ai_senrangemul     = 0.001 * StrToInt(scenarioProps.getProperty("AI_SENSOR_RANGE_MUL_MILLIS", "1000"));
+      player_senrangemul = 0.001 * StrToInt(scenarioProps.getProperty("PLAYER_SENSOR_RANGE_MUL_MILLIS", "1000"));
+
+
+
       BASEDIST = StrToInt(scenarioProps.getProperty("DISTANCE_BETWEEN_STARBASES", "20500"));
       BASEMOVESPEED = 0.001 * StrToInt(scenarioProps.getProperty("STARBASE_SPEED_MILLIS", "9000"));
 
@@ -1283,82 +1291,84 @@ public class Missilemada2 {
       //xx addto hudmsg, BUT that exists only after createworld...
     }
 
-    createWorld(facnum, astenum, basedi, start_reso_plr, start_reso_AI, aiboost);
+    createWorld(facnum, astenum, basedi, start_reso_plr, start_reso_AI, aiboost, ai_senrangemul, player_senrangemul);
   }
-  private static void createWorld(int num_factions/*2..10*/, int aste_per_world, double basedi, double start_reso_plr, double start_reso_AI, double boost_or_nerf_foe_reso) {
+  private static void createWorld(int num_factions/*2..10*/, int aste_per_world, double basedist_km, double start_reso_plr,
+      double start_reso_AI, double boost_or_nerf_foe_reso, double ai_sen_mul, double player_sen_mul) {
     camera_x = 0.0;    camera_y = 0.0;    camera_z = 13000.0; //reset user camera shifts
     worldTimeElapsed = 0; //new world.
     randgen = new Random(); randgen.nextBoolean(); randgen.nextBoolean();
 
     //empty and init all lists of existing things.
-    factionList = new Vector (5, 5);
-    starBaseList = new Vector (5, 5);
-    shipList = new Vector (80, 15);
-    deadShipList = new Vector (10, 30);
-    missileList = new Vector (300, 80);
-    asteroidList = new Vector (350, 100);
+    factionList = new Vector (3, 5);
+    starBaseList = new Vector (3, 5);
+    shipList = new Vector (75, 25);
+    deadShipList = new Vector (50, 20);
+    missileList = new Vector (300, 150);
+    asteroidList = new Vector (450, 100);
 
     flatsprite_temporary_List = new Vector (900, 200);
     flatsprite_permanent_List = new Vector (100, 200);
-    hazardList = new Vector (6, 6); //xxnotyet
+    hazardList = new Vector (6, 6); //xxxnotyet
     vfxList = new Vector (150, 200);
     hudMsgList = new Vector (30, 30);
 
     allNotesOff();
     soundNotesPile = new Vector(60,60);
 
-    System.out.println("Resetting the world... "+num_factions+" factions, "+aste_per_world+" asteroids. "+basedi+" km distance between faction bases.");
+    System.out.println("Resetting the world... "+num_factions+" factions, "+aste_per_world+" asteroids. "+basedist_km+" km distance between faction bases.");
     Missilemada2.addToHUDMsgList("Welcome, Commander. Zaibatsu's local resources are at your command. Stop our "+(num_factions-1)+" rivals' mining operations.");
     Missilemada2.addToHUDMsgList("ESC quit, SPACE pause, F5 restart. INS/HOME zoom, cursor keys pan.");
     Missilemada2.addToHUDMsgList("Mousewheel zoom, rightbutton drag pan. Wheelclick pause.");
 
     //place factions
-    double rand_dist = basedi * (0.9 + 0.2*gimmeRandDouble());
-    //place first faction (player) near origin; camera starts there too.
-    Vector xyz_fac1 = getRandomLocationNear(MobileThing.createXYZ(0.0,0.0,0.0), basedi/300.0, 0.04); //first faction near origin
-    Faction f1 = new Faction(xyz_fac1, 1, "Plr fac", new Vector()/*personality*/, 0.0/*no boost coz player*/);
-    factionList.add(f1);
-        StarBase sb = new StarBase(xyz_fac1, f1);
+    double rand_dist = basedist_km * (0.9 + 0.2*gimmeRandDouble());
+
+    //---place first faction (player) near origin; camera starts there too.---
+    Vector xyz_fac1 = getRandomLocationNear(MobileThing.createXYZ(0.0,0.0,0.0), basedist_km/300.0, 0.04); //first faction near origin
+    Faction plrfac = new Faction(xyz_fac1, 1, "Plr fac", new Vector()/*personality*/, 0.0/*no boost coz player*/,player_sen_mul);
+    factionList.add(plrfac);
+        StarBase sb = new StarBase(xyz_fac1, plrfac);
         //melody on init? let player's starbase sing.
         putNotes(strIntoMelody("kla4", 12, "") /*Vector of pitches*/, 30 /*core note*/, 67 /*tenor sax*/, 80, 3.9F /*note duration*/);
         sb.setIsSeenByPlayer(true);
-        sb.setFaction(f1);
+        sb.setFaction(plrfac);
         addToBaseList(sb);
-        addToShipList_withcrewcheck(sb);
-        f1.setBase(sb);
-    f1.initShipPriceBrackets();
+        addToShipList_withcrewcheck(sb); //starbase has an exception rule there.
+        plrfac.setBase(sb);
+    plrfac.initShipPriceBrackets();
 
-    f1.addStarterShips(); //first must have base set.
-    f1.addStarterResources(start_reso_plr/*note*/);
+    plrfac.addStarterShips(); //first must have base set.
+    plrfac.addStarterResources(start_reso_plr/*note*/);
     updateBuildButtonColours(); //update GUI, after resources.
 
     num_factions--;
 
     //the other factions, AIs, must be N dist away from any faction base.
     int fi = 0;
-    Faction n = null;
+    Faction aifac = null;
     while (num_factions > 0) {
       fi++;
       Vector loca = MobileThing.createXYZ(num_factions * 9000.0, 0.0, 0.0);
       boolean accept_loca = false;
 
       while (!accept_loca) {
-        loca = getRandomLocationNear(getRandomFaction().getXYZ(), basedi+rand_dist, 0.34);
-        if (far_from_factions(loca, basedi+rand_dist) ){
+        loca = getRandomLocationNear(getRandomFaction().getXYZ(), basedist_km+rand_dist, 0.34);
+        if (far_from_factions(loca, basedist_km+rand_dist) ){
           accept_loca = true;
         }
       }
 
-      n = new Faction(loca, 1+fi, getRandomJapaneseName(), new Vector()/*personality*/, boost_or_nerf_foe_reso );
-      factionList.add(n);
-          StarBase sb1 = new StarBase(loca, n);
-          sb1.setFaction(n);
+      aifac = new Faction(loca, 1+fi, getRandomJapaneseName(), new Vector()/*personality*/, boost_or_nerf_foe_reso, ai_sen_mul);
+      factionList.add(aifac);
+          StarBase sb1 = new StarBase(loca, aifac);
+          sb1.setFaction(aifac);
           addToBaseList(sb1);
           addToShipList_withcrewcheck(sb1);
-          n.setBase(sb1);
-      n.initShipPriceBrackets();
-      n.addStarterShips();  //first must have base set.
-      n.addStarterResources(start_reso_AI);
+          aifac.setBase(sb1);
+      aifac.initShipPriceBrackets();
+      aifac.addStarterShips();  //first must have base set.
+      aifac.addStarterResources(start_reso_AI);
       num_factions--;
     }
     //foe_test = new Ship()
@@ -1380,7 +1390,7 @@ public class Missilemada2 {
 
     //place asteroids, N per world.
     //double nearbydist = 16.0* getScoutingDistance_crude();
-    double nearbydist = 0.45*basedi;
+    double nearbydist = 0.45*basedist_km;
     //double fardist = basedi * 2.5;
     boolean world_approved = false;
     int loopbreaker = 0;

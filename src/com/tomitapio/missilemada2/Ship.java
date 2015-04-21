@@ -1111,6 +1111,9 @@ public class Ship extends MobileThing implements Comparable<Ship> {
   public double getSensorRange() {
     return sensor_range;
   }
+  public void setSensorRange(double v) {
+    sensor_range = v;
+  }
   public int getBuildTimeDelay() {
     return (int) (3.1 * buildcost); //1.7 too little, 4.5 too much.
   }
@@ -5017,6 +5020,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
   public void addVfxOfCargoCarried() {
     Missilemada2.addVfxOnMT(0,-5*this.getRadius(), 0, "TEXT", 29000, 900.0, 1.0, this, "", 1.0, "cargo:"+(int)cargo_carried);
   }
+
   static class ShipComparator implements Comparator<Ship> {
     @Override
     public int compare(Ship a, Ship b) {

@@ -44,7 +44,6 @@ public class Faction {
   int curr_wanted_count_ac = 0;
 
   //resources at starbase. gameplay important.
-  double DIFFICULTYADJ_AI_RESOGAIN = 0.0;
   double resource_fuel = 0.0;
   double resource_metal1 = 0.0;
   double resource_metal2 = 0.0;
@@ -61,6 +60,8 @@ public class Faction {
   private double max_known_ourshields = 30500500 * (0.98 + 0.10); //in MJ //copy default from scout.
   Vector personalityVec; // Vector of N Doubles
   public boolean show_sensors = false;
+  double DIFFICULTYADJ_AI_RESOGAIN = 0.0;
+  double SENSOR_RANGE_MUL = 1.0; //per scenario: player and AI can have different boost/nerf.
 
   //default faction AI mode:
   private String scoutmode = "FAR";
@@ -134,13 +135,14 @@ public class Faction {
   double ac_cost80 = 0.0;
   double ac_cost100 = 0.0;
 
-  public Faction(Vector XYZ, int id_in, String name_in, Vector perso /*various 0-1 doubles TOTALLYNOTDONE*/, double ai_reso_boost) {
+  public Faction(Vector XYZ, int id_in, String name_in, Vector perso /*various 0-1 doubles TOTALLYNOTDONE*/, double ai_reso_boost, double sen_range_mul) {
     starBaseLocation = XYZ;
     frontlineLocation = XYZ;
     name = id_in + ": " + Missilemada2.getRandomJapaneseName();
     factionId = id_in;
     personalityVec = perso;
     DIFFICULTYADJ_AI_RESOGAIN = ai_reso_boost;
+    SENSOR_RANGE_MUL = sen_range_mul;
 
     scoutreports_asteroids = new Vector(20,20);
     scoutreports_ships = new Vector(20,20);
@@ -290,6 +292,7 @@ public class Faction {
           shipCountUp(plr_try_ship, "built"); //send HUD msg of success, too.
           Missilemada2.updateBuildButtonColours(); //update player coz can build LESS stuff now.
           addXPToCommander(plr_try_ship, "BUILT");
+          plr_try_ship.setSensorRange(plr_try_ship.getSensorRange() * SENSOR_RANGE_MUL); //apply faction boost/nerf from scenarion file.
         } else {
           //not enough idle crew! Ship was not added to world.
           Missilemada2.addToHUDMsgList(Missilemada2.strCurrDaysHours()+"Build: have materials, but not enough crew. Needs "+plr_try_ship.getCrewCount()+", have "+crew_idle+".",0);
@@ -318,20 +321,25 @@ public class Faction {
         if (i == 6) ty = "MISSILEDRONE";
         if (i == 7) ty = "BEAMDRONE";
         if (!haveEnoughShipType(ty)) {
-          //xxx if crew shortage then make tinyminer instead
-          Ship try1 = tryProduceShipOfType(ty, pricebracketFromFacPersonalityXXXX(ty), false);
-          if (try1 != null) {
+          Ship aiship = tryProduceShipOfType(ty, pricebracketFromFacPersonalityXXXX(ty), false);
+          if (aiship != null) {
             //vfx, sfx
-            if (Missilemada2.addToShipList_withcrewcheck(try1)) {
+            if (Missilemada2.addToShipList_withcrewcheck(aiship)) {
               //success, enough crew. Crew got assigned in addtoshiplist.
-              removeResources(try1.getResourcesRequired()); //better to remove here than in tryBuild.
-              addShipSpending(try1.getCost());
-              shipCountUp(try1, "built");
+              removeResources(aiship.getResourcesRequired()); //better to remove here than in tryBuild.
+              addShipSpending(aiship.getCost());
+              shipCountUp(aiship, "built");
               //yyy here could be AI-commander gains xp.
+              aiship.setSensorRange(aiship.getSensorRange() * SENSOR_RANGE_MUL); //apply faction boost/nerf from scenario file.
               return;
             } else {
-              //fail, not enough idlers.
+              //fail, not enough idle crew.
+
               //xxxxxx branch on type and try a drone ship instead.
+              if (Missilemada2.gimmeRandInt(15) > 9) { //rand chance: not recurse forever
+                tryShipProduction("TINYMINER", 2);
+                tryShipProduction("MISSILEDRONE", 2);
+              }
 
             }
           }
@@ -2012,6 +2020,7 @@ public class Faction {
     boolean added_ok = false;
 
     System.out.println("Adding starter ships for faction "+name+". crew_alive: "+ crew_alive);
+    //gameplay: starter ships have no sen_range_mul, they're "standard issue"
     xyz = Missilemada2.getRandomLocationNear(this.getXYZ(), 99000.0, 0.54);
     added_ok = Missilemada2.addToShipList_withcrewcheck(new Ship("MINER", this, xyz, "a", "starship.png", true/*needs_crew*/)); miner_count++;
 

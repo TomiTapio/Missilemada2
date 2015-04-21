@@ -105,13 +105,16 @@ __ on ship creation, a "Notes" stringbuffer that has builder dudes' notes like "
 --starbase instaheals itself coz near itself??
 
 done: on zoom out far, draw HP+SHIE bar over ship. Grows upwards.
-__ aste drift speed to be per-scenario config.
+
 __ improve //----ambient sounds: low chance, bass note. (82sawtooth,98soundtrack,97rain,101brightness)
 __ mining sounds.
-__ tractor: if tractor-candidate is on trajectory to base, don't tractor. saves much time. 
 __ mildrones near far: stay at base. 
 cantrepro: buggy in drone built notes, and scout order notes.
 
+__ tractor: if tractor-candidate is on trajectory to base, don't tractor. saves much time. 
+__ scenariofile: playersensorboost=x, AIsensorboost=y
+  __ aste drift speed to be per-scenario config.
+__ new shiptype: disabler (ion cannon, EMP, messes enemy moving and sh-regen and sensors) (lesser defender, 2 crew. few missiles, no defbeam/atkbeam, ion shot takes 25% of shield)
 
 __________________________________________________________________________________________________
 Commander xp system:
@@ -121,7 +124,7 @@ Also have total xp. Total xp(influence?) goes down on ship destroyed, scenario l
 
 Commander class gets xp every shipbuild / shipcapture.
 every 8 days, and scenario over, save xp to file. To prevent "start, build 9, quit".
-__on quit dectection... hmm...
+dont _on quit dectection... hmm...
 __N xp to all categories on scenario win! N = two shipbuild worth. (Zaibatsu gave more researchers / allowance.)
 
 Start with scout 1, manned miner 1. "You get these 10year old designs, commander junior grade."
