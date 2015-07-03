@@ -841,7 +841,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
     merit_badges_lifetime = merit_badges_lifetime + a;
     merit_badges_curr = merit_badges_curr + a;
     if (isSeenByPlayer() && merit_badges_lifetime > 2.0) { //xxx want "if this adding put over _A_ 2.0 threshold
-      Missilemada2.addVfxOnMT(0, 4000, 800, "MERIT_UP", 4400, 980.0, 0.9/*transp*/, this, "qm_green.png", 1.0, "");
+      Missilemada2.addVfxOnMT(0, 4000, 800, "MERIT_UP", 4400, 980.0, 0.7/*transp*/, this, "scan_gray.png", 1.0, "");
     }
   }
   public double getMeritCurr() {
@@ -1595,7 +1595,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
       }
 
       if (!isOnDelayTimer()) { //if arrived and are not on timer, vfx of arrival.
-        Missilemada2.addVfxOnMT(0, 0, 0, "ARRIVED", 20000, 850.0, 0.4/*transp*/, this, "32texture_arrived.png", 1.0, "");
+        Missilemada2.addVfxOnMT(0, 0, 15, "ARRIVED", 20000, 600.0, 0.8/*transp*/, this, "32texture_arrived.png", 1.0, "");
       }
 
       //if miner at destination (asteroid or base or scouting)
@@ -1660,7 +1660,14 @@ public class Ship extends MobileThing implements Comparable<Ship> {
         have_destination = true;
         slowdown = true;
       }
-    } //----end ship_arrived----
+      //----end ship_arrived----
+    } else {
+      //random Vfx puff of fuel usage, because not_arrived state
+      if (Missilemada2.gimmeRandDouble() < 0.02) {
+        Missilemada2.createDebrisFlatSprite("fuel_usage_puff.png", 0.02,
+          150.0 * (1.0 + Missilemada2.gimmeRandDouble()), 150.0 * (1.0 + Missilemada2.gimmeRandDouble()), this, false, false);
+      }
+    }
 
     //if in battle, prefer high speed over decel-for-arrival.
     if (isInCombat())
@@ -1733,9 +1740,9 @@ public class Ship extends MobileThing implements Comparable<Ship> {
         //actual move, xyz change, is in advance_time_derelict_drift().
 
         if (isInPlayerFaction() && buddy_derelict != null) {
-          //Missilemada2.changeWorldTimeIncrement(-1); //slow down world, because xxtractor debug
-          Missilemada2.addVfx2(buddy_derelict.getXYZ(), "TRACTORHAPPENING", 270/*sec*/, 1350.0/*siz*/, 0.6/*transp*/, "purple_swirl.png", 1.0, "");
-          Missilemada2.addVfx2(this.getXYZ(), "TRACTORHAPPENING", 270/*sec*/, 1000.0/*siz*/, 0.4/*transp*/, "purple_swirl.png", 1.0, "");
+          //Missilemada2.changeWorldTimeIncrement(-1); //slow down world, because tractor debug
+          Missilemada2.addVfx2(changeXYZ(buddy_derelict.getXYZ(),0,0,-2), "TRACTORHAPPENING", 270/*sec*/, 1250.0/*siz*/, 0.6/*transp*/, "purple_swirl.png", 1.0, "");
+          Missilemada2.addVfx2(changeXYZ(this.getXYZ(),0,0,-3), "TRACTORHAPPENING", 270/*sec*/, 1000.0/*siz*/, 0.4/*transp*/, "purple_swirl.png", 1.0, "");
         }
       }
 
@@ -2170,7 +2177,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
 
         if (isInPlayerFaction()) {
           //nope, too spammy: Missilemada2.putNotes(Missilemada2.strIntoMelody("crewrepair yay", 6, "") /*Vector of pitches*/, 52 /*core note*/, 46 /*harp*/, 35, 1.9F /*note duration*/);
-          Missilemada2.addVfxOnMT(0, 150, 50, "CREWREPAIR", 17000, 1100.0, 0.7/*transp*/, this, "crewrepairs2.png", 1.0, "");
+          Missilemada2.addVfxOnMT(0, 150, 70, "CREWREPAIR", 17000, 1100.0, 0.7/*transp*/, this, "crewrepairs2.png", 1.0, "");
         }
         curr_buildcredits = 0.94 * curr_buildcredits; //use some of the missile nanotech on the repairs.
         //in priority order try:
@@ -4429,7 +4436,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
     }
 
     //non-civilian: draw line to move destination.
-    if (!isMiner() && current_destinationXYZ != null && !isDestroyed()) {
+    if (!isMiner() && current_destinationXYZ != null && !isDestroyed() && !Missilemada2.isShipCameraActive()) {
       if (calcDistanceVecVec(this.getXYZ(), current_destinationXYZ) > 1.1*Missilemada2.getArrivedDistance()) {
         Missilemada2.setOpenGLMaterial("LINE");
         Missilemada2.setOpenGLTextureGUILine();
@@ -4465,7 +4472,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
 //      Missilemada2.setOpenGLMaterial("SHIP");
 //    }
 
-    //DEBUG: sphere, draw sensors, before ship's-shape-deform-scale.
+    //DEBUG: draw sensors, before ship's-shape-deform-scale.
     if (parentFaction != null) {
       if (parentFaction.show_sensors)
         drawSensorRange2D();
@@ -4473,7 +4480,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
 
     //draw healthbar, if are zoomed far out. hp+shie.
     double totalbar = 0.0016*(2.1*curr_shields + curr_hull_hp);
-    if (drawhealthbar && curr_hull_hp > 100.0 && !isStarbase()) { //if zoomed out far and alive
+    if (drawhealthbar && curr_hull_hp > 100.0 && !isStarbase() && !Missilemada2.isShipCameraActive()) { //if zoomed out far and alive
       Missilemada2.setOpenGLMaterial("LINE");
       Missilemada2.setOpenGLTextureGUILine();
       Vector bar_start = MobileThing.changeXYZ(getXYZ(), 0, 195.0*radius, -100);
@@ -4493,36 +4500,38 @@ public class Ship extends MobileThing implements Comparable<Ship> {
     }
 
     //draw shields if have them.
-    if (max_shields > 1000.0 && getShieldPerc() > 0.06) {
-      double pwr = 10.0 * (curr_shields / max_shields); //xx curr div (parentFaction.getMaxShieldNumber() / 2.0), might confuse player, shields visibly weaken when build an AC.
-      if (pwr > 10.0)
-        pwr = 10.0;
-      //color: blue. emissive.
-      java.awt.Color shieldcolor = new java.awt.Color((int)Math.round(19.9*pwr),(int)Math.round(19.9*pwr),(int)Math.round(25.4*pwr));
-      if (shield_flash) { //if recent shield damage, other color.
-        shieldcolor = new java.awt.Color((int)Math.round(22.9*pwr),(int)Math.round(21.9*pwr),(int)Math.round(10.2*pwr));
-      }
+    if (Missilemada2.getCameraFollowedPlayerShip() != this) { //do not draw shields for the ship that has the camera!!
+      if (max_shields > 1000.0 && getShieldPerc() > 0.06) {
+        double pwr = 10.0 * (curr_shields / max_shields); //xx curr div (parentFaction.getMaxShieldNumber() / 2.0), might confuse player, shields visibly weaken when build an AC.
+        if (pwr > 10.0)
+          pwr = 10.0;
+        //color: blue. emissive.
+        java.awt.Color shieldcolor = new java.awt.Color((int) Math.round(19.9 * pwr), (int) Math.round(19.9 * pwr), (int) Math.round(25.4 * pwr));
+        if (shield_flash) { //if recent shield damage, other color.
+          shieldcolor = new java.awt.Color((int) Math.round(22.9 * pwr), (int) Math.round(21.9 * pwr), (int) Math.round(10.2 * pwr));
+        }
 
-      //set emission
-      GL11.glColorMaterial(GL_FRONT_AND_BACK, GL_EMISSION);
-      GL11.glColor4f(0.4f*shieldcolor.getRed() / 255.0f, 0.4f*shieldcolor.getGreen() / 255.0f, 0.4f*shieldcolor.getBlue() / 255.0f, 0.8f);
-      //set bounced light
-      GL11.glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
-      GL11.glColor4f(0.92f, 0.02f, 0.02f, 0.6f);
+        //set emission
+        GL11.glColorMaterial(GL_FRONT_AND_BACK, GL_EMISSION);
+        GL11.glColor4f(0.4f * shieldcolor.getRed() / 255.0f, 0.4f * shieldcolor.getGreen() / 255.0f, 0.4f * shieldcolor.getBlue() / 255.0f, 0.8f);
+        //set bounced light
+        GL11.glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
+        GL11.glColor4f(0.92f, 0.02f, 0.02f, 0.6f);
 
-      FlatSprite shie_sprite = new FlatSprite(13.0*scale1, 13.0*scale1, xcoord, ycoord, zcoord, "shields1.png", 1.0, 1.0f/*transp*/);
-      GL11.glPushMatrix();
-      shie_sprite.drawFlatSpriteSHIP((float) (37.0*radius), 0.0f);
-      GL11.glPopMatrix();
-      //extra thick shield visual if AC or base.
-      if (type.equals("STARBASE") || type.equals("AC")) {
+        FlatSprite shie_sprite = new FlatSprite(13.0 * scale1, 13.0 * scale1, xcoord, ycoord, zcoord - 0.5f, "shields1.png", 1.0, 1.0f/*transp*/);
         GL11.glPushMatrix();
-        shie_sprite.drawFlatSpriteSHIP((float) (33.6*radius), 0.0f);
+        shie_sprite.drawFlatSpriteSHIP((float) (37.0 * radius), 0.0f);
         GL11.glPopMatrix();
-      }
+        //extra thick shield visual if AC or base.
+        if (type.equals("STARBASE") || type.equals("AC")) {
+          GL11.glPushMatrix();
+          shie_sprite.drawFlatSpriteSHIP((float) (33.6 * radius), 0.0f);
+          GL11.glPopMatrix();
+        }
 
-      //reset emission and bounced
-      Missilemada2.setOpenGLMaterial("SHIP");
+        //reset emission and bounced
+        Missilemada2.setOpenGLMaterial("SHIP");
+      }
     }
 
     if (type.equals("STARBASE")) {
@@ -4530,12 +4539,6 @@ public class Ship extends MobileThing implements Comparable<Ship> {
       Missilemada2.setOpenGLMaterial("SHIP");
       drawStarBase(5.9f*scale1);
     } else { //normal ship
-//      Sphere s = new Sphere(); //old code before ship-sprites.
-//      s.setTextureFlag(true); // "specifies if texture coordinates should be generated for quadrics rendered with qobj."
-//      s.setNormals(GLU.GLU_NONE);
-//      s.setNormals(GLU.GLU_FLAT);
-//      s.setTextureFlag(true); // "specifies if texture coordinates should be generated for quadrics rendered with qobj."
-
       //if derelict, dull color.
       try {
         if (isDestroyed()) {
@@ -4572,11 +4575,40 @@ public class Ship extends MobileThing implements Comparable<Ship> {
 
       float rota = (float) ((180.0/Math.PI) * (getBearingXYfromSpeed() - Math.PI / 2.0)); //okay at  (float) ((180.0/Math.PI) * (getBearingXYfromSpeed() - Math.PI / 2.0))
       float siz = (float) (27.0*radius);
-      FlatSprite ship_sprite = new FlatSprite(13.0*scale1, 13.0*scale1, xcoord, ycoord, zcoord, ship_sprite_filename, 1.0, 1.0f/*transp*/);
-      //GL11.glTexEnvf(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_ADD);
 
-      //hmm seems okay GL11.glTexEnvf(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL13.GL_COMBINE);
-      ship_sprite.drawFlatSpriteSHIP(siz, rota);
+      FlatSprite ship_sprite = new FlatSprite(12.0*scale1, 12.0*scale1, xcoord, ycoord, zcoord, ship_sprite_filename, 1.0, 1.0f/*transp*/);
+          //GL11.glTexEnvf(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_ADD);
+          //hmm seems okay GL11.glTexEnvf(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL13.GL_COMBINE);
+      if (Missilemada2.getCameraFollowedPlayerShip() != this) { //do not draw flatsprite for the ship that has the camera!!
+        ship_sprite.drawFlatSpriteSHIP(siz, rota);
+      }
+
+      //if in ship's-eye-camera, draw ships ALSO as spheres.
+      if (Missilemada2.isShipCameraActive()) {
+        if (Missilemada2.getCameraFollowedPlayerShip() != this) { //do not draw sphere for the ship that has the camera!!
+          Sphere sph = new Sphere();
+          sph.setNormals(GLU.GLU_FLAT);
+          sph.setTextureFlag(false); // "specifies if texture coordinates should be generated for quadrics rendered with qobj."
+          sph.setDrawStyle(GLU.GLU_LINE); //fill, line, silhouette, point
+
+       //GL11.glPushMatrix();
+          if (textureMy != null) {
+            //GL11.glEnable(GL11.GL_TEXTURE_2D);
+            //GL11.glTexEnvi(GL11.GL_TEXTURE_ENV, GL11.GL_TEXTURE_ENV_MODE, GL11.GL_MODULATE); //modulate surface color? GL_DECAL seems worse.
+            textureMy.bind(); //GL11.glBindTexture(GL11.GL_TEXTURE_2D, 1);
+            sph.setNormals(GLU.GLU_FLAT); //flat=dicelike, one normal per triangle, smooth=onenormal per vertex
+            sph.setTextureFlag(true); // "specifies if texture coordinates should be generated for quadrics rendered with qobj."
+            sph.setDrawStyle(GLU.GLU_FILL); //fill, line, silhouette, point
+          }
+          GL11.glTranslatef((float) xcoord, (float) ycoord, (float) zcoord);
+          siz = (float) (0.05 * radius);
+          //xx faction color should be in effect.
+          GL11.glScalef(380.0f*siz, 380.0f*siz, 380.0f*siz);
+          sph.draw(siz, 8, 8); //why is it flattttt? coz GL11.glScalef(scale1, scale1, 1.0f); inside drawflatsprite...
+      //GL11.glPopMatrix();
+        }
+      }
+
 //      if (dodge_mode) {
 //        Missilemada2.addVfx2(getX(), getY()-10.0*radius, getZ()+4.0*radius, "DODGE_MODE", 900, 480.0, 0.5/*transp*/, null, "32texture_arrived.png", 1.0, "");
 //      }
@@ -4632,7 +4664,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
     //+ " "+(int)(100*curr_buildcredits/max_buildcredits)
 
     //the following DOESNT set material to FONT. draws with faction color.
-    Missilemada2.drawTextXYZ(Missilemada2.getFont60fornowwww(0), 210f, (float) xcoord, (float) (ycoord-6000.0), (float) zcoord, tx, Color.white);
+    Missilemada2.drawTextXYZ(Missilemada2.getFont60fornowwww(0), 210f, (float) xcoord, (float) (ycoord - 6000.0), (float) zcoord, tx, Color.white);
   }
   public void drawStarBase(float scale1) {
     Sphere s = new Sphere();
@@ -4673,13 +4705,13 @@ public class Ship extends MobileThing implements Comparable<Ship> {
     GL11.glPopMatrix();
   }
   public void drawSensorRange2D() {
-    Sphere s = new Sphere();
+    //Sphere s = new Sphere();
     Disk di = new Disk();
     GL11.glPushMatrix();
-    GL11.glTranslatef((float) xcoord, (float) ycoord, (float) zcoord);
+    GL11.glTranslatef((float) xcoord, (float) ycoord, (float) zcoord - 1000.0f/*offset for ship's-camera*/);
 
     float siz = (float) getSensorRange();
-    s.setDrawStyle(GLU.GLU_LINE); //fill, line, silhouette, point
+    //s.setDrawStyle(GLU.GLU_LINE); //fill, line, silhouette, point
     di.setDrawStyle(GLU.GLU_LINE); //fill, line, silhouette, point
 
     GL11.glColor4f(0.9f, 0.9f, 0.45f, 0.26f); //yellow
@@ -5021,10 +5053,14 @@ public class Ship extends MobileThing implements Comparable<Ship> {
     Missilemada2.addVfxOnMT(0,-5*this.getRadius(), 0, "TEXT", 29000, 900.0, 1.0, this, "", 1.0, "cargo:"+(int)cargo_carried);
   }
   public Vector getWhatYouLookingAtXYZ() { //return vector of XYZ what the ship is moving towards. For ship's-eye camera.
-    return changeXYZ(getXYZ(), 4.0*xspeed, 4.0*yspeed, 4.0*zspeed); //works!
+    if (tractormode && parentFaction.isBaseAlive()) //tractoring is very wobbly movement.
+      return parentFaction.getXYZ_starbase_safer_side();
+    else
+      return changeXYZ(getXYZ(), 2.0*xspeed, 2.0*yspeed, 2.0*zspeed); //works!
   }
   public Vector getRearCameraXYZ() {
-    return changeXYZ(getXYZ(), -4.0*xspeed, -4.0*yspeed, -4.0*zspeed);
+    return changeXYZ(getXYZ(), 5.1, 0.0, 6.5);
+    //return changeXYZ(getXYZ(), -4.0*xspeed, -4.0*yspeed, -4.0*zspeed);
   }
 
   static class ShipComparator implements Comparator<Ship> {

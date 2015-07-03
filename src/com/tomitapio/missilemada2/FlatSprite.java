@@ -80,10 +80,10 @@ public class FlatSprite extends MobileThing {
     //color and transparency set by caller. push&pop handling by caller.
     if (textureMy != null)
       textureMy.bind();
-    //GL11.glPushMatrix();
+    GL11.glPushMatrix(); //needed coz scale command hurts ships-camera spheres.
     GL11.glTranslatef((float)xcoord, (float)ycoord, (float)zcoord);
     GL11.glScalef(scale1, scale1, 1.0f);
-    GL11.glRotatef(180, 1f,0f,0f); //x 180deg makes correct side up. and textured side towards camera.
+    GL11.glRotatef(180, 1f,0f,0f); //180deg makes correct side up. and textured side towards camera.
     GL11.glRotatef(rotation_deg, 0f, 0f, 1f); //rotate on z-axis so x and y change.
 
     GL11.glBegin(GL11.GL_QUADS);
@@ -102,7 +102,7 @@ public class FlatSprite extends MobileThing {
 
     GL11.glEnd();
 
-    //GL11.glPopMatrix();
+    GL11.glPopMatrix();
   }
   public static void drawFlatLine(double x1, double y1, double z1, double x2, double y2, double z2, double width) { //xxx knows which way to face camera?
     GL11.glEnable(GL_DEPTH_TEST);

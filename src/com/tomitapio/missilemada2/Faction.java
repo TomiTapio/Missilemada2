@@ -1033,12 +1033,14 @@ public class Faction {
       if (isPlayerFaction()) {
         Missilemada2.addVfx2(getXYZ_starbase_safer_side(), "RESUPPLYSHUTTLE", 460 * 45, 2910.0, 0.9/*transp*/, "resupplyshuttle.png", 1.0, "");
         Missilemada2.addToHUDMsgList(Missilemada2.strCurrDaysHours() + "---RESUPPLY SHUTTLE brought 6 crew. some metals.---",2);
+        Missilemada2.putNotes(Missilemada2.strIntoMelody("yo yo yo", 12, "") /*Vec pitches*/, 55 /*core note*/, 82/*sawto*/, 55, 0.8F /*note duration*/);
       }
     } else {
       //didn't bring crew
       if (isPlayerFaction()) {
         Missilemada2.addVfx2(getXYZ_starbase_safer_side(), "RESUPPLYSHUTTLE", 460 * 45, 2910.0, 0.9/*transp*/, "resupplyshuttle.png", 1.0, "");
         Missilemada2.addToHUDMsgList(Missilemada2.strCurrDaysHours() + "---RESUPPLY SHUTTLE visited, didn't bring crew. (we have many)---",2);
+        Missilemada2.putNotes(Missilemada2.strIntoMelody("yo yo yo", 8, "") /*Vec pitches*/, 55 /*core note*/, 82/*sawto*/, 75, 0.9F /*note duration*/);
       }
     }
 
@@ -2629,10 +2631,17 @@ public class Faction {
 
   public Ship getStrongestShip() {
     //not base.
-    return  gimmeRandMannedShip();
+    Ship ret = null;
+    Ship p = null;
+    Vector ourships = Missilemada2.getShipsOfFaction(this);
+    int listsize = ourships.size();
+    ret = (Ship) ourships.elementAt(1); //init. 0th is base I guess, that's bad
 
-
-
-    //xxxxxxxxxreturn null;
+    for (int j = 0; j < listsize; j++) {
+      p = (Ship) ourships.elementAt(j);
+      if (p.getMaxBattleStr() > ret.getMaxBattleStr() && (!p.isStarbase())) //if stronger, that one is the one to return.
+        ret = p;
+    }
+    return ret;
   }
 }

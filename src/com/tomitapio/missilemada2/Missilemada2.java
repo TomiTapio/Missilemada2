@@ -3,7 +3,6 @@ package com.tomitapio.missilemada2;
 //LWJGL for OpenGL
 import static org.lwjgl.opengl.GL11.*;
 import org.lwjgl.LWJGLException;
-import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.*;
@@ -11,7 +10,6 @@ import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.util.glu.GLU;
 
 //Slick2D for font stuff
-import org.lwjgl.util.vector.*;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.UnicodeFont;
@@ -148,7 +146,7 @@ public class Missilemada2 {
   private static double camera_y = 0;
   private static double camera_z = 2900;
   private static Vector camera_xyz;
-  private static Ship camera_follows_ship = null; //if null, regular camera view.
+  private static Ship camera_on_this_ship = null; //if null, regular camera view.
 
   private static UnicodeFont font60;
   private static UnicodeFont font20;
@@ -755,10 +753,10 @@ public class Missilemada2 {
           inputsleep = 50;
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_F6)) { //follow-ship-camera toggle.
-          if (camera_follows_ship == null)
-            camera_follows_ship = getPlayerFaction().getStrongestShip();
+          if (camera_on_this_ship == null)
+            camera_on_this_ship = getPlayerFaction().getStrongestShip();
           else
-            camera_follows_ship = null;
+            camera_on_this_ship = null;
           inputsleep = 29;
         }
       }
@@ -1139,7 +1137,7 @@ public class Missilemada2 {
     float buhei2 = 27.0f;
     ///can't draw text in this func. So, info texts as no-action buttons.
     float introwidth = lmargin+buwid+75.0f;
-    bu = new GUIButton(9031/*id*/, "Build scout: ", lmargin, 5*guirowheight,   introwidth/10.0f, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(9031/*id*/, "Scout: ", lmargin, 5*guirowheight,   introwidth/10.0f, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
     bu = new GUIButton(31/*id*/, "Dingy", 0*(buwid+4.0)+introwidth, 5*guirowheight,   buwid, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
     bu = new GUIButton(32/*id*/, "Cheap", 1*(buwid+4.0)+introwidth, 5*guirowheight,   buwid, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
     bu = new GUIButton(33/*id*/, "Avg",   2*(buwid+4.0)+introwidth, 5*guirowheight,   buwid, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
@@ -1153,7 +1151,7 @@ public class Missilemada2 {
     bu = new GUIButton(44/*id*/, "Nice",  3*(buwid+4.0)+introwidth, 6*guirowheight,   buwid, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
     bu = new GUIButton(45/*id*/, "Elite", 4*(buwid+4.0)+introwidth, 6*guirowheight,   buwid, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
     //build miner:
-    bu = new GUIButton(9051/*id*/, "Build miner: ", lmargin, 7*guirowheight,   introwidth/10.0f, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
+    bu = new GUIButton(9051/*id*/, "Miner: ", lmargin, 7*guirowheight,   introwidth/10.0f, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
     bu = new GUIButton(51/*id*/, "Dingy", 0*(buwid+4.0)+introwidth, 7*guirowheight,   buwid, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
     bu = new GUIButton(52/*id*/, "Cheap", 1*(buwid+4.0)+introwidth, 7*guirowheight,   buwid, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
     bu = new GUIButton(53/*id*/, "Avg",   2*(buwid+4.0)+introwidth, 7*guirowheight,   buwid, buhei2,   0.0f/*z*/, 0.38f, 0.0f); GUIButtonList.add(bu);
@@ -1415,7 +1413,7 @@ public class Missilemada2 {
               int rand1to10 = 1+gimmeRandInt(9);
               String cloudfilename = "cloud"+rand1to10+".png";
               double siz = 590000.0*(0.15+gimmeRandDouble());
-              FlatSprite fs = new FlatSprite(siz, siz, as.getX(), as.getY(), as.getZ() - 9000.0, cloudfilename, 1.0, 0.30f/*transp*/);
+              FlatSprite fs = new FlatSprite(siz, siz, as.getX(), as.getY(), as.getZ() - 29000.0, cloudfilename, 1.0, 0.25f/*transp*/);
               fs.setPermRotation((float)(173.0f*gimmeRandDouble()));
               addToFSPermList(fs);
 
@@ -1423,7 +1421,7 @@ public class Missilemada2 {
               rand1to10 = 1+gimmeRandInt(9);
               cloudfilename = "cloud"+rand1to10+".png";
               siz = 740000.0*(0.25+gimmeRandDouble());
-              fs = new FlatSprite(siz, siz, 4.0*as.getX(), 4.0*as.getY(), 1.5*as.getZ(), cloudfilename, 1.0, 0.28f/*transp*/);
+              fs = new FlatSprite(siz, siz, 4.0*as.getX(), 4.0*as.getY(), 1.5*as.getZ() - 35000.0, cloudfilename, 1.0, 0.31f/*transp*/);
               fs.setPermRotation((float)(173.0f*gimmeRandDouble()));
               addToFSPermList(fs);
             }
@@ -1725,20 +1723,21 @@ public class Missilemada2 {
 
     GL11.glMatrixMode(GL11.GL_PROJECTION); //camera mode: are changing projection.
     GL11.glLoadIdentity();
-    float voo = (float)VIEWWIDTH/(float)VIEWHEIGHT;
+    float aspect = (float)VIEWWIDTH/(float)VIEWHEIGHT;
 
-    if (camera_follows_ship == null) {
-      GLU.gluPerspective(70.0f, voo, CLIP_ZNEAR, CLIP_ZFAR);
+    if (camera_on_this_ship == null) { //__camera is regular overhead view.__
+      GLU.gluPerspective(70.0f, aspect, CLIP_ZNEAR, CLIP_ZFAR);
       GLU.gluLookAt(((Double) xyz.get(0)).floatValue() + (float) camera_x, ((Double) xyz.get(1)).floatValue() + (float) camera_y, dist,
             ((Double) xyz.get(0)).floatValue() + (float) camera_x, ((Double) xyz.get(1)).floatValue() + (float) camera_y, -dist/*helped somewhat*/,
             0.0f, 100.0f, 0.0f);
-    } else { //camera is followed-ship's point of view.
-      //xxadjust near clip?
-      //xxxxxadjust voo please
-      GLU.gluPerspective(110.0f, voo, CLIP_ZNEAR, CLIP_ZFAR); //fovy, aspect, zNear, zFar
+    } else { //__camera is followed-ship's point of view.__
+      //adjust near clip
+      CLIP_ZNEAR = 350.0f;
+      //GLU.gluPerspective(120.0f, aspect, 0.26f, CLIP_ZFAR); //fovy, aspect, zNear, zFar
+      GLU.gluPerspective(128.0f, aspect, CLIP_ZNEAR, CLIP_ZFAR);
       //eyex, eyey, eyez, centerx, centery, centerz, upx, upy, upz
-      Vector shiplooksat = camera_follows_ship.getWhatYouLookingAtXYZ();
-      Vector rearofship  = camera_follows_ship.getRearCameraXYZ(); //so lines drawn from center point of ship aren't annoying.
+      Vector shiplooksat = camera_on_this_ship.getWhatYouLookingAtXYZ();
+      Vector rearofship  = camera_on_this_ship.getRearCameraXYZ(); //so lines drawn from center point of ship aren't annoying.
       GLU.gluLookAt(((Double) rearofship.get(0)).floatValue(), ((Double) rearofship.get(1)).floatValue(), ((Double) rearofship.get(2)).floatValue(),
             ((Double) shiplooksat.get(0)).floatValue(), ((Double) shiplooksat.get(1)).floatValue(), ((Double) shiplooksat.get(2)).floatValue(),
             0.0f, 0.0f, 1.0f);
@@ -1836,11 +1835,11 @@ public class Missilemada2 {
     int j = 0;
     int shipdrawcount = 0;
     for (; j < listsize; j++) {
-      Ship p = (Ship) shipList.elementAt(j);
-      if (p != null /*&& p.isNearCamera_2d(camera_xyz, cam_isnearcam_dist)*/) {
+      Ship sh = (Ship) shipList.elementAt(j);
+      if (sh != null /*&& p.isNearCamera_2d(camera_xyz, cam_isnearcam_dist)*/) {
         //draw only if belongs to player faction or has been spotted by pf recently.
-        if (p.isSeenByPlayer()) {
-          p.drawShip(0.97f*visualscaling, (camera_z > 0.18*world_x_max) ); /*draw health bar if far zoom*/
+        if (sh.isSeenByPlayer()) {
+          sh.drawShip(0.97f*visualscaling, (camera_z > 0.18*world_x_max) ); /*draw health bar if far zoom*/
           shipdrawcount++;
         }
       }
@@ -1849,21 +1848,21 @@ public class Missilemada2 {
     //drawtext sets: Missilemada2.setOpenGLMaterial("FONT"); ,not costly op.
     j = 0;
     for (; j < listsize; j++) {
-      Ship p = (Ship) shipList.elementAt(j);
-      if (p != null && p.isNearCamera_2d(camera_xyz, cam_isnearcam_dist) && camera_z < 0.07*world_x_max) { //only when close zoom.
-        if (p.getFaction() == getPlayerFaction())
-          p.drawShipInfoText();
+      Ship plrship = (Ship) shipList.elementAt(j);
+      if (plrship != null && plrship.isNearCamera_2d(camera_xyz, cam_isnearcam_dist) && camera_z < 0.07*world_x_max) { //only when close zoom.
+        if (plrship.getFaction() == getPlayerFaction() && camera_on_this_ship == null)
+          plrship.drawShipInfoText();
       }
     }
     // draw all derelict ships within-view, no infotext ever, dull colour
     Missilemada2.setOpenGLMaterial("SHIP");
     listsize = deadShipList.size();
     for (j = 0; j < listsize; j++) {
-      Ship p = (Ship) deadShipList.elementAt(j);
-      if (p != null /*&& p.isNearCamera_2d(camera_xyz, cam_isnearcam_dist)*/) {
+      Ship deadship = (Ship) deadShipList.elementAt(j);
+      if (deadship != null /*&& p.isNearCamera_2d(camera_xyz, cam_isnearcam_dist)*/) {
         //draw only if usesensors tagged it.
         //xxxtemp if (p.isSeenByPlayer()) {
-          p.drawShip(0.97f*visualscaling, false);
+          deadship.drawShip(0.97f * visualscaling, false);
         //}
       }
     }
@@ -3411,7 +3410,15 @@ public class Missilemada2 {
     return false;
   }
   private static void setCameraFollowedPlayerShip(Ship followship) { //set to null for regular camera
-    camera_follows_ship = followship;
+    camera_on_this_ship = followship;
   }
-
+  public static Ship getCameraFollowedPlayerShip() { //is null for regular camera
+    return camera_on_this_ship;
+  }
+  public static boolean isShipCameraActive() {
+    if (camera_on_this_ship == null)
+      return false;
+    else
+      return true;
+  }
 }

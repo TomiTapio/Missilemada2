@@ -111,9 +111,9 @@ __ mining sounds.
 __ mildrones near far: stay at base. 
 cantrepro: buggy in drone built notes, and scout order notes.
 
-__ tractor: if tractor-candidate is on trajectory to base, don't tractor. saves much time. 
+__ tractor: if tractor-candidate is on trajectory to base, don't tractor. saves much time and dilly-dallying. 
 done: scenariofile: playersensorboost=x, AIsensorboost=y
-__ aste drift speed to be per-scenario config.
+
 __ new shiptype: disabler (ion cannon, EMP, messes enemy moving and sh-regen and sensors) (lesser defender, 2 crew. few missiles, no defbeam/atkbeam, ion shot takes 25% of shield)
 __ rand chance find off-mineral in aste. prevents stagnation a little.
 __ rand chance find very high grade deposit (immediate +X to base)
@@ -121,12 +121,14 @@ __ rand chance find very high grade deposit (immediate +X to base)
 __ floating gui text: one slot of high prio annoucement (lost ship, built ship, engagement start, kild enemy ship)
 
 
+__ aste drift speed to be per-scenario config!
 
-
-__ Func key: camera follow rand mil or scout ship. global ship pointer, usually null. 
+DONE!  Func key: camera follow rand mil or scout ship. global ship pointer, usually null.
+done: fix nullptr, if the ships-camera ship died...
 __ faction aggression: 0[flee when see 1 foe or 2 misl] 0 to 11. On AI, random. On player, set via gui buttons. This makes it easier for player to make mistakes. 
-
-
+_halfdone_ ships drop fuel poof trails randomly. For nice visuals.
+done: resupply shuttle makes melody.
+__ ship's-view-ship's stats (shie, hull, systems avg) displayed SOMEWHERE when in ship's-view
 
 
 
