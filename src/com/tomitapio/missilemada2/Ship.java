@@ -5020,6 +5020,12 @@ public class Ship extends MobileThing implements Comparable<Ship> {
   public void addVfxOfCargoCarried() {
     Missilemada2.addVfxOnMT(0,-5*this.getRadius(), 0, "TEXT", 29000, 900.0, 1.0, this, "", 1.0, "cargo:"+(int)cargo_carried);
   }
+  public Vector getWhatYouLookingAtXYZ() { //return vector of XYZ what the ship is moving towards. For ship's-eye camera.
+    return changeXYZ(getXYZ(), 4.0*xspeed, 4.0*yspeed, 4.0*zspeed); //works!
+  }
+  public Vector getRearCameraXYZ() {
+    return changeXYZ(getXYZ(), -4.0*xspeed, -4.0*yspeed, -4.0*zspeed);
+  }
 
   static class ShipComparator implements Comparator<Ship> {
     @Override

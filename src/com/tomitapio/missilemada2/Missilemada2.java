@@ -11,6 +11,7 @@ import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.util.glu.GLU;
 
 //Slick2D for font stuff
+import org.lwjgl.util.vector.*;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.UnicodeFont;
@@ -25,6 +26,7 @@ import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
 import java.util.*;
+import java.util.Vector;
 
 //RTree / SpatialIndex library (jsi-1.0.0)
 //import org.slf4j.*;
@@ -38,11 +40,11 @@ import com.infomatiq.jsi.rtree.RTree;
 public class Missilemada2 {
   //constants that define the world
   public static double world_x_max =  5100500.0; //km.  player base at 0 x 0. basedist like 700 000
-  public static double world_x_min = -5100500.0;
+  public static double world_x_min = -5100500.0; //world z min max relative to x.
   public static double world_y_max =  5100500.0;
   public static double world_y_min = -5100500.0;
+  public static double SECONDS_TO_MAX_SPEED = 1.7 * 3600.0; //not quite Star Trek shuttle acceleration
   private static boolean FLATWORLD = true; //2.15d is fine. 3d world too hard with my camera, and very little added fun.
-  public static double SECONDS_TO_MAX_SPEED = 1.7 * 3600.0;
 
   //per-scenario things, read from scenario files.
   private static double BASEDIST = 680500.0; //1100500.0; //km.
@@ -146,27 +148,28 @@ public class Missilemada2 {
   private static double camera_y = 0;
   private static double camera_z = 2900;
   private static Vector camera_xyz;
+  private static Ship camera_follows_ship = null; //if null, regular camera view.
 
   private static UnicodeFont font60;
   private static UnicodeFont font20;
   private static UnicodeFont font30;
-  private static String[] helppaneltext = {"Missilemada2 by TomiTapio, made 2013-11 to 2015-04",
-        "Yo Commander. Zaibatsu's local resources are at your command. Stop our rivals' asteroid mining operations.",
+  private static String[] helppaneltext = {"Missilemada2 by TomiTapio, made 2013-11 to 2015-07.",
+        "Commander. Zaibatsu's local resources are at your command. Stop our rivals' asteroid mining operations.",
         "A stealth shuttle will resupply you with crewmembers and the resource you lack most urgently.",
         "",
         "Leftclick on GUI buttons. Rightclick-drag to pan camera.",
         "Mousewheel to zoom, wheelclick or SPACE to toggle pause.",
         "Keyboard camera controls: INSERT/HOME to zoom, cursor keys pan.",
-        "ESC quit, SPACE pause, F1 toggle help, F2 toggle ship list, F5 restart scenario.",
+        "ESC quit, SPACE pause, F1 toggle help, F2 toggle ship list, F5 restart scenario. F6 toggle specialcamera.",
         "Commander's experience is saved every N days. Category xp unlocks better pricebrackets."
   };
 
   public static void main(String[] args) throws LWJGLException {
     new com.tomitapio.missilemada2.Missilemada2().start();
   }
-  public static String randomDNAFromStr(String a) {
+  public static String randomDNAFromStr(String randseed) {
     StringBuilder sb = new StringBuilder();
-    Random tmprand = new Random(strToLongSeed(a)); tmprand.nextBoolean();
+    Random tmprand = new Random(strToLongSeed(randseed)); tmprand.nextBoolean();
     for (int i = 0; i < 9; i++) {
       sb.append(randCharsAllowed.charAt(tmprand.nextInt(randCharsAllowed.length())));
     }
@@ -190,7 +193,7 @@ public class Missilemada2 {
                       "ureshi", "urutora", "wakai", "wata", "yaba",    "ya" };
     String second[] = {"toka", "kuma", "risu", "toishi", "tooboe",     "toorima", "tsuta", "uchiwa", "uketori", "ukimi",
                        "uma", "umeki", "umou" ,"urame"," no uranari",  "uri", "usei", "ushio", "uten","wadome",
-                       "waihon", "wani" , "waregachi", "waza", "chou", "yagai"};
+                       "waihon", "wani", "waregachi", "waza", "chou",  "yagai"};
     return first[gimmeRandInt(16)]+second[gimmeRandInt(26)];
   }
   public static String getRandomVulcanName() {
@@ -744,16 +747,19 @@ public class Missilemada2 {
           inputsleep = 17;
         }
         if (Keyboard.isKeyDown(Keyboard.KEY_F5)) {
-          FULLSCREEN = !FULLSCREEN;
+          FULLSCREEN = !FULLSCREEN; //wtf is this
           Display.setFullscreen(FULLSCREEN);
           createWorldFromScenarioFile("1");
           createGUIButtons();
           //resize();
           inputsleep = 50;
         }
-        if (Keyboard.isKeyDown(Keyboard.KEY_F6)) {
-          playRadioChatter(5, 109, 90, 0);
-          inputsleep = 17;
+        if (Keyboard.isKeyDown(Keyboard.KEY_F6)) { //follow-ship-camera toggle.
+          if (camera_follows_ship == null)
+            camera_follows_ship = getPlayerFaction().getStrongestShip();
+          else
+            camera_follows_ship = null;
+          inputsleep = 29;
         }
       }
 
@@ -1720,12 +1726,24 @@ public class Missilemada2 {
     GL11.glMatrixMode(GL11.GL_PROJECTION); //camera mode: are changing projection.
     GL11.glLoadIdentity();
     float voo = (float)VIEWWIDTH/(float)VIEWHEIGHT;
-    GLU.gluPerspective(70.0f, voo, CLIP_ZNEAR, CLIP_ZFAR);
 
-    GLU.gluLookAt(((Double) xyz.get(0)).floatValue()+(float)camera_x, ((Double) xyz.get(1)).floatValue()+(float)camera_y, dist,
-                  ((Double) xyz.get(0)).floatValue()+(float)camera_x, ((Double) xyz.get(1)).floatValue()+(float)camera_y, -dist/*helped somewhat*/,
+    if (camera_follows_ship == null) {
+      GLU.gluPerspective(70.0f, voo, CLIP_ZNEAR, CLIP_ZFAR);
+      GLU.gluLookAt(((Double) xyz.get(0)).floatValue() + (float) camera_x, ((Double) xyz.get(1)).floatValue() + (float) camera_y, dist,
+            ((Double) xyz.get(0)).floatValue() + (float) camera_x, ((Double) xyz.get(1)).floatValue() + (float) camera_y, -dist/*helped somewhat*/,
             0.0f, 100.0f, 0.0f);
-    //2D CAD measurements view:   GL11.glOrtho(0, VIEWWIDTH, 0, VIEWHEIGHT, 9000, -9000); //clip distance -1 to 1 is for 2d games...
+    } else { //camera is followed-ship's point of view.
+      //xxadjust near clip?
+      //xxxxxadjust voo please
+      GLU.gluPerspective(110.0f, voo, CLIP_ZNEAR, CLIP_ZFAR); //fovy, aspect, zNear, zFar
+      //eyex, eyey, eyez, centerx, centery, centerz, upx, upy, upz
+      Vector shiplooksat = camera_follows_ship.getWhatYouLookingAtXYZ();
+      Vector rearofship  = camera_follows_ship.getRearCameraXYZ(); //so lines drawn from center point of ship aren't annoying.
+      GLU.gluLookAt(((Double) rearofship.get(0)).floatValue(), ((Double) rearofship.get(1)).floatValue(), ((Double) rearofship.get(2)).floatValue(),
+            ((Double) shiplooksat.get(0)).floatValue(), ((Double) shiplooksat.get(1)).floatValue(), ((Double) shiplooksat.get(2)).floatValue(),
+            0.0f, 0.0f, 1.0f);
+    }
+    //2D CAD measurements view would be: GL11.glOrtho(0, VIEWWIDTH, 0, VIEWHEIGHT, 9000, -9000); //clip distance -1 to 1 is for 2d games...
     GL11.glMatrixMode(GL11.GL_MODELVIEW); //regular mode: are changing models.
   }
   public static void removeShipFromActives(Ship just_destr_ship) {
@@ -3352,12 +3370,12 @@ public class Missilemada2 {
     glViewport(0, 0, Display.getWidth(), Display.getHeight());
     // ??
   }
-  public long getTimeMS() {
+  /*public long getTimeMS() {
     return System.nanoTime() / 1000000;
-  }
-  public long getTime() { //in ms
+  }*/
+  /*public long getTime() { //in ms
     return (Sys.getTime() * 1000) / Sys.getTimerResolution();
-  }
+  }*/
   protected void disposeResources() {
     try {
       allNotesOff();
@@ -3392,6 +3410,8 @@ public class Missilemada2 {
     }
     return false;
   }
-
+  private static void setCameraFollowedPlayerShip(Ship followship) { //set to null for regular camera
+    camera_follows_ship = followship;
+  }
 
 }

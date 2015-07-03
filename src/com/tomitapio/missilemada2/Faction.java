@@ -2587,7 +2587,7 @@ public class Faction {
   public void addXPToCommander(Ship s, String why) {
     if (isPlayerFaction())
       cmdr.addXP(s, why);
-    //AI not have xp across scenarios.
+    //AI factions do not have xp across scenarios.
   }
   public void commanderScenarioWon() { cmdr.handleXP_scenariowon(); }
   public void commanderScenarioLost() {
@@ -2617,9 +2617,22 @@ public class Faction {
 
     //also needs to be out of combat, for hullrepair.
 
+
     //xxxx getShipsOfFaction(fa);
+
+
+
+
 
     return null;
   }
 
+  public Ship getStrongestShip() {
+    //not base.
+    return  gimmeRandMannedShip();
+
+
+
+    //xxxxxxxxxreturn null;
+  }
 }

@@ -112,44 +112,58 @@ __ mildrones near far: stay at base.
 cantrepro: buggy in drone built notes, and scout order notes.
 
 __ tractor: if tractor-candidate is on trajectory to base, don't tractor. saves much time. 
-__ scenariofile: playersensorboost=x, AIsensorboost=y
-  __ aste drift speed to be per-scenario config.
+done: scenariofile: playersensorboost=x, AIsensorboost=y
+__ aste drift speed to be per-scenario config.
 __ new shiptype: disabler (ion cannon, EMP, messes enemy moving and sh-regen and sensors) (lesser defender, 2 crew. few missiles, no defbeam/atkbeam, ion shot takes 25% of shield)
+__ rand chance find off-mineral in aste. prevents stagnation a little.
+__ rand chance find very high grade deposit (immediate +X to base)
+
+__ floating gui text: one slot of high prio annoucement (lost ship, built ship, engagement start, kild enemy ship)
+
+
+
+
+__ Func key: camera follow rand mil or scout ship. global ship pointer, usually null. 
+__ faction aggression: 0[flee when see 1 foe or 2 misl] 0 to 11. On AI, random. On player, set via gui buttons. This makes it easier for player to make mistakes. 
+
+
+
+
 
 __________________________________________________________________________________________________
-Commander xp system:
-On scenario start, read player's per-shipcategory xp levels from text file.
-Also have total xp. Total xp(influence?) goes down on ship destroyed, scenario lost.
-   totalxp down on crew casualties.
-
-Commander class gets xp every shipbuild / shipcapture.
-every 8 days, and scenario over, save xp to file. To prevent "start, build 9, quit".
-dont _on quit dectection... hmm...
-__N xp to all categories on scenario win! N = two shipbuild worth. (Zaibatsu gave more researchers / allowance.)
-
-Start with scout 1, manned miner 1. "You get these 10year old designs, commander junior grade."
-After M xp in miner or scout, unlock cheapo mining drone. 
-After M xp in mining drone, unlock cheapo missiledrone.
-After M xp in Scout, unlock cheapo Defender. Commander.getDefenderPriceTier()
-__After M xp in Scout, unlock drop-SENSAT(sensor satellite) ability. Commander.hasLearnedSenSat()
-After M xp in Defender, unlock cheapo Cruiser.
-After M xp in Defender, unlock cheapo beamdrone.
-__After M xp in Defender, unlock VOLLEY Commander-command.
-
--what about enemy faction Commanders????
-Build only 13 cruisers to get to max cruiser tier (5). CruiserXP = 1000 / 13. Bar maxed at 1000.
-DONE: repair at base, tiny bit xp on that category. 0.2 xp.
-
--more REsupply of crewmen when high totalxp level.
--commander.addtolog(scenario X you won/lost in N days, total battle strength Y, M men lost.)
-
-    xxx;
-    Commander c = new Commander("foo");
-    c.addXP("SCOUT", 1000);
-    c.addTotalXP(1000);
-    c.saveToFile();
-    c.loadFromFile();
-    c.addBonusXPFromScenarioWin();
+	Commander xp system:
+	On scenario start, read player's per-shipcategory xp levels from text file.
+	Also have total xp. Total xp(influence?) goes down on ship destroyed, scenario lost.
+	   totalxp down on crew casualties.
+	
+	Commander class gets xp every shipbuild / shipcapture.
+	every 8 days, and scenario over, save xp to file. To prevent "start, build 9, quit".
+	dont _on quit detection... hmm...
+	__N xp to all categories on scenario win! N = two shipbuild worth. (Zaibatsu gave more researchers / allowance.)
+	
+	Start with scout 1, manned miner 1. "You get these 10year old designs, commander junior grade."
+	After M xp in miner or scout, unlock cheapo mining drone. 
+	After M xp in mining drone, unlock cheapo missiledrone.
+	After M xp in Scout, unlock cheapo Defender. Commander.getDefenderPriceTier()
+	__After M xp in Scout, unlock drop-SENSAT(sensor satellite) ability. Commander.hasLearnedSenSat()
+	After M xp in Defender, unlock cheapo Cruiser.
+	After M xp in Defender, unlock cheapo beamdrone.
+	__After M xp in Defender, unlock VOLLEY Commander-command.
+	
+	-what about enemy faction Commanders????
+	Build only 13 cruisers to get to max cruiser tier (5). CruiserXP = 1000 / 13. Bar maxed at 1000.
+	DONE: repair at base, tiny bit xp on that category. 0.2 xp.
+	
+	-more REsupply of crewmen when high totalxp level.
+	-commander.addtolog(scenario X you won/lost in N days, total battle strength Y, M men lost.)
+	
+	    xxx;
+	    Commander c = new Commander("foo");
+	    c.addXP("SCOUT", 1000);
+	    c.addTotalXP(1000);
+	    c.saveToFile();
+	    c.loadFromFile();
+	    c.addBonusXPFromScenarioWin();
 
 ______________
 
