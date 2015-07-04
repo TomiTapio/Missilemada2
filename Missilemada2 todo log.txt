@@ -125,12 +125,15 @@ __ aste drift speed to be per-scenario config!
 
 DONE!  Func key: camera follow rand mil or scout ship. global ship pointer, usually null.
 done: fix nullptr, if the ships-camera ship died...
-__ faction aggression: 0[flee when see 1 foe or 2 misl] 0 to 11. On AI, random. On player, set via gui buttons. This makes it easier for player to make mistakes. 
+
 _halfdone_ ships drop fuel poof trails randomly. For nice visuals.
 done: resupply shuttle makes melody.
 __ ship's-view-ship's stats (shie, hull, systems avg) displayed SOMEWHERE when in ship's-view
+__ dont draw shields in ship-camera mode. Way bigger misl-hit-shield spark-vfx in ship-camera.
+done: ships speeds down (21->16), to make battle encounters longer
+done: misl cost down 50% to have more misl. yield down 40%, defebeam more often.
 
-
+__ faction aggression: 0[flee when see 1 foe or 2 misl] 0 to 11. On AI, random. On player, set via gui buttons. This makes it easier for player to make mistakes. 
 
 __________________________________________________________________________________________________
 	Commander xp system:

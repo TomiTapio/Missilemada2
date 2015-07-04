@@ -122,9 +122,9 @@ public class Missile extends MobileThing {
     }
     if (yield_variance > 0.92) { //then high-dam elite, pricey.
       yield = 1.25 * yield;
-      turnrate = 1.1*turnrate;
-      maxfuel = 1.26*maxfuel;
-      spd = 1.1*spd;
+      turnrate = 1.16*turnrate;
+      maxfuel = 1.46*maxfuel;
+      spd = 1.18*spd;
     }
 
     double mass_kg = 40
@@ -141,7 +141,7 @@ public class Missile extends MobileThing {
     int cost_from_maxfuel = new Double(0.45 * maxfuel).intValue();
     int cost_from_sensors = new Double(0.049*senrange).intValue();
     double buildcost = cost_from_mass + cost_from_speed + cost_from_yield + cost_from_turn + cost_from_maxfuel + cost_from_sensors;  //formula. mass is a penalty ofcoz
-    buildcost = 0.00014 * buildcost; //global scaling
+    buildcost = 0.00007 * buildcost; //global scaling
     double[] ret = new double[7];
     ret[0] = spd;
     ret[1] = senrange;

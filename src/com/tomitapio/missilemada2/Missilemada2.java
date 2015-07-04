@@ -1734,7 +1734,7 @@ public class Missilemada2 {
       //adjust near clip
       CLIP_ZNEAR = 350.0f;
       //GLU.gluPerspective(120.0f, aspect, 0.26f, CLIP_ZFAR); //fovy, aspect, zNear, zFar
-      GLU.gluPerspective(128.0f, aspect, CLIP_ZNEAR, CLIP_ZFAR);
+      GLU.gluPerspective(102.0f/*128 crap*/, aspect, CLIP_ZNEAR, CLIP_ZFAR);
       //eyex, eyey, eyez, centerx, centery, centerz, upx, upy, upz
       Vector shiplooksat = camera_on_this_ship.getWhatYouLookingAtXYZ();
       Vector rearofship  = camera_on_this_ship.getRearCameraXYZ(); //so lines drawn from center point of ship aren't annoying.
@@ -3093,27 +3093,27 @@ public class Missilemada2 {
     return 0.95 * getSensorRangeMinShip();
   }
   public static double getMissileRangeMax() {
-    return 0.59 * BASEDIST; //xxxxgameplay. 0.8 might be different gameplay. 1.0x and 2.2x is SHITE.
+    return 0.61 * BASEDIST; //xxxxgameplay. 0.8 might be different gameplay. 1.0x and 2.2x is SHITE.
   }
   public static double getMissileCollisionRangeMin() { //scale to world tick, coz large tick is VERY IMPRECISE. //precision improved by 4x adv time per framedraw.
     return 17300.0 * (worldTimeIncrement / 60.0) ; //26x gives about 14 300 km. when wti is 60.
-    //xxone must test at both 15 sec tick and 160 sec tick... well, combat is viewed with slow time..
+    //xxone must test at both 15 sec tick and 160 sec tick... well, combat is viewed with slow time...
   }
   public static double getMissileTurnMargin() { //scale to world tick, coz large tick is VERY IMPRECISE. //precision improved by 4x adv time per framedraw.
     return 0.035; //radians. was 0.04 for a long time. was 0.12 then.
   }
   public static double getMissileSpeedMin() {
     //calc from ship speeds.
-    return 1.17 * Ship.getAvgScoutSpeed(); //crappiest missiles should catch up to mid-low scouts, barely.
+    return 1.21 * Ship.getAvgScoutSpeed(); //crappiest missiles should catch up to mid-low scouts, barely.
   }
   public static double getMissileSpeedMax() {
-    return 1.46 * Ship.getMaxScoutSpeed(); //elite missiles should catch up to average scouts most excellently.
+    return 1.42 * Ship.getMaxScoutSpeed(); //elite missiles should catch up to average scouts most excellently.
   }
   public static double getAvgMislYield() {
-    return Ship.getAvgScoutHullHP() / 19.3; //gameplay: more missiles means more fun! (scout/12: not that fun.)
+    return 0.6/*less dam coz half-priced missiles*/ * (Ship.getAvgScoutHullHP() / 19.3); //gameplay: more missiles means more fun! (scout/12: not that fun.)
   }
   public static double getAsteDriftSpeed() {
-    return 0.09318; //0.00118; //gameplay
+    return 0.098; //0.00118; //gameplay
   }
   public static Asteroid getRandomAsteroid() {
     try {
@@ -3125,7 +3125,7 @@ public class Missilemada2 {
     return null;
   }
   public static UnicodeFont getFont60fornowwww(int i) {
-    //xxxx
+    //xxxx make this return different font sizes.
     return font60;
   }
   public static void removeMissile(Missile m) {

@@ -111,7 +111,7 @@ public class Ship extends MobileThing implements Comparable<Ship> {
   double curr_buildcredits;
   double max_buildcredits;
   double defense_beam_accuracy; //0..1, skill of antimissile defense beam targeting.
-  double defense_beam_rechargebasethou = 1000.0; //for merit-upgrading of recharge.
+  double defense_beam_rechargebasethou = 880.0; //for merit-upgrading of recharge time. //reduced to 880 coz half price missiles now.
   double personality_aggro; //0..1
 
   double caused_destruction = 0.0; //in buildcost
@@ -438,15 +438,15 @@ public class Ship extends MobileThing implements Comparable<Ship> {
       cargo_capacity = 0.0; //tons
       sensor_range = senrange_core * 1.33 * (0.90 + 0.90); //NOTE, standardised senrange for all faction bases. For gameplay.
       stealth = 0.0; //no stealth capability, and bases must be equal
-      curr_hull_hp = (400.0/25.0) * getAvgScoutHullHP() * (0.5+hull_factor); //in MJ. NN teraJ avg...
+      curr_hull_hp = (480.0/25.0) * getAvgScoutHullHP() * (0.5+hull_factor); //in MJ. NN teraJ avg...
       defense_beam_accuracy = 1.5 + r8.nextDouble(); //defense beam to nullify missiles
       personality_aggro = 0.85;
 
-      max_shields = 210500500 * (maxshield_factor + 0.13); //in MJ //nerf from 24 to 21
+      max_shields = 220500500 * (maxshield_factor + 0.13); //in MJ //nerf from 24 to 21
       curr_shields = max_shields / 12.5;
-      shield_regen_per_min = 190500 * shieldregenpermin_factor; //in MJ / sec. also powers the beam weapons. //nerf from 28 to 18
+      shield_regen_per_min = 220500 * shieldregenpermin_factor; //in MJ / sec. also powers the beam weapons. //nerf from 28 to 18
 
-      buildcredits_gen_per_minute = bcps_scaling * 6250 * (bcps_factor + 0.39); //base has xxdefender firepower, but more storage for missiles.
+      buildcredits_gen_per_minute = bcps_scaling * 7250 * (bcps_factor + 0.39); //base has xxdefender firepower, but more storage for missiles.
       max_buildcredits = bc_storage_scaling * 5.2 * 60.0 * buildcredits_gen_per_minute; //how many hours' worth of missiles piled up?
       curr_buildcredits = max_buildcredits / 4.0; //note, starts with decent pile.
 
@@ -4150,8 +4150,8 @@ public class Ship extends MobileThing implements Comparable<Ship> {
     return 80500500 * (0.25);
   }
   public static double getAvgScoutSpeed() {
-    //scout min speed would be then 21.0. Max at 150%.
-    return 21.0 * (1.0 + 0.5*(0.5/*the rand*/)); //1.851 km/sec shuttle from real world, but ditch that.
+    //scout min speed would be then 16.0. Max at 150%.
+    return 16.0/*was 21*/ * (1.0 + 0.5*(0.5/*the rand*/)); //1.851 km/sec shuttle from real world, but ditch that.
   }
   public static double getMaxScoutSpeed() {
     return 21.0 * (1.0 + 0.5*(1.0/*the rand*/));
